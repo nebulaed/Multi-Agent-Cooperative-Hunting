@@ -1,0 +1,13 @@
+# External initialization parameters
+
+TOTSTEP: 600 # Total number of simulation steps
+TS: 0.1 # Sampling time, the unit is second
+WOLF_NUM: 5 # Number of robots
+TARGET_NUM: 1 # Target number
+S_OBS_NUM: 2 # Number of fixed circular obstacles
+M_OBS_NUM: 2 # Number of movable circular obstacles
+IRR_OBS_NUM: 10 # Number of irregular fixed obstacles
+M_IRR_OBS_NUM: 10 # Number of movable irregular obstacles
+
+border: [-10,-10,10,10] # border, the unit is m
+INIT_D: 1 # The distance between the obstacle surfaces in the initial position, the unit is m
