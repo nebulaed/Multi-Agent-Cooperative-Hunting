@@ -1,0 +1,1046 @@
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2021.1.26)  21 MAY 2021 17:35
+entering extended mode
+**算法设计
+(d:\Data\Group_B_Luo\521_BoZheXu\communication\hunt_handover\docs\算法设计.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for loaded.
+(D:\Software\CTEX\MiKTeX\tex\latex\base\article.cls
+Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
+(D:\Software\CTEX\MiKTeX\tex\latex\base\size10.clo
+File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+) (D:\Software\CTEX\MiKTeX\tex\latex\geometry\geometry.sty
+Package: geometry 2010/09/12 v5.6 Page Geometry
+ (D:\Software\CTEX\MiKTeX\tex\latex\graphics\keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+) (D:\Software\CTEX\MiKTeX\tex\generic\oberdiek\ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+) (D:\Software\CTEX\MiKTeX\tex\generic\oberdiek\ifvtex.sty
+Package: ifvtex 2010/03/01 v1.5 Switches for detecting VTeX and its modes (HO)
+Package ifvtex Info: VTeX not detected.
+) (D:\Software\CTEX\MiKTeX\tex\generic\ifxetex\ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count87
+\Gm@cntv=\count88
+\c@Gm@tempcnt=\count89
+\Gm@bindingoffset=\dimen103
+\Gm@wd@mp=\dimen104
+\Gm@odd@mp=\dimen105
+\Gm@even@mp=\dimen106
+\Gm@layoutwidth=\dimen107
+\Gm@layoutheight=\dimen108
+\Gm@layouthoffset=\dimen109
+\Gm@layoutvoffset=\dimen110
+\Gm@dimlist=\toks15
+ (D:\Software\CTEX\MiKTeX\tex\latex\geometry\geometry.cfg)) (D:\Software\CTEX\MiKTeX\tex\latex\amsfonts\amsfonts.sty
+Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
+\@emptytoks=\toks16
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
+) (D:\Software\CTEX\MiKTeX\tex\latex\ctex\ctex.sty
+Package: ctex 2011/03/11 v1.02c ctex macros package
+ (D:\Software\CTEX\MiKTeX\tex\latex\ctex\opt\ctex-common-opts.def) (D:\Software\CTEX\CTeX\tex\latex\ctex\cfg\ctexopts.cfg) (D:\Software\CTEX\MiKTeX\tex\latex\ctex\def\ctex-common.def (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\expl3.sty (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3names.sty (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3bootstrap.sty
+Package: l3bootstrap 2011/12/29 v3110 L3 Experimental bootstrap code
+)
+Package: l3names 2011/12/30 v3113 L3 Experimental namespace for primitives
+) (D:\Software\CTEX\MiKTeX\tex\latex\misc\etex.sty
+Package: etex 1998/03/26 v2.0 eTeX basic definition package (PEB)
+\et@xins=\count90
+)
+Package: expl3 2012/02/26 v3471 L3 Experimental code bundle wrapper
+ (D:\Software\CTEX\MiKTeX\tex\latex\graphics\color.sty
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+ (D:\Software\CTEX\MiKTeX\tex\latex\00miktex\color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 130.
+ (D:\Software\CTEX\MiKTeX\tex\latex\pdftex-def\pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+ (D:\Software\CTEX\MiKTeX\tex\generic\oberdiek\infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/message (HO)
+) (D:\Software\CTEX\MiKTeX\tex\generic\oberdiek\ltxcmds.sty
+Package: ltxcmds 2011/04/18 v1.20 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count91
+)) (D:\Software\CTEX\MiKTeX\tex\latex\graphics\graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+ (D:\Software\CTEX\MiKTeX\tex\latex\graphics\trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+) (D:\Software\CTEX\MiKTeX\tex\latex\00miktex\graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3basics.sty
+Package: l3basics 2012/02/26 v3460 L3 Experimental basic definitions
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3expan.sty
+Package: l3expan 2012/02/26 v3460 L3 Experimental argument expansion
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3tl.sty
+Package: l3tl 2012/02/26 v3460 L3 Experimental token lists
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3seq.sty
+Package: l3seq 2012/01/09 v3158 L3 Experimental sequences and stacks
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3int.sty
+Package: l3int 2012/02/26 v3460 L3 Experimental integers
+\c_max_int=\count92
+\l_tmpa_int=\count93
+\l_tmpb_int=\count94
+\l_tmpc_int=\count95
+\g_tmpa_int=\count96
+\g_tmpb_int=\count97
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3quark.sty
+Package: l3quark 2012/02/12 v3384 L3 Experimental quarks
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3prg.sty
+Package: l3prg 2012/02/26 v3464 L3 Experimental control structures
+\g_prg_map_int=\count98
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3clist.sty
+Package: l3clist 2012/02/26 v3460 L3 Experimental comma separated lists
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3token.sty
+Package: l3token 2012/02/26 v3460 L3 Experimental token manipulation
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3prop.sty
+Package: l3prop 2012/02/26 v3460 L3 Experimental property lists
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3msg.sty
+Package: l3msg 2012/02/26 v3470 L3 Experimental messages
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3file.sty
+Package: l3file 2012/02/26 v3464 L3 Experimental file and I/O operations
+\l_iow_stream_int=\count99
+\l_iow_line_length_int=\count100
+\l_iow_target_length_int=\count101
+\l_iow_current_line_int=\count102
+\l_iow_current_word_int=\count103
+\l_iow_current_indentation_int=\count104
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3skip.sty
+Package: l3skip 2012/02/26 v3460 L3 Experimental dimensions and skips
+\l_tmpa_dim=\dimen111
+\l_tmpb_dim=\dimen112
+\l_tmpc_dim=\dimen113
+\g_tmpa_dim=\dimen114
+\g_tmpb_dim=\dimen115
+\l_tmpa_skip=\skip43
+\l_tmpb_skip=\skip44
+\l_tmpc_skip=\skip45
+\g_tmpa_skip=\skip46
+\g_tmpb_skip=\skip47
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3keys.sty
+Package: l3keys 2011/12/22 v3086 L3 Experimental key-value interfaces
+\g_keyval_level_int=\count105
+\l_keys_choice_int=\count106
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3fp.sty
+Package: l3fp 2012/02/06 v3315 L3 Experimental floating-point operations
+\c_one_million=\count107
+\c_one_hundred_million=\count108
+\c_five_hundred_million=\count109
+\c_one_thousand_million=\count110
+\c_fp_pi_by_four_decimal_int=\count111
+\c_fp_pi_by_four_extended_int=\count112
+\c_fp_pi_decimal_int=\count113
+\c_fp_pi_extended_int=\count114
+\c_fp_two_pi_decimal_int=\count115
+\c_fp_two_pi_extended_int=\count116
+\l_fp_count_int=\count117
+\l_fp_div_offset_int=\count118
+\l_fp_exp_integer_int=\count119
+\l_fp_exp_decimal_int=\count120
+\l_fp_exp_extended_int=\count121
+\l_fp_exp_exponent_int=\count122
+\l_fp_input_a_sign_int=\count123
+\l_fp_input_a_integer_int=\count124
+\l_fp_input_a_decimal_int=\count125
+\l_fp_input_a_exponent_int=\count126
+\l_fp_input_b_sign_int=\count127
+\l_fp_input_b_integer_int=\count128
+\l_fp_input_b_decimal_int=\count129
+\l_fp_input_b_exponent_int=\count130
+\l_fp_input_a_extended_int=\count131
+\l_fp_input_b_extended_int=\count132
+\l_fp_mul_a_i_int=\count133
+\l_fp_mul_a_ii_int=\count134
+\l_fp_mul_a_iii_int=\count135
+\l_fp_mul_a_iv_int=\count136
+\l_fp_mul_a_v_int=\count137
+\l_fp_mul_a_vi_int=\count138
+\l_fp_mul_b_i_int=\count139
+\l_fp_mul_b_ii_int=\count140
+\l_fp_mul_b_iii_int=\count141
+\l_fp_mul_b_iv_int=\count142
+\l_fp_mul_b_v_int=\count143
+\l_fp_mul_b_vi_int=\count144
+\l_fp_mul_output_int=\count145
+\l_fp_output_sign_int=\count146
+\l_fp_output_integer_int=\count147
+\l_fp_output_decimal_int=\count148
+\l_fp_output_exponent_int=\count149
+\l_fp_output_extended_int=\count150
+\l_fp_round_position_int=\count151
+\l_fp_round_target_int=\count152
+\l_fp_split_sign_int=\count153
+\l_fp_internal_int=\count154
+\l_fp_trig_octant_int=\count155
+\l_fp_trig_sign_int=\count156
+\l_fp_trig_decimal_int=\count157
+\l_fp_trig_extended_int=\count158
+\l_fp_internal_dim=\dimen116
+\l_fp_internal_skip=\skip48
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3box.sty
+Package: l3box 2012/02/18 v3432 L3 Experimental boxes
+\l_tmpb_box=\box26
+\l_box_top_dim=\dimen117
+\l_box_bottom_dim=\dimen118
+\l_box_left_dim=\dimen119
+\l_box_right_dim=\dimen120
+\l_box_top_new_dim=\dimen121
+\l_box_bottom_new_dim=\dimen122
+\l_box_left_new_dim=\dimen123
+\l_box_right_new_dim=\dimen124
+\l_box_internal_box=\box27
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3coffins.sty
+Package: l3coffins 2012/02/26 v3460 L3 Experimental coffin code layer
+\l_coffin_internal_box=\box28
+\l_coffin_internal_dim=\dimen125
+\l_coffin_offset_x_dim=\dimen126
+\l_coffin_offset_y_dim=\dimen127
+\l_coffin_x_dim=\dimen128
+\l_coffin_y_dim=\dimen129
+\l_coffin_x_prime_dim=\dimen130
+\l_coffin_y_prime_dim=\dimen131
+\l_coffin_Depth_dim=\dimen132
+\l_coffin_Height_dim=\dimen133
+\l_coffin_TotalHeight_dim=\dimen134
+\l_coffin_Width_dim=\dimen135
+\c_empty_coffin=\box29
+\l_coffin_aligned_coffin=\box30
+\l_coffin_aligned_internal_coffin=\box31
+\l_coffin_bounding_shift_dim=\dimen136
+\l_coffin_left_corner_dim=\dimen137
+\l_coffin_right_corner_dim=\dimen138
+\l_coffin_bottom_corner_dim=\dimen139
+\l_coffin_top_corner_dim=\dimen140
+\l_coffin_scaled_total_height_dim=\dimen141
+\l_coffin_scaled_width_dim=\dimen142
+\l_coffin_display_coffin=\box32
+\l_coffin_display_coord_coffin=\box33
+\l_coffin_display_pole_coffin=\box34
+\l_coffin_display_offset_dim=\dimen143
+\l_coffin_display_x_dim=\dimen144
+\l_coffin_display_y_dim=\dimen145
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3color.sty
+Package: l3color 2011/09/07 v2776 L3 Experimental colour support
+) (D:\Software\CTEX\MiKTeX\tex\latex\l3kernel\l3luatex.sty
+Package: l3luatex 2012/02/09 v3355 L3 Experimental LuaTeX-specific functions
+\g_cctab_allocate_int=\count159
+\g_cctab_stack_int=\count160
+)) (D:\Software\CTEX\MiKTeX\tex\latex\etoolbox\etoolbox.sty
+Package: etoolbox 2011/01/03 v2.1 e-TeX tools for LaTeX
+\etb@tempcnta=\count161
+) (D:\Software\CTEX\MiKTeX\tex\latex\tools\indentfirst.sty
+Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
+) (D:\Software\CTEX\MiKTeX\tex\latex\base\fix-cm.sty
+Package: fix-cm 2006/09/13 v1.1m fixes to LaTeX
+ (D:\Software\CTEX\MiKTeX\tex\latex\base\ts1enc.def
+File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
+)) (D:\Software\CTEX\MiKTeX\tex\latex\ctex\engine\ctex-cjk-engine.def (D:\Software\CTEX\MiKTeX\tex\latex\cjk\CJK.sty
+Package: CJK 2008/12/29 4.8.2
+ (D:\Software\CTEX\MiKTeX\tex\latex\cjk\mule\MULEenc.sty
+Package: MULEenc 2008/12/29 4.8.2
+) (D:\Software\CTEX\MiKTeX\tex\latex\cjk\CJK.enc
+File: CJK.enc 2008/12/29 4.8.2
+)
+LaTeX Info: Redefining \selectfont on input line 756.
+\CJK@indent=\box35
+) (D:\Software\CTEX\CTeX\tex\latex\CJKpunct\CJKpunct.sty
+Package: CJKpunct 2010/02/21 4.8.2-2
+\CJKpunct@cnta=\count162
+\CJKpunct@cntb=\count163
+\CJKpunct@cntc=\count164
+\CJKpunct@cntd=\count165
+\CJKpunct@cnte=\count166
+ (D:\Software\CTEX\CTeX\tex\latex\CJKpunct\CJKpunct.spa)) (D:\Software\CTEX\MiKTeX\tex\latex\ctex\engine\ctex-cjk-common.def
+\ccwd=\dimen146
+) (D:\Software\CTEX\MiKTeX\tex\latex\ctex\fontset\ctex-cjk-winfonts.def (D:\Software\CTEX\MiKTeX\tex\generic\zhmetrics\zhwinfonts.tex (D:\Software\CTEX\MiKTeX\tex\generic\oberdiek\ifpdf.sty
+Package ifpdf Info: The package is already loaded, stopped on input line 64.
+){D:/Software/CTEX/UserData/pdftex/config/pdftex.map{Unicode.sfd}{UGBK.sfd}})))
+\CTEX@q=\count167
+\CTEX@r=\count168
+)) (D:\Software\CTEX\MiKTeX\tex\latex\ctex\def\ctex-gbk.def) (D:\Software\CTEX\MiKTeX\tex\latex\ctex\cfg\ctex.cfg) (D:\Software\CTEX\MiKTeX\tex\latex\ulem\ulem.sty
+\UL@box=\box36
+\UL@hyphenbox=\box37
+\UL@skip=\skip49
+\UL@hook=\toks17
+\UL@height=\dimen147
+\UL@pe=\count169
+\UL@pixel=\dimen148
+\ULC@box=\box38
+Package: ulem 2011/03/18
+\ULdepth=\dimen149
+) (D:\Software\CTEX\MiKTeX\tex\latex\cjk\CJKulem.sty
+Package: CJKulem 2008/12/29 4.8.2
+\UL@lastkern=\dimen150
+\CJK@skip=\skip50
+) (D:\Software\CTEX\CTeX\tex\latex\CJK\CJKfntef.sty
+Package: CJKfntef 2008/12/29 4.8.2
+\CJK@fntefSkip=\skip51
+\CJK@nest=\count170
+\CJK@fntefDimen=\dimen151
+\CJK@underdotBox=\box39
+\CJK@ULbox=\box40
+\CJK@underanyskip=\dimen152
+) (D:\Software\CTEX\MiKTeX\tex\latex\ams\math\amsmath.sty
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip52
+
+For additional information on amsmath, use the `?' option.
+(D:\Software\CTEX\MiKTeX\tex\latex\ams\math\amstext.sty
+Package: amstext 2000/06/29 v2.01
+ (D:\Software\CTEX\MiKTeX\tex\latex\ams\math\amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks18
+\ex@=\dimen153
+)) (D:\Software\CTEX\MiKTeX\tex\latex\ams\math\amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen154
+) (D:\Software\CTEX\MiKTeX\tex\latex\ams\math\amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count171
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count172
+\leftroot@=\count173
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count174
+\DOTSCASE@=\count175
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box41
+\strutbox@=\box42
+\big@size=\dimen155
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count176
+\c@MaxMatrixCols=\count177
+\dotsspace@=\muskip10
+\c@parentequation=\count178
+\dspbrk@lvl=\count179
+\tag@help=\toks19
+\row@=\count180
+\column@=\count181
+\maxfields@=\count182
+\andhelp@=\toks20
+\eqnshift@=\dimen156
+\alignsep@=\dimen157
+\tagshift@=\dimen158
+\tagwidth@=\dimen159
+\totwidth@=\dimen160
+\lineht@=\dimen161
+\@envbody=\toks21
+\multlinegap=\skip53
+\multlinetaggap=\skip54
+\mathdisplay@stack=\toks22
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+) (D:\Software\CTEX\MiKTeX\tex\latex\amsfonts\amssymb.sty
+Package: amssymb 2009/06/22 v3.00
+) (D:\Software\CTEX\MiKTeX\tex\latex\ams\classes\amsthm.sty
+Package: amsthm 2004/08/06 v2.20
+\thm@style=\toks23
+\thm@bodyfont=\toks24
+\thm@headfont=\toks25
+\thm@notefont=\toks26
+\thm@headpunct=\toks27
+\thm@preskip=\skip55
+\thm@postskip=\skip56
+\thm@headsep=\skip57
+\dth@everypar=\toks28
+) (D:\Software\CTEX\MiKTeX\tex\latex\jknappen\mathrsfs.sty
+Package: mathrsfs 1996/01/01 Math RSFS package v1.0 (jk)
+\symrsfs=\mathgroup6
+) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\circuitikz.sty
+Package: circuitikz 2009/11/18 The CircuiTikz circuit drawing package version 0.2.4
+ (D:\Software\CTEX\MiKTeX\tex\latex\pgf\frontendlayer\tikz.sty (D:\Software\CTEX\MiKTeX\tex\latex\pgf\basiclayer\pgf.sty (D:\Software\CTEX\MiKTeX\tex\latex\pgf\utilities\pgfrcs.sty (D:\Software\CTEX\MiKTeX\tex\generic\pgf\utilities\pgfutil-common.tex
+\pgfutil@everybye=\toks29
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\utilities\pgfutil-latex.def
+\pgfutil@abb=\box43
+ (D:\Software\CTEX\MiKTeX\tex\latex\ms\everyshi.sty
+Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\utilities\pgfrcs.code.tex
+Package: pgfrcs 2010/10/25 v2.10 (rcs-revision 1.24)
+))
+Package: pgf 2008/01/15 v2.10 (rcs-revision 1.12)
+ (D:\Software\CTEX\MiKTeX\tex\latex\pgf\basiclayer\pgfcore.sty (D:\Software\CTEX\MiKTeX\tex\latex\graphics\graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+\Gin@req@height=\dimen162
+\Gin@req@width=\dimen163
+) (D:\Software\CTEX\MiKTeX\tex\latex\pgf\systemlayer\pgfsys.sty (D:\Software\CTEX\MiKTeX\tex\generic\pgf\systemlayer\pgfsys.code.tex
+Package: pgfsys 2010/06/30 v2.10 (rcs-revision 1.37)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\utilities\pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks30
+\pgfkeys@temptoks=\toks31
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\utilities\pgfkeysfiltered.code.tex
+\pgfkeys@tmptoks=\toks32
+))
+\pgf@x=\dimen164
+\pgf@y=\dimen165
+\pgf@xa=\dimen166
+\pgf@ya=\dimen167
+\pgf@xb=\dimen168
+\pgf@yb=\dimen169
+\pgf@xc=\dimen170
+\pgf@yc=\dimen171
+\w@pgf@writea=\write3
+\r@pgf@reada=\read1
+\c@pgf@counta=\count183
+\c@pgf@countb=\count184
+\c@pgf@countc=\count185
+\c@pgf@countd=\count186
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\systemlayer\pgf.cfg
+File: pgf.cfg 2008/05/14  (rcs-revision 1.7)
+)
+Package pgfsys Info: Driver file for pgf: pgfsys-pdftex.def on input line 900.
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\systemlayer\pgfsys-pdftex.def
+File: pgfsys-pdftex.def 2009/05/22  (rcs-revision 1.26)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\systemlayer\pgfsys-common-pdf.def
+File: pgfsys-common-pdf.def 2008/05/19  (rcs-revision 1.10)
+))) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\systemlayer\pgfsyssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2008/07/18  (rcs-revision 1.7)
+\pgfsyssoftpath@smallbuffer@items=\count187
+\pgfsyssoftpath@bigbuffer@items=\count188
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\systemlayer\pgfsysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2006/10/16  (rcs-revision 1.4)
+)) (D:\Software\CTEX\MiKTeX\tex\latex\xcolor\xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+ (D:\Software\CTEX\MiKTeX\tex\latex\00miktex\color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+LaTeX Info: Redefining \color on input line 702.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcore.code.tex
+Package: pgfcore 2010/04/11 v2.10 (rcs-revision 1.7)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmath.code.tex (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathcalc.code.tex (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathutil.code.tex) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathparser.code.tex
+\pgfmath@dimen=\dimen172
+\pgfmath@count=\count189
+\pgfmath@box=\box44
+\pgfmath@toks=\toks33
+\pgfmath@stack@operand=\toks34
+\pgfmath@stack@operation=\toks35
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.code.tex (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.basic.code.tex) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.trigonometric.code.tex) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.random.code.tex) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.comparison.code.tex) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.base.code.tex) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.round.code.tex) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathfunctions.misc.code.tex))) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\math\pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count190
+)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepoints.code.tex
+File: pgfcorepoints.code.tex 2010/04/09  (rcs-revision 1.20)
+\pgf@picminx=\dimen173
+\pgf@picmaxx=\dimen174
+\pgf@picminy=\dimen175
+\pgf@picmaxy=\dimen176
+\pgf@pathminx=\dimen177
+\pgf@pathmaxx=\dimen178
+\pgf@pathminy=\dimen179
+\pgf@pathmaxy=\dimen180
+\pgf@xx=\dimen181
+\pgf@xy=\dimen182
+\pgf@yx=\dimen183
+\pgf@yy=\dimen184
+\pgf@zx=\dimen185
+\pgf@zy=\dimen186
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2010/08/03  (rcs-revision 1.24)
+\pgf@path@lastx=\dimen187
+\pgf@path@lasty=\dimen188
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathusage.code.tex
+File: pgfcorepathusage.code.tex 2008/04/22  (rcs-revision 1.12)
+\pgf@shorten@end@additional=\dimen189
+\pgf@shorten@start@additional=\dimen190
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcorescopes.code.tex
+File: pgfcorescopes.code.tex 2010/09/08  (rcs-revision 1.34)
+\pgfpic=\box45
+\pgf@hbox=\box46
+\pgf@layerbox@main=\box47
+\pgf@picture@serial@count=\count191
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcoregraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2008/04/22  (rcs-revision 1.9)
+\pgflinewidth=\dimen191
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcoretransformations.code.tex
+File: pgfcoretransformations.code.tex 2009/06/10  (rcs-revision 1.11)
+\pgf@pt@x=\dimen192
+\pgf@pt@y=\dimen193
+\pgf@pt@temp=\dimen194
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2008/10/09  (rcs-revision 1.3)
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreobjects.code.tex
+File: pgfcoreobjects.code.tex 2006/10/11  (rcs-revision 1.2)
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2008/10/09  (rcs-revision 1.8)
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcorearrows.code.tex
+File: pgfcorearrows.code.tex 2008/04/23  (rcs-revision 1.11)
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2008/11/23  (rcs-revision 1.13)
+\pgf@max=\dimen195
+\pgf@sys@shading@range@num=\count192
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2010/03/25  (rcs-revision 1.16)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcoreexternal.code.tex
+File: pgfcoreexternal.code.tex 2010/09/01  (rcs-revision 1.17)
+\pgfexternal@startupbox=\box48
+)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcorelayers.code.tex
+File: pgfcorelayers.code.tex 2010/08/27  (rcs-revision 1.2)
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcoretransparency.code.tex
+File: pgfcoretransparency.code.tex 2008/01/17  (rcs-revision 1.2)
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\basiclayer\pgfcorepatterns.code.tex
+File: pgfcorepatterns.code.tex 2009/07/02  (rcs-revision 1.3)
+))) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\modules\pgfmoduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2010/09/09  (rcs-revision 1.13)
+\pgfnodeparttextbox=\box49
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\modules\pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2010/10/22  (rcs-revision 1.8)
+) (D:\Software\CTEX\MiKTeX\tex\latex\pgf\compatibility\pgfcomp-version-0-65.sty
+Package: pgfcomp-version-0-65 2007/07/03 v2.10 (rcs-revision 1.7)
+\pgf@nodesepstart=\dimen196
+\pgf@nodesepend=\dimen197
+) (D:\Software\CTEX\MiKTeX\tex\latex\pgf\compatibility\pgfcomp-version-1-18.sty
+Package: pgfcomp-version-1-18 2007/07/23 v2.10 (rcs-revision 1.1)
+)) (D:\Software\CTEX\MiKTeX\tex\latex\pgf\utilities\pgffor.sty (D:\Software\CTEX\MiKTeX\tex\latex\pgf\utilities\pgfkeys.sty (D:\Software\CTEX\MiKTeX\tex\generic\pgf\utilities\pgfkeys.code.tex)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\utilities\pgffor.code.tex
+Package: pgffor 2010/03/23 v2.10 (rcs-revision 1.18)
+\pgffor@iter=\dimen198
+\pgffor@skip=\dimen199
+\pgffor@stack=\toks36
+\pgffor@toks=\toks37
+)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\tikz.code.tex
+Package: tikz 2010/10/13 v2.10 (rcs-revision 1.76)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\libraries\pgflibraryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2010/05/31 v2.10 (rcs-revision 1.15)
+\pgf@plot@mark@count=\count193
+\pgfplotmarksize=\dimen200
+)
+\tikz@lastx=\dimen201
+Normal \dimen register pool exhausted, switching to extended pool.
+\tikz@lasty=\dimen256
+\tikz@lastxsaved=\dimen257
+\tikz@lastysaved=\dimen258
+\tikzleveldistance=\dimen259
+\tikzsiblingdistance=\dimen260
+\tikz@figbox=\box50
+\tikz@tempbox=\box51
+\tikztreelevel=\count194
+\tikznumberofchildren=\count195
+\tikznumberofcurrentchild=\count196
+\tikz@fig@count=\count197
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\modules\pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2010/08/24  (rcs-revision 1.4)
+\pgfmatrixcurrentrow=\count198
+\pgfmatrixcurrentcolumn=\count199
+\pgf@matrix@numberofcolumns=\count200
+)
+\tikz@expandcount=\count201
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2008/06/17 v2.10 (rcs-revision 1.2)
+))) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarycalc.code.tex
+File: tikzlibrarycalc.code.tex 2009/09/04 v2.10 (rcs-revision 1.6)
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\libraries\decorations\pgflibrarydecorations.pathmorphing.code.tex (D:\Software\CTEX\MiKTeX\tex\generic\pgf\modules\pgfmoduledecorations.code.tex
+\pgfdecoratedcompleteddistance=\dimen261
+\pgfdecoratedremainingdistance=\dimen262
+\pgfdecoratedinputsegmentcompleteddistance=\dimen263
+\pgfdecoratedinputsegmentremainingdistance=\dimen264
+\pgf@decorate@distancetomove=\dimen265
+Normal \count register pool exhausted, switching to extended pool.
+\pgf@decorate@repeatstate=\count277
+\pgfdecorationsegmentamplitude=\dimen266
+\pgfdecorationsegmentlength=\dimen267
+)) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\circuitikz.code.tex
+\pgf@circ@Rlen=\dimen268
+ (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\pgfcircutils.sty) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\pgfcircmath.sty) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\pgfcircshapes.sty) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\pgfcircmonopoles.sty) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\pgfcircbipoles.sty) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\pgfcirctripoles.sty) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\pgfcircquadpoles.sty) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\pgfcirclabel.sty) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\pgfcircvoltage.sty) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\pgfcirccurrent.sty)) (D:\Software\CTEX\MiKTeX\tex\latex\circuitikz\circuitikz1.code.tex
+\pgf@circ@res@up=\dimen269
+\pgf@circ@res@down=\dimen270
+\pgf@circ@res@zero=\dimen271
+\pgf@circ@res@left=\dimen272
+\pgf@circ@res@right=\dimen273
+\pgf@circ@res@other=\dimen274
+\pgf@circ@res@step=\dimen275
+\pgfstartlinewidth=\dimen276
+)) (D:\Software\CTEX\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+\fancy@headwidth=\skip58
+\f@ncyO@elh=\skip59
+\f@ncyO@erh=\skip60
+\f@ncyO@olh=\skip61
+\f@ncyO@orh=\skip62
+\f@ncyO@elf=\skip63
+\f@ncyO@erf=\skip64
+\f@ncyO@olf=\skip65
+\f@ncyO@orf=\skip66
+) (D:\Software\CTEX\MiKTeX\tex\latex\booktabs\booktabs.sty
+Package: booktabs 2005/04/14 v1.61803 publication quality tables
+\heavyrulewidth=\dimen277
+\lightrulewidth=\dimen278
+\cmidrulewidth=\dimen279
+\belowrulesep=\dimen280
+\belowbottomsep=\dimen281
+\aboverulesep=\dimen282
+\abovetopsep=\dimen283
+\cmidrulesep=\dimen284
+\cmidrulekern=\dimen285
+\defaultaddspace=\dimen286
+\@cmidla=\count278
+\@cmidlb=\count279
+\@aboverulesep=\dimen287
+\@belowrulesep=\dimen288
+\@thisruleclass=\count280
+\@lastruleclass=\count281
+\@thisrulewidth=\dimen289
+) (D:\Software\CTEX\MiKTeX\tex\latex\multirow\multirow.sty
+\bigstrutjot=\dimen290
+) (D:\Software\CTEX\MiKTeX\tex\latex\tools\bm.sty
+Package: bm 2004/02/26 v1.1c Bold Symbol Support (DPC/FMi)
+\symboldoperators=\mathgroup7
+\symboldletters=\mathgroup8
+\symboldsymbols=\mathgroup9
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 138.
+LaTeX Info: Redefining \bm on input line 204.
+) (D:\Software\CTEX\MiKTeX\tex\latex\base\latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup10
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 47.
+) (D:\Software\CTEX\MiKTeX\tex\latex\oberdiek\epstopdf.sty
+Package: epstopdf 2010/02/09 v2.5 Conversion with epstopdf on the fly (HO)
+ (D:\Software\CTEX\MiKTeX\tex\latex\oberdiek\epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+ (D:\Software\CTEX\MiKTeX\tex\latex\oberdiek\grfext.sty
+Package: grfext 2010/08/19 v1.1 Managing graphics extensions (HO)
+ (D:\Software\CTEX\MiKTeX\tex\generic\oberdiek\kvdefinekeys.sty
+Package: kvdefinekeys 2011/04/07 v1.3 Defining keys (HO)
+)) (D:\Software\CTEX\MiKTeX\tex\latex\oberdiek\kvoptions.sty
+Package: kvoptions 2010/12/23 v3.10 Keyval support for LaTeX options (HO)
+ (D:\Software\CTEX\MiKTeX\tex\generic\oberdiek\kvsetkeys.sty
+Package: kvsetkeys 2011/04/07 v1.13 Key value parser (HO)
+ (D:\Software\CTEX\MiKTeX\tex\generic\oberdiek\etexcmds.sty
+Package: etexcmds 2011/02/16 v1.5 Prefix for e-TeX command names (HO)
+ (D:\Software\CTEX\MiKTeX\tex\generic\oberdiek\ifluatex.sty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+))) (D:\Software\CTEX\MiKTeX\tex\generic\oberdiek\pdftexcmds.sty
+Package: pdftexcmds 2011/04/22 v0.16 Utilities of pdfTeX for LuaTeX (HO)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+)) (D:\Software\CTEX\MiKTeX\tex\latex\subfig\subfig.sty
+Package: subfig 2005/06/28 ver: 1.3 subfig package
+ (D:\Software\CTEX\MiKTeX\tex\latex\caption\caption.sty
+Package: caption 2011/11/10 v3.2e Customizing captions (AR)
+ (D:\Software\CTEX\MiKTeX\tex\latex\caption\caption3.sty
+Package: caption3 2011/11/01 v1.4a caption3 kernel (AR)
+\captionmargin=\dimen291
+\captionmargin@=\dimen292
+\captionwidth=\dimen293
+\caption@indent=\dimen294
+\caption@parindent=\dimen295
+\caption@hangindent=\dimen296
+)
+\c@ContinuedFloat=\count282
+)
+\c@KVtest=\count283
+\sf@farskip=\skip67
+\sf@captopadj=\dimen297
+\sf@capskip=\skip68
+\sf@nearskip=\skip69
+\c@subfigure=\count284
+\c@subfigure@save=\count285
+\c@lofdepth=\count286
+\c@subtable=\count287
+\c@subtable@save=\count288
+\c@lotdepth=\count289
+\sf@top=\skip70
+\sf@bottom=\skip71
+) (D:\Software\CTEX\MiKTeX\tex\latex\cjk\standard.bdg
+File: standard.bdg 2008/12/29 4.8.2
+) (D:\Software\CTEX\MiKTeX\tex\latex\cjk\extended.enc
+File: extended.enc 2008/12/29 4.8.2
+) (D:\Software\CTEX\MiKTeX\tex\latex\cjk\extended.chr
+File: extended.chr 2008/12/29 4.8.2
+)
+\c@dingyi=\count290
+\c@dingli=\count291
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.pathmorphing.code.tex (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarydecorations.code.tex
+\tikz@lib@dec@box=\box52
+)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibrarymatrix.code.tex
+File: tikzlibrarymatrix.code.tex 2008/06/18 v2.10 (rcs-revision 1.2)
+) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryarrows.code.tex
+File: tikzlibraryarrows.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\libraries\pgflibraryarrows.code.tex
+File: pgflibraryarrows.code.tex 2008/10/27 v2.10 (rcs-revision 1.9)
+\arrowsize=\dimen298
+)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryshapes.code.tex
+File: tikzlibraryshapes.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryshapes.geometric.code.tex
+File: tikzlibraryshapes.geometric.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\libraries\shapes\pgflibraryshapes.geometric.code.tex
+File: pgflibraryshapes.geometric.code.tex 2008/06/26 v2.10 (rcs-revision 1.1)
+)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryshapes.misc.code.tex
+File: tikzlibraryshapes.misc.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\libraries\shapes\pgflibraryshapes.misc.code.tex
+File: pgflibraryshapes.misc.code.tex 2008/10/07 v2.10 (rcs-revision 1.3)
+)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryshapes.symbols.code.tex
+File: tikzlibraryshapes.symbols.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\libraries\shapes\pgflibraryshapes.symbols.code.tex
+File: pgflibraryshapes.symbols.code.tex 2009/10/27 v2.10 (rcs-revision 1.3)
+)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryshapes.arrows.code.tex
+File: tikzlibraryshapes.arrows.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\libraries\shapes\pgflibraryshapes.arrows.code.tex
+File: pgflibraryshapes.arrows.code.tex 2008/06/26 v2.10 (rcs-revision 1.1)
+)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryshapes.callouts.code.tex (D:\Software\CTEX\MiKTeX\tex\generic\pgf\libraries\shapes\pgflibraryshapes.callouts.code.tex)) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryshapes.multipart.code.tex
+File: tikzlibraryshapes.multipart.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\libraries\shapes\pgflibraryshapes.multipart.code.tex
+File: pgflibraryshapes.multipart.code.tex 2010/01/07 v2.10 (rcs-revision 1.2)
+\pgfnodepartlowerbox=\box53
+\pgfnodeparttwobox=\box54
+\pgfnodepartthreebox=\box55
+\pgfnodepartfourbox=\box56
+\pgfnodeparttwentybox=\box57
+\pgfnodepartnineteenbox=\box58
+\pgfnodeparteighteenbox=\box59
+\pgfnodepartseventeenbox=\box60
+\pgfnodepartsixteenbox=\box61
+\pgfnodepartfifteenbox=\box62
+\pgfnodepartfourteenbox=\box63
+\pgfnodepartthirteenbox=\box64
+\pgfnodeparttwelvebox=\box65
+\pgfnodepartelevenbox=\box66
+\pgfnodeparttenbox=\box67
+\pgfnodepartninebox=\box68
+\pgfnodeparteightbox=\box69
+\pgfnodepartsevenbox=\box70
+\pgfnodepartsixbox=\box71
+\pgfnodepartfivebox=\box72
+))) (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryshadows.code.tex
+File: tikzlibraryshadows.code.tex 2008/01/13 v2.10 (rcs-revision 1.3)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\frontendlayer\tikz\libraries\tikzlibraryfadings.code.tex
+File: tikzlibraryfadings.code.tex 2009/11/15 v2.10 (rcs-revision 1.2)
+ (D:\Software\CTEX\MiKTeX\tex\generic\pgf\libraries\pgflibraryfadings.code.tex
+File: pgflibraryfadings.code.tex 2008/02/07 v2.10 (rcs-revision 1.3)
+))) (d:\Data\Group_B_Luo\521_BoZheXu\communication\hunt_handover\docs\算法设计.aux
+
+LaTeX Warning: Label `utils' multiply defined.
+
+
+LaTeX Warning: Label `robots_control' multiply defined.
+
+)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C00/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C05/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C09/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C10/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C20/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C19/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C40/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C42/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C43/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C50/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C52/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C49/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C60/mj/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C61/mj/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C63/mj/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C64/mj/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C65/mj/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C70/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C31/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C32/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C33/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C34/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C35/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C36/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C37/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C80/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C81/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C01/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C11/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C21/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C41/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+LaTeX Font Info:    Checking defaults for C62/song/m/n on input line 116.
+LaTeX Font Info:    ... okay on input line 116.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(88.2037pt, 421.10046pt, 88.2037pt)
+* v-part:(T,H,B)=(71.13188pt, 702.78308pt, 71.13188pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=421.10046pt
+* \textheight=702.78308pt
+* \oddsidemargin=15.93372pt
+* \evensidemargin=15.93372pt
+* \topmargin=-38.1381pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=57.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+(D:\Software\CTEX\MiKTeX\tex\context\base\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count292
+\scratchdimen=\dimen299
+\scratchbox=\box73
+\nofMPsegments=\count293
+\nofMParguments=\count294
+\everyMPshowfont=\toks38
+\MPscratchCnt=\count295
+\MPscratchDim=\dimen300
+\MPnumerator=\count296
+\makeMPintoPDFobject=\count297
+\everyMPtoPDFconversion=\toks39
+) ABD: EveryShipout initializing macros
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: subfig package v1.3 is loaded.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Try loading font information for C19+song on input line 120.
+ (D:\Software\CTEX\CTeX\tex\latex\CJK\GB\c19song.fd
+File: c19song.fd 2009/09/23 4.8.2
+)
+Package CJKpunct Info: use punctuation spaces for family 'song' with punctstyle (quanjiao) on input line 120.
+LaTeX Font Info:    Try loading font information for C19+hei on input line 133.
+ (D:\Software\CTEX\CTeX\tex\latex\CJK\GB\c19hei.fd
+File: c19hei.fd 2009/09/23 4.8.2
+)
+LaTeX Font Info:    Try loading font information for C19+kai on input line 143.
+ (D:\Software\CTEX\CTeX\tex\latex\CJK\GB\c19kai.fd
+File: c19kai.fd 2009/09/23 4.8.2
+)
+LaTeX Font Info:    Calculating math sizes for size <14> on input line 143.
+LaTeX Font Info:    Try loading font information for U+msa on input line 143.
+ (D:\Software\CTEX\MiKTeX\tex\latex\amsfonts\umsa.fd
+File: umsa.fd 2009/06/22 v3.00 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 143.
+ (D:\Software\CTEX\MiKTeX\tex\latex\amsfonts\umsb.fd
+File: umsb.fd 2009/06/22 v3.00 AMS symbols B
+)
+LaTeX Font Info:    Try loading font information for U+rsfs on input line 143.
+ (D:\Software\CTEX\MiKTeX\tex\latex\jknappen\ursfs.fd
+File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
+)
+Package CJKpunct Info: use punctuation spaces for family 'kai' with punctstyle (quanjiao) on input line 143.
+ [1
+
+]
+
+pdfTeX warning: pdflatex (file d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/topology.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/topology.pdf, id=72, 554.07pt x 312.76851pt>
+File: images/topology.pdf Graphic file (type pdf)
+ <use images/topology.pdf>
+Package pdftex.def Info: images/topology.pdf used on input line 191.
+(pdftex.def)             Requested size: 387.84636pt x 218.93645pt.
+LaTeX Font Info:    Try loading font information for C19+rm on input line 192.
+ (D:\Software\CTEX\MiKTeX\tex\latex\ctex\fd\c19rm.fd
+File: c19rm.fd 2007/05/06 v0.8a ctex font definition file
+) [2 <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/topology.pdf>]
+
+pdfTeX warning: pdflatex (file d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/SVF_Model.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/SVF_Model.pdf, id=109, 206.91605pt x 165.10484pt>
+File: images/SVF_Model.pdf Graphic file (type pdf)
+ <use images/SVF_Model.pdf>
+Package pdftex.def Info: images/SVF_Model.pdf used on input line 237.
+(pdftex.def)             Requested size: 237.95158pt x 189.86908pt.
+ [3 <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/SVF_Model.pdf>]
+
+pdfTeX warning: pdflatex (file d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/heading_obs3.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/heading_obs3.pdf, id=139, 113.1411pt x 51.00606pt>
+File: images/heading_obs3.pdf Graphic file (type pdf)
+ <use images/heading_obs3.pdf>
+Package pdftex.def Info: images/heading_obs3.pdf used on input line 292.
+(pdftex.def)             Requested size: 226.28162pt x 102.01184pt.
+
+
+pdfTeX warning: pdflatex (file d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/heading_obs_border.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/heading_obs_border.pdf, id=140, 100.82047pt x 89.65364pt>
+File: images/heading_obs_border.pdf Graphic file (type pdf)
+ <use images/heading_obs_border.pdf>
+Package pdftex.def Info: images/heading_obs_border.pdf used on input line 306.
+(pdftex.def)             Requested size: 151.2303pt x 134.48009pt.
+ [4 <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/heading_obs3.pdf>]
+Overfull \hbox (12.91115pt too wide) in paragraph at lines 321--322
+[]\C19/kai/m/n/14/45 b \C19/kai/m/n/14/40 �$\OML/cmm/m/it/14 t$\C19/kai/m/n/14/55 � \C19/kai/m/n/14/47 � \C19/kai/m/n/14/42 � \C19/kai/m/n/14/57 N$\OMS/cmsy/m/n/14 R$\C19/kai/m/n/14/40  \C19/kai/m/n/14/43 * \C19/kai/m/n/14/38 	 \C19/kai/m/n/14/41 � \C19/kai/m/n/14/58 � �$\OT1/cmr/m/n/14 [\OML/cmm/m/it/14 k\OT1/cmr/m/n/14 ] = []$|\C19/kai/m/n/14/26 �|
+ []
+
+
+
+pdfTeX warning: pdflatex (file d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/heading_obs_all.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/heading_obs_all.pdf, id=170, 180.26337pt x 153.28857pt>
+File: images/heading_obs_all.pdf Graphic file (type pdf)
+ <use images/heading_obs_all.pdf>
+Package pdftex.def Info: images/heading_obs_all.pdf used on input line 325.
+(pdftex.def)             Requested size: 270.39436pt x 229.93228pt.
+ [5 <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/heading_obs_border.pdf> <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/heading_obs_all.pdf>] [6]
+
+pdfTeX warning: pdflatex (file d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/heading_obs_all2_2.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/heading_obs_all2_2.pdf, id=215, 182.18031pt x 151.56656pt>
+File: images/heading_obs_all2_2.pdf Graphic file (type pdf)
+ <use images/heading_obs_all2_2.pdf>
+Package pdftex.def Info: images/heading_obs_all2_2.pdf used on input line 361.
+(pdftex.def)             Requested size: 236.83437pt x 197.03648pt.
+ [7 <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/heading_obs_all2_2.pdf>]
+
+pdfTeX warning: pdflatex (file d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/data_i2.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/data_i2.pdf, id=240, 375.07428pt x 130.47746pt>
+File: images/data_i2.pdf Graphic file (type pdf)
+ <use images/data_i2.pdf>
+Package pdftex.def Info: images/data_i2.pdf used on input line 391.
+(pdftex.def)             Requested size: 375.07335pt x 130.47714pt.
+ [8 <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/data_i2.pdf>] <images/data_interaction/model.pdf, id=264, 3866.445pt x 233.87375pt>
+File: images/data_interaction/model.pdf Graphic file (type pdf)
+ <use images/data_interaction/model.pdf>
+Package pdftex.def Info: images/data_interaction/model.pdf used on input line 415.
+(pdftex.def)             Requested size: 425.31027pt x 25.72618pt.
+
+Overfull \hbox (4.20981pt too wide) in paragraph at lines 415--415
+ [][] 
+ []
+
+<images/data_interaction/init.pdf, id=265, 827.09pt x 222.8325pt>
+File: images/data_interaction/init.pdf Graphic file (type pdf)
+ <use images/data_interaction/init.pdf>
+Package pdftex.def Info: images/data_interaction/init.pdf used on input line 421.
+(pdftex.def)             Requested size: 206.77199pt x 55.70798pt.
+File: images/data_interaction/init.pdf Graphic file (type pdf)
+ <use images/data_interaction/init.pdf>
+Package pdftex.def Info: images/data_interaction/init.pdf used on input line 427.
+(pdftex.def)             Requested size: 206.77199pt x 55.70798pt.
+ <images/data_interaction/robots_control.pdf, id=266, 1312.905pt x 313.17pt>
+File: images/data_interaction/robots_control.pdf Graphic file (type pdf)
+ <use images/data_interaction/robots_control.pdf>
+Package pdftex.def Info: images/data_interaction/robots_control.pdf used on input line 433.
+(pdftex.def)             Requested size: 328.22545pt x 78.2923pt.
+File: images/data_interaction/robots_control.pdf Graphic file (type pdf)
+ <use images/data_interaction/robots_control.pdf>
+Package pdftex.def Info: images/data_interaction/robots_control.pdf used on input line 439.
+(pdftex.def)             Requested size: 328.22545pt x 78.2923pt.
+ <images/data_interaction/targets_control.pdf, id=267, 412.54124pt x 313.17pt>
+File: images/data_interaction/targets_control.pdf Graphic file (type pdf)
+ <use images/data_interaction/targets_control.pdf>
+Package pdftex.def Info: images/data_interaction/targets_control.pdf used on input line 445.
+(pdftex.def)             Requested size: 103.13506pt x 78.2923pt.
+ [9 <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/data_interaction/model.pdf> <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/data_interaction/init.pdf> <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/data_interaction/robots_control.pdf> <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/data_interaction/targets_control.pdf>] <images/files.png, id=300, 712.6625pt x 591.71063pt>
+File: images/files.png Graphic file (type png)
+ <use images/files.png>
+Package pdftex.def Info: images/files.png used on input line 463.
+(pdftex.def)             Requested size: 427.6008pt x 355.02911pt.
+
+Overfull \hbox (6.50034pt too wide) in paragraph at lines 463--463
+ [][] 
+ []
+
+Package CJKpunct Info: use punctuation spaces for family 'hei' with punctstyle (quanjiao) on input line 475.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[10 <d:/Data/Group_B_Luo/521_BoZheXu/communication/hunt_handover/docs/images/files.png>] [11] (d:\Data\Group_B_Luo\521_BoZheXu\communication\hunt_handover\docs\算法设计.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 26548 strings out of 495354
+ 542217 string characters out of 3183355
+ 654046 words of memory out of 3000000
+ 29030 multiletter control sequences out of 15000+200000
+ 55532 words of font info for 197 fonts, out of 3000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 63i,13n,73p,820b,647s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simkai.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simhei.ttf><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><C:/WINDOWS/Fonts/simsun.ttc><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><D:/Software/CTEX/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on 算法设计.pdf (11 pages, 1064354 bytes).
+PDF statistics:
+ 629 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 169 words of extra memory for PDF output out of 10000 (max. 10000000)
+

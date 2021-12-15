@@ -1,0 +1,987 @@
+
+%============苏友峰=======================================================%
+\documentclass[a4paper]{article} %[11pt,a4paper]
+\usepackage[left=3.1cm,right=3.1cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{amsfonts}
+%%\usepackage{setspace}
+\usepackage{ctex} %[UTF8]
+
+\usepackage{ulem,CJKulem,CJKfntef}
+
+\newcommand{\upcite}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}}
+
+\usepackage{amsmath,amssymb,amsthm,ulem} % AMSLaTeX宏包 用来排出更加漂亮的公式
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{circuitikz}
+\usepackage{fancyhdr}
+\pagestyle{empty}
+\DeclareMathOperator{\ray}{ray}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{CJK}% 中文支持宏包
+\usepackage{color}
+\usepackage{bm}         % 处理数学公式中的黑斜体的宏包
+\usepackage{indentfirst} % 首行缩进宏包
+\usepackage{latexsym}   % 用来排数学公式
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{graphics}
+\usepackage{subfig}
+
+\newcommand{\col}{\hbox{col}}
+
+%===================== 重定义字体、字号命令 ==============================%
+\newcommand{\song}{\CJKfamily{song}}    % 宋体   (Windows自带simsun.ttf)
+\newcommand{\fs}{\CJKfamily{fs}}        % 仿宋体 (Windows自带simfs.ttf)
+\newcommand{\kai}{\CJKfamily{kai}}      % 楷体   (Windows自带simkai.ttf)
+\newcommand{\hei}{\CJKfamily{hei}}      % 黑体   (Windows自带simhei.ttf)
+\newcommand{\li}{\CJKfamily{li}}        % 隶书   (Windows自带simli.ttf)
+\newcommand{\you}{\CJKfamily{you}}      % 幼圆   (Windows自带simyou.ttf)
+%
+\newcommand{\chuhao}{\fontsize{42pt}{\baselineskip}\selectfont}     % 字号设置
+\newcommand{\xiaochuhao}{\fontsize{36pt}{\baselineskip}\selectfont} % 字号设置
+\newcommand{\yihao}{\fontsize{28pt}{\baselineskip}\selectfont}      % 字号设置
+\newcommand{\erhao}{\fontsize{21pt}{\baselineskip}\selectfont}      % 字号设置
+\newcommand{\xiaoerhao}{\fontsize{18pt}{\baselineskip}\selectfont}  % 字号设置
+\newcommand{\sanhao}{\fontsize{16pt}{\baselineskip}\selectfont}  % 字号设置
+\newcommand{\xiaosanhao}{\fontsize{15pt}{\baselineskip}\selectfont}  % 字号设置
+\newcommand{\sihao}{\fontsize{14pt}{\baselineskip}\selectfont}      % 字号设置
+\newcommand{\xiaosihao}{\fontsize{12pt}{14pt}\selectfont}  % 字号设置
+\newcommand{\wuhao}{\fontsize{10.5pt}{12.6pt}\selectfont}    % 字号设置
+\newcommand{\xiaowuhao}{\fontsize{9pt}{\baselineskip}\selectfont}   % 字号设置
+\newcommand{\liuhao}{\fontsize{7.875pt}{\baselineskip}\selectfont}  % 字号设置
+\newcommand{\qihao}{\fontsize{5.25pt}{\baselineskip}\selectfont}    % 字号设置
+
+%========================================================================%
+\CJKtilde   %用于解决英文字母和汉字的间距问题。例如：变量~$x$~的值。
+            %这个命令重新定义~。等价于 \def~{\hspace{0.25em plus 0.125em minus 0.08em}}
+            %若想恢复~,则用命令 \standardtilde 。
+
+%===================== 自定义命令 =======================================%
+\begin{CJK*}{GBK}{song}
+\newtheorem{dingyi}{\hei 定义~}
+\newtheorem{dingli}{\hei 定理~}
+\newtheorem{yinli}[dingli]{\hei 引理~}
+\newtheorem{tuilun}[dingli]{\hei 推论~}
+\newtheorem{suanfa}[dingli]{\hei 算法~}
+\newtheorem*{zhu}{\hei 注~}
+\end{CJK*}
+\renewcommand*\tablename{\hei 表}
+\renewcommand*\figurename{\hei 图}
+
+
+
+%中文汉字与标点间距为\CJKglue，更改这个值即可调整"全文中文及中文标点"之间的距离。
+%默认值为\newcommand{\CJKglue}{\hskip 0pt plus 0.08\baselineskip}
+%或增加1cm,则可借助于\renewcommand修改成：
+%\renewcommand{\CJKglue}{\hskip 1cm plus 0.08\baselineskip}
+
+
+% \renewcommand{\CJKglue}{\hskip 0.08pt plus 0.08\baselineskip}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing} % for snake lines
+\usetikzlibrary{matrix} % for block alignment
+\usetikzlibrary{arrows} % for arrow heads
+\usetikzlibrary{calc} % for manimulation of coordinates
+
+\usetikzlibrary{shapes,arrows,shadows}
+
+\tikzstyle{block0} = [draw,red,ultra thick,rounded corners,dashed,minimum height=2em,minimum width=2em]
+\tikzstyle{block} = [draw,rectangle,rounded corners,thick,minimum height=2em,minimum width=2em,align=center,fill=red!20,drop shadow]
+
+\tikzstyle{blockbig} = [draw,rectangle,rounded corners,thick,minimum height=8em,minimum width=6em,fill=green!20,drop shadow]
+\tikzstyle{sum} = [draw,thick,circle,inner sep=0mm,minimum size=2mm]
+\tikzstyle{connector} = [->,thick]
+\tikzstyle{line} = [thick]
+\tikzstyle{dot} = [circle,inner sep=0pt,minimum size=1mm,fill=black,draw=black]
+\tikzstyle{branch} = [circle,inner sep=0pt,minimum size=1mm,fill=black,draw=black]
+\tikzstyle{guide} = []
+\tikzstyle{snakeline} = [connector, decorate, decoration={pre length=0.2cm,
+                         post length=0.2cm, snake, amplitude=.4mm,
+                         segment length=2mm},thick, magenta, ->]
+
+
+\renewcommand{\vec}[1]{\ensuremath{\boldsymbol{#1}}} % bold vectors
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength\parskip{0.8\baselineskip}
+
+\xiaosihao
+
+
+\begin{document}
+\begin{CJK*}{GBK}{song}
+
+
+\CJKindent
+
+\newpage
+
+\song\sanhao
+
+\begin{center}
+\textbf{说明文档}
+\end{center}
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{一.~算法详细介绍}}
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{1.1.~数学定义}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+
+对一向量$\bm{c}=[c_x,c_y]^T$，可定义其在全局坐标系$xOy$中的方向角$\angle{\bm{c}} \in [0,2\pi)$为
+\begin{equation}\label{angle}
+  \angle{\bm{c}} = \left\{\begin{array}{ll}
+    \arctan \dfrac{c_y}{c_x}, & c_x>0 \land c_y\geqslant0 \\[4mm]
+    \arctan \dfrac{c_y}{c_x}+2\pi, & c_x>0 \land c_y<0 \\[4mm]
+    \arctan \dfrac{c_y}{c_x}+\pi, & c_x < 0 \\[4mm]
+    \dfrac{\pi}{2}, & c_x=0 \land c_y>0 \\[4mm]
+    \dfrac{3\pi}{2}, & c_x=0 \land c_y<0
+    \end{array}\right.
+\end{equation}
+
+对两个方向角$a\in [0,2\pi)$，$b\in [0,2\pi)$，它们的角度差为
+\begin{equation}\label{dif}
+  \text{dif}(a,b)=\left\{\begin{array}{ll}
+    2\pi-|a-b|, & |a-b|>\pi \\
+    |a-b|, & |a-b|\leqslant\pi
+    \end{array}\right.
+\end{equation}
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{1.2.~运动学方程}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+围捕机器人和目标的运动学方程为：
+\begin{equation}\label{kinematic}
+\begin{aligned}
+  &p_x[k+1] = p_x[k] + v[k] \cos \theta[k] \cdot T_s \\
+  &p_y[k+1] = p_y[k] + v[k] \sin \theta[k] \cdot T_s \\
+  &\theta[k+1] = \theta[k] + \omega[k] \cdot T_s
+\end{aligned}
+\end{equation}
+其中$p_x[k]$，$p_y[k]$分别表示该个体第$k$步时在$xOy$全局坐标系中的$x$坐标和$y$坐标，$\theta[k]\in[0,2\pi)$表示在$xOy$全局坐标系中从$x$轴正方向顺时针旋转到该个体第$k$步时车头方向的角度，$v[k]$表示第$k$步时该个体的控制输入线速度，$\omega[k]$表示第$k$步时该个体的控制输入角速度，$T_s$为仿真的采样时间。
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{1.3.~拓扑结构}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+
+本文所描述的围捕-逃脱仿真模型为根据距离的时变拓扑结构，目标只有在围捕机器人的观察范围内时才可被获取到相对位置信息，而围捕机器人之间可以全局通信。以围捕机器人数量是5，目标数量是1的情况为例，有下图：
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{images/topology.pdf}\\
+  \caption{拓扑结构图}\label{topology}
+\end{figure}
+
+图\ref{topology}中的实线表示，在任意条件下都可以通信，虚线表示当虚线连接的另一节点和本节点距离小于本节点的感知距离时，本节点即可获得另一端节点的相对位置信息。
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{1.4.~围捕策略}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+在不考虑避障的情况下，机器人$\mathcal{R}_i$的速度设计为：
+\begin{equation}\label{nu}
+  \bm{\nu}_i[k]=\bm{\nu}_{i1}[k]+\bm{\nu}_{i2}[k].
+\end{equation}
+
+\hei\xiaosihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{1.4.1.~前进速度}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+围捕机器人的前进速度为：
+\begin{equation}\label{attract}
+  \bm{\nu}_{i1}[k] = \left\{\begin{array}{ll}
+    \displaystyle\frac{\alpha(d_{ti}[k]-r_h)}{d_{ti}^{\tau_1}[k]}(\bm{p}_0[k]-\bm{p}_i[k]), & d_{ti}[k]\leqslant r_w \\[4mm]
+
+    \alpha\varsigma(\bm{p}_j[k]-\bm{p}_i[k])\cdot d_{ij}^{\tau_2}[k], & d_{ti}[k] > r_w
+    \end{array}\right.
+\end{equation}
+其中$\bm{p}_j$是离$\mathcal{R}_i$最近的能观察到目标的围捕机器人$\mathcal{R}_j$的坐标，$\alpha$，$\varsigma$，$\tau_1$，$\tau_2$是系数，$d_{ti}[k]=|| \bm{p}_i[k]-\bm{p}_0[k]||$，$d_{ij}[k]=|| \bm{p}_j[k]-\bm{p}_i[k]||$，$r_w$是围捕机器人的观察范围。
+
+ 
+\hei\xiaosihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{1.4.2.~排斥速度}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=1.15]{images/SVF_Model.pdf}\\
+  \caption{$x'Oy'$坐标系}\label{SVF_model}
+\end{figure}
+
+以目标所在方向为$y'$轴，$y'$轴顺时针旋转$\pi/2$为$x'$轴建立$x'Oy'$坐标系。
+
+机器人的排斥速度为
+\begin{equation}\label{repulsion}
+  \bm{\nu}_{i2}[k]=\left\{\begin{array}{lr}
+    \bm{\nu}_{2pi}[k]+\bm{\nu}_{2qi}[k],\ \ & d_{pi}[k]<r_w,\ d_{qi}[k]<r_w \\
+    \bm{\nu}_{2pi}[k], & d_{pi}[k]<r_w,\ d_{qi}[k]\geqslant r_w \\
+    \bm{\nu}_{2qi}[k], & d_{pi}[k]\geqslant r_w,\ d_{qi}[k]<r_w \\
+    0, & d_{pi}[k]\geqslant r_w,\ d_{qi}[k]\geqslant r_w
+    \end{array}\right.
+\end{equation}
+其中$\bm{u}$是图\ref{SVF_model}中的$x'Oy'$坐标系$x'$轴正方向的单位向量，
+\begin{equation}\label{transform1}
+\begin{aligned}
+\bm{\nu}_{2pi}[k]=||\bm{\nu}_{2fpi}[k]||\cos \theta_{pi}[k]\cdot\bm{u}\\
+\bm{\nu}_{2qi}[k]=||\bm{\nu}_{2fqi}[k]||\cos \theta_{qi}[k]\cdot\bm{u}
+\end{aligned}
+\end{equation}
+\begin{equation}\label{transform2}
+\begin{aligned}
+\bm{\nu}_{2fpi}[k]=\beta\dfrac{\bm{p}_i[k]-\bm{p}_p[k]}{||\bm{p}_i[k]-\bm{p}_p[k]||^{\tau_3}}\\
+\bm{\nu}_{2fqi}[k]=\beta\dfrac{\bm{p}_i[k]-\bm{p}_q[k]}{||\bm{p}_i[k]-\bm{p}_q[k]||^{\tau_3}}
+\end{aligned}
+\end{equation}
+
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{1.5.~避障策略}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+
+机器人总的速度设计为：
+\begin{equation}\label{v_1}
+  \bm{v}[k]=f(\bm{\nu}_i[k],\bm{v}[k-1],\bar{S}_i[k],\bar{B}[k])
+\end{equation}
+其中包含避障的算法。具体如下：
+
+\hei\xiaosihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{1.5.1.~不规则障碍物}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+如图\ref{irregular_obs}，将个体$\mathcal{R}$与最近的不规则障碍物的两条切线构成的角的角平分线表示为参考线$L$，那么个体的速度$\bm{v}[k]$的方向按逆时针方向距离$L$的角度即为$x$，个体与不规则障碍物切线和$L$的夹角为$\theta$。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=2]{images/heading_obs3.pdf}\\
+  \caption{个体遭遇不规则障碍物的情况}\label{irregular_obs}
+\end{figure}
+
+
+\hei\xiaosihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{1.5.2.~矩形边界}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=1.5]{images/heading_obs_border.pdf}\\
+  \caption{个体遭遇矩形边界的情况}\label{rectangle_border}
+\end{figure}
+如图\ref{rectangle_border}，将个体$\mathcal{R}$与矩形边界上最近点的连线表示为参考线$L$，那么个体的速度$\bm{v}[k]$的方向按逆时针方向距离$L$的角度即为$x$，个体的安全角度为$\theta=\dfrac{\pi}{2}$。
+
+
+\hei\xiaosihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{1.5.3.~避障算法}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+以上2节中展示了个体遇到各种障碍的情况及相应的安全角度$\theta$。
+
+假定$t$时刻个体$\mathcal{R}$的观察范围为$\Phi[k]=\left\{z \mid z \in \mathbb{R}^{2},\|z-p[k]\| \leqslant r_a\right\}$，其中$r_a$为个体的避障距离。$\mathcal{Q}_i$表示第$i$个障碍物，$S_i[k]\subseteq \mathbb{R}^2$是t时刻障碍物的形状中所包含的所有点，$B$表示边界上所有点的集合。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[scale=1.5]{images/heading_obs_all.pdf}\\
+  \caption{个体遭遇多障碍的情况}\label{heading_obs_all}
+\end{figure}
+
+以图\ref{heading_obs_all}为例，令$\bar{S}_i[k]=\Phi[k]\cap S_i[k]$，$\bar{B}[k]=\Phi[k]\cap B$，则总的速度设计为：
+\begin{equation}\label{v_2}
+  \bm{v}[k]=f(\bm{\nu}_i[k],\bm{v}[k-1],\bar{S}_i[k],\bar{B}[k])
+\end{equation}
+其中，$\bm{\nu}_i[k]\in\mathbb{R}^2$表示不在避障模式下的个体的速度。
+
+由图\ref{heading_obs_all}可知，个体$\mathcal{R}$遭遇了障碍物$\mathcal{Q}_m$的可见部分$\bar{S}_m[k]$、$\mathcal{Q}_n$的可见部分$\bar{S}_n[k]$和边界$B$的可见部分$\bar{B}[k]$。根据前2节的设定可得$\bar{B}[k]$对应的参考线为$L_1$、安全角度$\theta_1$、角度$x_1$、表面与个体最近点距离$d_1$，$\bar{S}_m[k]$对应的参考线$L_2$、安全角度$\theta_2$、角度$x_2$、表面与个体最近点距离$d_2$，$\bar{S}_n[k]$对应的参考线$L_3$、安全角度$\theta_3$、角度$x_3$、表面与个体最近点距离$d_3$。
+
+令$\phi_j=\kappa_{}\theta_j$，则对个体$\mathcal{R}$，若将$\bm{L}_j$视为从个体出发到障碍物的向量(模为1)，其某一个危险角度区间可表示为$(\underline{\varphi}_j,\overline{\varphi}_j)$，其中$\underline{\varphi}_j=\angle \bm{L}_j-\phi_j$，$\overline{\varphi}_j=\angle \bm{L}_j+\phi_j$。在$\mathcal{R}$的避障距离内只有一个障碍物(包括边界)时，对边界为$\kappa=1.2$，对固定、移动圆形障碍物和不规则障碍物为$\kappa=2.0$，对移动不规则障碍物为$\kappa=2.8$；在$\mathcal{R}$的避障距离内有多于一个障碍物(包括边界)时，对边界为$\kappa=1.2$，对固定、移动圆形障碍物和不规则障碍物为$\kappa=1.6$，对移动不规则障碍物为$\kappa=2.0$。
+
+将在$\bar{B}[k]$危险角度范围内的方向角$\theta$表示为集合$\Theta_1=\{\theta| \theta \in (\underline{\varphi}_1,\overline{\varphi}_1) \}$，在$\bar{S}_m[k]$危险角度范围内的速度矢量$\bm{v}$表示为集合$\Theta_2=\{\theta| \theta \in (\underline{\varphi}_2,\overline{\varphi}_2) \}$，在$\bar{S}_n[k]$危险角度范围内的速度矢量$\bm{v}$表示为集合$\Theta_3=\{\theta| \theta \in (\underline{\varphi}_3,\overline{\varphi}_3) \}$。
+
+
+对于个体$\mathcal{R}_i$，设计其基于航向的避障速度为
+\begin{equation}\label{v_3}
+  \bm{v}_i[k]=\left\{\begin{array}{llll}
+    \bm{v}_{ia}[k], & \displaystyle \angle \bm{\nu}_i[k]\in \Theta_j,\ j=1,2,3. \\[4mm]
+    \bm{\nu}_i[k], &(\angle\bm{\nu}_i[k]\notin \Theta_1)\land (\angle\bm{\nu}_i[k]\notin \Theta_2)\land(\angle\bm{\nu}_i[k]\notin \Theta_3)
+  \end{array}\right.
+\end{equation}
+其中，$\bm{v}_{ia}[k]$设计如下：
+\begin{equation}\label{v_ia}
+  \bm{v}_{ia}[k]=||\bm{\nu}_i[k]||*\bm{u}_a
+\end{equation}
+其中$\bm{u}_a=[\cos \varphi_a,\sin \varphi_a]$，$\varphi_a$为
+\begin{equation}\label{varphi}
+  \varphi_a = \displaystyle \mathop{\text{argmin}}\limits_{\varphi_j} (\text{dif}(\varphi_j,\angle\bm{\nu}_i[k]))
+\end{equation}
+其中$\varphi_j$为$\underline{\varphi}_j$或$\overline{\varphi}_j$。
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=1.3]{images/heading_obs_all2_2.pdf}\\
+  \caption{多角度危险角度有交叠的情况}\label{heading_obs_all_2}
+\end{figure}
+
+图\ref{heading_obs_all_2}中，个体$\mathcal{R}$遭遇了障碍物$\mathcal{Q}_m$的可见部分$\bar{S}_m[k]=\Phi[k]\cap S_m[k]$、$\mathcal{Q}_n$的可见部分$\bar{S}_n[k]=\Phi[k]\cap S_n[k]=S_n[k]$和边界$B$的可见部分$\bar{B}[k]$。
+
+由于$\bar{S}_m[k]$和$\bar{S}_n[k]$的危险角度范围有交叠，故将这两个障碍合并计算。
+
+那么$\bar{B}[k]$对应的参考线为$L_1$、安全角度$\theta_1$、角度$x_1$、表面与个体最近点距离$d_1$，$\bar{S}_m[k]$和$\bar{S}_n[k]$共同对应的参考线为$L_2$、安全角度$\theta_2$、角度$x_2$、表面与个体最近点距离$d_2$。
+
+后面部分的计算与图\ref{heading_obs_all}相同。
+
+
+\newpage
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{二.~项目架构说明}}
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{2.1.~项目中各模块间数据交互}}
+
+\kai\xiaosihao
+\setlength{\baselineskip}{28pt}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=1]{images/data_i2.pdf}\\
+  \caption{各模块间数据交互图}\label{allfiles}
+\end{figure}
+
+\begin{table}[!h]
+  \centering
+  \caption{重要参数对照列表}
+  \begin{tabular}{ccccc}
+    \toprule  %添加表格头部粗线
+    变量& 数学符号& 物理意义 &定义位置& 单位\\
+    \midrule  %添加表格中横线
+    attract\_v& $\bm{\nu}_{i1}$& 前进速度 & utils/robots\_control.py第586行 & m/s\\
+    horizontal\_v& $\bm{\nu}_{i2}$& 排斥速度& utils/robots\_control.py第588行& m/s\\
+    vel\_wolf\_desired& $\bm{\nu}$& 机器人期望速度& utils/robots\_control.py第594行& m/s\\
+    theta\_wolf\_desired & $\angle{\bm{\nu}}$ & 机器人期望方向& utils/robots\_control.py第594行 & rad \\
+    \bottomrule %添加表格底部粗线
+  \end{tabular}
+  \end{table}
+
+
+\newpage
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.11]{images/data_interaction/model.pdf}\\
+  \caption{model.py文件}\label{model}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.25]{images/data_interaction/init.pdf}\\
+  \caption{utils/init.py文件}\label{utils}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.25]{images/data_interaction/init.pdf}\\
+  \caption{utils/init.py文件}\label{utils}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.25]{images/data_interaction/robots_control.pdf}\\
+  \caption{utils/robots\_control.py文件}\label{robots_control}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.25]{images/data_interaction/robots_control.pdf}\\
+  \caption{utils/robots\_control.py文件}\label{robots_control}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.25]{images/data_interaction/targets_control.pdf}\\
+  \caption{utils/targets\_control.py文件}\label{targets_control}
+\end{figure}
+
+
+\newpage
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{2.2.~文件结构说明}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.6]{images/files.png}\\
+  \caption{文件结构图}\label{files}
+\end{figure}
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{三.~代码详细说明}}
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{3.1.~关键常量、函数的对照列表}}
+
+\kai\xiaosihao
+\setlength{\baselineskip}{28pt}
+
+\begin{table}[!h]
+  \centering
+  \caption{重要常量对照列表}
+  \begin{tabular}{ccccc}
+    \toprule  %添加表格头部粗线
+    常量& 数学符号& 物理意义 &定义位置& 单位\\
+    \midrule  %添加表格中横线
+    Ts& $T_s$& 采样时间 & params.yml/Ts & s\\
+    radius& $r_h$& 围捕半径& run.py/parameter{['radius']}& m\\
+    VISION\_R& $r_w$& 观察距离& model.py/Robot.VISION\_R& m\\
+    AVOID\_DIST & $r_a$ & 避障距离& model.py/Robot.AVOID\_DIST & m\\
+    alpha& $\alpha$& 前进速度系数& run.py/parameter{['alpha']}&
+    \\
+    varsigma& $\varsigma$& 前进速度系数& run.py/parameter{['VARSIGMA']}& \\
+    d1\_ind& $\tau_1$& 前进速度系数& run.py/parameter{['d1\_ind']}&\\
+    d2\_ind& $\tau_2$& 前进速度系数& run.py/parameter{['d2\_ind']}&\\
+    d3\_ind& $\tau_3$& 排斥速度系数& run.py/parameter{['d3\_ind']}&\\
+    beta& $\beta$& 排斥速度系数& run.py/parameter{['beta']}&\\
+    \bottomrule %添加表格底部粗线
+  \end{tabular}
+  \end{table}
+
+\begin{table}[!h]
+\centering
+\caption{关键函数对照列表}
+\begin{tabular}{ccc}
+  \toprule  %添加表格头部粗线
+  函数& 对应公式& 基本作用\\
+  \midrule  %添加表格中横线
+  utils.math\_func.PeriArctan& \eqref{angle}& 将向量转换为$[0,2\pi)$角度\\
+  utils.math\_func.IncAngle& \eqref{dif}& 计算两个方向角间夹角
+  \\
+  model.Agent.move& \eqref{kinematic}& 运动学方程\\
+  utils.robots\_control.Attractive& \eqref{attract}& 计算前进速度\\
+  utils.robots\_control.Repulsion& \eqref{repulsion}& 计算同伴排斥速度\\
+  utils.robots\_control.WolvesHunt& \eqref{v_1}& 围捕机器人运动的主函数\\
+  utils.robots\_control.AroundWolves& \eqref{v_3}\eqref{v_ia}\eqref{varphi}& 围捕机器人的避障算法\\
+  \bottomrule %添加表格底部粗线
+\end{tabular}
+\end{table}
+
+
+\newpage
+
+\hei\sihao
+\setlength{\baselineskip}{22pt}
+
+{\noindent\textbf{3.2.~初始化文档说明}}
+
+\kai\sihao
+\setlength{\baselineskip}{28pt}
+
+\begin{table}[!h]
+\centering
+\caption{初始化变量说明}
+\begin{tabular}{ccc}
+  \toprule  %添加表格头部粗线
+  变量& 取值& 含义\\
+  \midrule  %添加表格中横线
+  TOTSTEP& 300& 仿真步数(单位为step)\\
+  Ts& 0.1& 采样时间(单位为s/step)\\
+  WOLF\_NUM& 5& 围捕机器人数量\\
+  TARGET\_NUM& 1& 目标数量\\
+  S\_OBS\_NUM& 1& 固定圆形障碍物数量\\
+  M\_OBS\_NUM& 1& 移动圆形障碍物数量\\
+  IRR\_OBS\_NUM& 5& 固定不规则障碍物数量\\
+  M\_IRR\_OBS\_NUM& 5& 移动不规则障碍物数量\\
+  border& [-10,-10,10,10]& 边界(单位为m)\\
+  INIT\_D& 1.5& 初始化障碍物表面间应有距离\\
+  &&(单位为m)\\
+  \bottomrule %添加表格底部粗线
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\normalsize
+%\setlength{\baselineskip}{13pt}
+%
+%%===============参考文献=================================================%
+%\renewcommand{\refname}{\kai\xiaosihao 主要参考文献目录} %\hfil
+%
+%
+%
+%\begin{thebibliography}{9}
+%
+%\bibitem{sh-tac-12}
+%Y. Su and J. Huang,
+%``Cooperative output regulation of linear multi-agent systems,''
+%IEEE Transactions on Automatic Control,
+%vol. 57, no. 4, pp. 1062--1066, 2012.
+%
+%
+%
+%\bibitem{sh-tcyb-12}
+%Y. Su and J. Huang,
+%``Cooperative output regulation with application to multi-agent consensus under switching network,''
+%IEEE Transactions on Systems, Man, and Cybernetics, Part B: Cybernetics,
+%vol. 42, no. 3, pp. 864--875, 2012.
+%
+%
+%
+% \bibitem{ch-tac-16}
+% H. Cai and J. Huang,
+% ``The leader-following consensus for multiple uncertain Euler-Lagrange systems with an adaptive distributed observer,''
+% IEEE Transactions on Automatic Control,
+% vol. 61, no. 10, pp. 3152--3157, 2016.
+%
+%
+% \bibitem{ch-auto-17}
+%H. Cai, F. Lewis, G. Hu, and J. Huang,
+%``The adaptive distributed observer approach to the cooperative output regulation of linear multi-agent systems,''
+%Automatica,
+%vol. 75,  pp. 299--305, 2017.
+%
+%
+%\bibitem{WangHuang2019}
+%S. Wang and J. Huang,
+%``Adaptive leader-following consensus for multiple Euler-Lagrange systems with an uncertain leader system,''
+% IEEE Transactions on Neural Networks and Learning Systems,
+% DOI: 10.1109/TNNLS.2018.2878463, 2018.
+%
+%
+%
+%\bibitem{Schrick-1997}
+%D. V. Schrick,
+%``Remarks on terminology in the field of supervision, fault detection and diagnosis,''
+%IFAC Fault Detection, Supervision and Safety for Technical Processes,
+%Kingston Upon Hull, UK,  pp. 959--964, 1997.
+%
+%
+%\bibitem{Menon-Edwards-2014}
+%P. P. Menon and C. Edwards,
+%``Robust fault estimation using relative information in linear multi-agent networks,''
+%IEEE Transaction on Automatic Control,
+%vol. 59, no. 2, pp. 477--482, 2014.
+%
+%
+%\bibitem{Chen-Patton-Zhang-1996}
+%J. Chen, R. J. Patton, and H. Y. Zhang,
+%``Design of unknown input observers and robust fault-detection filters,''
+%International Journal of Control,
+%vol. 63, no. 1, pp. 85--105, 1996.
+%
+%
+%
+%
+%
+%
+%\bibitem{Gertler-1997}
+%J. Gertler,
+%``Fault detection and isolation using parity relations,''
+%Control Engineering Practice,
+%vol. 5, no. 5, pp. 653--661, 1997.
+%
+%
+%
+%
+%
+%
+%\bibitem{Hwang-Kim-Kim-Seah-2010}
+%I. Hwang, S. Kim, Y. Kim, and C. E. Seah,
+%``A survey of fault detection, isolation, and reconfiguration methods,''
+%IEEE Transactions on Control Systems Technology,
+%vol. 18, no. 3, pp. 636--653, 2010.
+%
+%\bibitem{Zhang-Jiang-Shi-2017}
+%K. Zhang, B. Jiang, and P. Shi, ``Adjustable parameter-based distributed fault estimation observer design for multiagent systems with directed graphs,'' IEEE Transactions on Cybernetics, vol. 47, no. 2, pp. 306--314, 2017.
+%
+%
+%\bibitem{Li-Fan-Chen-Yu-2018}
+%Y. Li, H. Fang, J. Chen, and C. Yu, ``Distributed cooperative fault detection for
+%multiagent systems: a mixed $H_{\infty}/H_{2}$ optimization approach,'' IEEE Transactions on Industrial Electronics, vol. 65, no. 8, pp. 6468--6477, 2018.
+%
+%\bibitem{Zhang-Yang-2018}
+%Z. H. Zhang and G. H. Yang, ``Distributed fault detection and isolation for
+%multiagent systems: an interval observer approach,'' IEEE  Transactions on Systems, Man, and Cybernetics: Systems, DOI: 10.1109/TSMC.2018.2811390, 2018.
+%
+%\bibitem{Khalili-etal-2018}
+%M. Khalili,  X. Zhang,  Y. Cao  M. M. Polycarpou, and  T. Parisini,
+%``Distributed adaptive fault-tolerant leader-following formation control of nonlinear uncertain second-order multi-agent systems,'' International Journal of Robust and Nonlinear Control, vol. 28, no. 15, pp. 4287--4308, 2018.
+%
+%
+%
+%\bibitem{Lee2008}
+%E. A. Lee,
+%``Cyber physical systems: Design challenges,''
+%The 11th IEEE International Symposium on Object and Component-Oriented Real-Time Distributed Computing,
+%pp. 363--369, 2008.
+%
+%
+%
+%\bibitem{Langner2011}
+%R. Langner, ``Stuxnet: Dissecting a cyberwarfare weapon,''
+%IEEE Security \& Privacy,
+%vol. 9, no. 3, pp. 49--51, 2011.
+%
+%
+%\bibitem{Mo2009}
+%Y. Mo and B. Sinopoli,
+%``Secure control against replay attacks,''
+%The 47th Annual Allerton Conference on Communication, Control, and Computing,
+%pp. 911--918, 2009.
+%
+%
+%
+%
+%\bibitem{Pasqualetti2015}
+%F. Pasqualetti, F. Dorfler, and F. Bullo,
+%``Control-theoretic methods for cyberphysical security: Geometric principles for optimal cross-layer resilient control systems,''
+%IEEE Control Systems Magazine,
+%vol. 35 no. 1, pp. 110--127, 2015.
+%
+%
+%\bibitem{LeNy2014}
+%J. Le Ny and G. J. Pappas,
+%``Differentially private filtering,''
+%IEEE Transactions on Automatic Control,
+%vol. 59, no. 2, pp. 341--354, 2014.
+%
+%
+%
+%\bibitem{Oh2015}
+%K. Oh, M. Park, and H. Ahn,
+%``A survey of multi-agent formation control,''
+%Automatica, vol. 53, pp. 424--440, 2015.
+%
+%
+%
+%\bibitem{Liu2018}
+%H.~H.T. Liu and B.~Zhu,
+%Formation Control of Multiple Autonomous Vehicle Systems,
+%Hoboken, NJ: Wiley, 2018.
+%
+%
+%
+%\bibitem{Kumar2018}
+%A. Weinstein, A. Cho, G. Loianno, and V. Kumar,
+%``Visual inertial odometry swarm: An autonomous swarm of vision-based quadrotors,''
+%IEEE Robotics and Automation Letters,
+%vol. 3, no. 3, pp. 1801--1807, 2018.
+%
+%
+%
+%
+%
+%
+%\bibitem{Lee2017}
+%T. C. Lee, Y. Tan, and I. Mareels,
+%``Analyzing the stability of switched systems using common zeroing-output systems,''
+%IEEE Transactions on Automatic Control,
+%vol. 62, no. 10, pp. 5138--5153, 2017.
+%
+%
+%
+%\bibitem{Jadbabaie-Lin-Morse-2003}
+%A. Jadbabaie, J. Lin, and A. S. Morse, ``Coordination of groups of mobile agents using nearest neighbor rules,'' IEEE Transactions on Automatic Control, vol. 48, no. 6, pp. 988--1001, 2003.
+%
+%\bibitem{Olfati-Saber-Murray-2004}
+%R. Olfati-Saber and R. Murray, ``Consensus problems in networks of agents with switching topology and time-delays,'' IEEE Transactions on Automatic Control, vol. 49, no. 9, pp. 1520-1533, 2004.
+%
+%%\bibitem{Ren-Beard-2005}
+%%W. Ren and R. W. Beard, ``Consensus seeking in multiagent systems under dynamically changing interaction topologies,'' IEEE Transaction Automatic Control. vol. 50, no. 5, pp. 655-661, May 2005.
+%%
+%%\bibitem{Nin-Cheng-2010}
+%%W. Ni and D. Cheng, ``Leader-following consensus of multi-agent systems under fixed and switching topologies,'' Systems and Control Letters, vol. 59, no. 3, pp. 209--217, 2010.
+%%
+%%\bibitem{Hua-Li-Guan-2018}
+%%C.-C. Hua, K. Li, and X.-P. Guan, ``Leader-following output consensus for high order nonlinear multiagent systems,'' IEEE Transactions on Automatic Control, DOI: 10.1109/TAC.2018.2836024, 2018.
+%
+%\bibitem{Bu-Hou-Zhang-2018}
+%X. Bu, Z. Hou, and H. Zhang, ``Data-driven multiagent systems consensus tracking using model free adaptive control,''
+%IEEE Transactions on Neural Networks and Learning Systems, vol. 29, no. 5, pp. 1514-1524, 2018.
+%
+%
+%\bibitem{Zhang-etal-2018}
+%H. Zhang, D. Yue, W. Zhao,  S. Hu, and C. Dou, ``Distributed optimal consensus control for multiagent systems with input delay,'' IEEE Transactions on Cybernetics, vol. 48, no. 6, pp. 1747--1759, 2018.
+%
+%\bibitem{Wu-Hu-Guan-2019}
+%Y. Wu, B. Hu, Z. H. Guan, ``Consensus problems over cooperation-competition random switching networks with noisy channels,''  IEEE Transactions on Neural Networks and Learning Systems, vol. 30, no. 1, pp. 35--43, 2019.
+%
+%
+%
+%
+%\bibitem{Anderson-Fidan-Hendrickx-2008}
+%B. D. O. Anderson, C. Yu, B. Fidan, and J. M. Hendrickx, ``Rigid graph control architectures for autonomous formations,'' IEEE Control Systems Magazine, vol. 28, no. 6, pp. 48--63, 2008.
+%
+%%\bibitem{Lin-Broucke-Francis-2004}
+%% Z. Lin, M. Broucke, and B. Francis, ``Local control strategies for groups of mobile autonomous agents,'' IEEE Transactions on Automatic Control, vol. 49, no. 4, pp. 622--629, 2004.
+%
+% \bibitem{Han-etal-2018}
+%T. Han, Z. Lin, R. Zheng, and M. Fu,  ``A barycentric coordinate-based approach to formation control under directed and switching sensing graphs,'' IEEE Transactions on Cybernetics, vol. 48, no. 4, pp. 1202--1215, 2018.
+%
+% \bibitem{Xue-Cao-2019}
+%L. Xue and X. Cao, ``Leader selection via supermodular game for formation control in multiagent systems,''
+%IEEE Transactions on Neural Networks and Learning Systems, DOI: 10.1109/TNNLS.2019.2900592, 2019.
+%
+% \bibitem{Su-Zhang-Chen-2019}
+%H. Su, J. Zhang, and X. Chen, ``A stochastic sampling mechanism for time-varying formation of multiagent systems with multiple leaders and communication delays," IEEE Transactions on Neural Networks and Learning Systems, DOI:  10.1109/TNNLS.2019.2891259, 2019.
+%
+%\bibitem{Cortes-etal-2004}
+%J. Cort\'{e}s, S. Mart\'{\i}nez, T. Karatas, and F. Bullo, ``Coverage control for mobile sensing networks,'' IEEE Transactions on Robots and Automation, vol. 20, no. 2, pp. 243--255, 2004.
+%
+%%\bibitem{Ta-Mao-Anderson-2007}
+%%X. Ta, G. Mao, and B. D. O. Anderson, ``On the probability of K-hop connection in wireless sensor networks,'' IEEE Communications Letters, vol. 11, no. 9, pp. 662--664, 2007.
+%
+%\bibitem{Luo-Yang-Li-Meng-2017}
+%C. Luo, S. X. Yang, X. Li, and M. Q. H. Meng, ``Neural-dynamics-driven complete area coverage navigation through cooperation of multiple mobile robots,'' IEEE Transactions on Industrial Electronics, vol. 64, no. 1, pp. 750--760, 2017.
+%
+%\bibitem{An-etal-2018}
+%V. An, Z. Qu, F. Crosby, R. Roberts, and V. An, ``A triangulation-based coverage path planning,''
+%IEEE Transactions on Systems, Man, and Cybernetics: Systems, DOI:  10.1109/TSMC.2018.2806840, 2018.
+%
+%
+%\bibitem{Zuo-Shi-Yan-2019}
+%L. Zuo, Y. Shi, and W. Yan, ``Dynamic coverage control in a time-varying environment using bayesian prediction,''
+%IEEE Transactions on Cybernetics, vol. 49, no. 1, pp. 354--362, 2019.
+%
+%
+%
+%\bibitem{Gazi-Passino-2003}
+%V. Gazi and K. M. Passino, ``Stability analysis of swarms,'' IEEE Transactions on Automatic Control, vol. 48, no. 4, pp. 692--697, 2003.
+%
+%\bibitem{Zhu-etal-2017}
+%B. Zhu, L. Xie, D. Han, X. Meng, and R. Teo, ``A survey on recent progress in control of swarm systems,''
+%Science China Information Sciences, vol. 60, pp. 1--24, 2017.
+%
+%\bibitem{Hu-etal-2018}
+%H. X. Hu, G. Wen, W. Yu, Q. Xuan, and G. Chen, ``Swarming behavior of multiple euler-lagrange systems with cooperation-competition interactions: an auxiliary system approach," IEEE Transactions on Neural Networks and Learning Systems,
+%vol. 29, no. 11, pp. 5726--5737, 2018.
+%
+%
+%\bibitem{Olfati-Saber-2006}
+% R. Olfati-Saber, ``Flocking for multi-agent dynamic systems: algorithms and theory,'' IEEE Transactions on Automatic Control, vol. 51, no. 3, pp. 401--420, 2006.
+%
+%
+%%\bibitem{Su-Wang-Lin-2009}
+%%H. Su, X. F. Wang, and Z. Lin, ``Flocking of multi-agents with a virtual leader,'' IEEE Transaction on Automatic Control, vol. 54, no. 2, pp. 293--307, 2009.
+%
+%\bibitem{Dong-Huang-2015}
+% Y. Dong and J. Huang, ``Flocking with connectivity preservation of multiple double integrator systems subject to external disturbances by a distributed control law,'' Automatica, pp. 197--203, 2015.
+%
+%
+%\bibitem{Hung-Givigi-2017}
+%S. M. Hung and S. N. Givigi, ``A Q-learning approach to flocking with UAVs in a stochastic environment,''
+%IEEE Transactions on Cybernetics, vol. 47, no. 1, pp.186--197, 2017.
+%
+%
+% \bibitem{Chen-etal-2018}
+%S. Chen, H. Pei , Q. Lai, and H. Yan, ``Multitarget ttracking control for coupled heterogeneous inertial agents systems based on flocking behavior,'' IEEE Transaction on Systems, Man, and Cybernetics: Systems, DOI: 10.1109/TSMC.2017.2789335, 2018.
+%
+%
+%
+%\bibitem{How2015}
+%J. P. How, ``Cyberphysical security in networked control systems [about this issue],''
+%IEEE Control Systems Magazine,
+%vol. 35, no. 1, pp. 8--12, 2015.
+%
+%
+%\bibitem{Cheng2017}
+%P. Cheng, L. Shi, and B. Sinopoli,
+%``Guest editorial special issue on secure control of cyber-physical systems,''
+%IEEE Transactions on Control of Network Systems,
+%vol. 4, no. 1, pp. 1--3, 2017.
+%
+%
+%
+%
+%
+%\bibitem{sh-scl-12}
+%Y. Su and J. Huang,
+%``Cooperative output regulation of linear multi-agent systems by output feedback,''
+%Systems \& Control Letters,
+%vol. 61, no. 12, pp. 1248--1253, 2012.
+%
+%
+%
+%\bibitem{sh-tac-12b}
+%Y. Su and J. Huang,
+%``Stability of a class of linear switching systems with applications to two consensus problems,''
+%IEEE Transactions on Automatic Control,
+%vol. 57, no. 6, pp. 1420--1430, 2012.
+%
+%
+%
+%
+%\bibitem{ch-tac-14}
+%H. Cai and J. Huang,
+%``The leader following consensus control of multiple rigid spacecraft systems,''
+%Automatica,
+%vol. 50, no. 4,  pp. 1109--1115, 2014.
+%
+%
+%
+%\bibitem{lwh-tac-15}
+%W. Liu and J. Huang,
+%``Cooperative global robust output regulation for a class of nonlinear multi-agent systems with switching network,''
+%IEEE Transactions on Automatic Control,
+%vol. 60, no. 7, pp. 1963--1968, 2015.
+%
+%
+%
+%\bibitem{ch-auto-16}
+%H. Cai and J. Huang,
+%``Leader-following attitude consensus of multiple rigid body systems by attitude feedback control,''
+%Automatica,
+%vol. 69, pp. 87--92, 2016.
+%
+%
+%
+%\bibitem{ch-scis-16}
+%H. Cai and J. Huang,
+%``Leader-following adaptive consensus of multiple uncertain rigid spacecraft systems,''
+%Science in China Information Sciences,
+%vol. 59, no. 1, pp. 1--13, 2016.
+%
+%
+%
+%\bibitem{lwh-auto-17}
+%W. Liu and J. Huang,
+%``Adaptive leader-following consensus for a class of higher-order nonlinear multi-agent systems with directed switching networks,''
+% Automatica,
+%vol. 79,  pp. 84--92, 2017.
+%
+%
+%
+%\bibitem{ch-tac-17}
+%H. Cai and G. Hu,
+%``Distributed tracking control of an interconnected leader-follower multiagent system,''
+%IEEE Transactions on Automatic Control,
+%vol. 62, no. 7, pp. 3494--3501, 2017.
+%
+%
+%
+%\bibitem{huang-tac-17}
+%J. Huang,
+%``The consensus for discrete-time linear multi-agent systems under directed switching networks,''
+%IEEE Transactions on Automatic Control,
+%vol. 62, no. 8, pp. 4086--4092, 2017.
+%
+%
+%
+%\bibitem{CH2017}
+%H. Cai and J. Huang,
+%``Leader-following attitude consensus of multiple uncertain spacecraft systems subject to external disturbance,''
+%International Journal of Robust and Nonlinear Control,
+%vol. 27, pp. 742--760, 2017.
+%
+%
+%\bibitem{lwh-tac-17}
+%W. Liu and J. Huang,
+%``Cooperative global robust output regulation for nonlinear output feedback multi-agent systems under directed switching networks,''
+%IEEE Transactions on Automatic Control,
+%vol. 62, no. 12, pp. 6339--6352, 2017.
+%
+%
+%
+%\bibitem{lwh-tnnls-18}
+%W. Liu and J. Huang,
+%``Cooperative adaptive output regulation for second-order nonlinear multi-agent systems with jointly connected switching networks,''
+% IEEE Transactions on Neural Networks and Learning Systems,
+% vol. 29, no. 3, pp. 695--705,  2018.
+%
+%
+%
+%
+%\bibitem{lth-tac-18}
+%T. Liu and J. Huang,
+%``Cooperative output regulation for a class of nonlinear multi-agent systems with unknown control directions subject to switching networks,''
+%IEEE Transactions on Automatic Control,
+%vol. 63, no. 3,  pp. 783--790, 2018.
+%
+%
+%
+%
+%
+%
+%\bibitem{Xu2019}
+%J. He, A. Sheng, D. Xu, Z. Chen, and D. Wang,
+%``Robust precision attitude tracking of an uncertain rigid spacecraft based on regulation theory,''
+%International Journal of Robust and Nonlinear Control,
+%DOI:10.1002/rnc.4578, 2019.
+%
+%
+%
+%\bibitem{Huang2009}
+%Z. Chen and J. Huang,
+%``Attitude tracking and disturbance rejection of rigid spacecraft by adaptive control,''
+%IEEE Transactions on Automatic Control,
+%vol. 54, no. 3, pp. 600--605, 2009.
+%
+%\end{thebibliography}
+
+
+
+\end{CJK*}
+\end{document}
+
+
+%[11] Y. Dong and J. Huang, “Consensus and Flocking with connectivity preservation of uncertain Euler-lagrange multi-agent systems,” Journal of Dynamic Systems Measurement and Control-Transactions of ASME, Vol. 140, No. 9, Sept. 2018, 4039666.
+%
+%[12] Y. Dong and J. Huang, “Flocking with connectivity preservation of multiple double integrator systems subject to external disturbances by a distributed control law,” Automatica, March 2015, pp. 197-203.
+%
+%[13] Y. Dong, and J. Huang, “Leader-following connectivity preservation rendezvous of multiple double integrator systems based on position measurements only,” IEEE Transactions on Automatic Control, Vol. 59, No. 9, Sept. 2014, pp. 2598-2603.
+%
+%[14]  Y. Dong and J. Huang, “Leader-following consensus with connectivity preservation of uncertain Euler-Lagrange multi-agent systems,” International Journal of Robust and Nonlinear Control, vol. 27, no. 18, pp. 4772-4787, December 2017.
+%
+%[8] Y. Dong, J. Chen, and J. Huang, “A self-tuning adaptive distributed observer approach to the cooperative output regulation problem for networked multi-agent systems,” International Journal of Control, to appear.
