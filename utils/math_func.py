@@ -82,6 +82,7 @@ def inc_angle(angle1, angle2):
 def intervals_merge(ang_intervals: list, ang_intervals_index: list, ang_intervals_dists: list):
     """
     将有交叠的角度区间进行合并，所有输入角度区间的起点和终点都∈[0,2π)
+    思路：先检查列表中的角度区间，若有右端点大于左端点，将其拆分为[右端点,2π)和[0,左端点]，然后对列表中的区间按照左端点升序排序，同时index和dists也按照前面排好的顺序排序，然后按顺序依次考虑每个区间：1.假如是第一个区间或当前区间的左端点在结果列表中最后一个区间的右端点之后，那么它们不重合，直接把当前区间放入结果列表中，2.否则重合，更新结果列表中最后一个区间的右端点，变为(结果列表中最后一个区间的右端点,当前区间的右端点)中的最大值。最后将[右端点,2π)和[0,左端点]合并为[左端点，右端点+2π]
 
     输入：
         ang_intervals: 角度区间列表
@@ -93,82 +94,49 @@ def intervals_merge(ang_intervals: list, ang_intervals_index: list, ang_interval
         merged_ang_interval_index: 合并后的角度区间索引列表
         merged_ang_interval_dists: 合并后的角度区间距离列表
     """
-    # 若右边界小于左边界, 则令右边界+2π
+    # 若右边界小于左边界, 则将该区间拆开为[右端点,2π)和[0,左端点]
     for i in range(len(ang_intervals)):
         if ang_intervals[i][0] > ang_intervals[i][1]:
-            ang_intervals[i][1] += 2*PI
-    # if mark==1: print(ang_intervals)
-    if len(ang_intervals) >= 2:
-        duplication = True
-        while duplication:
-            for i in range(len(ang_intervals)):
-                for j in range(i+1, len(ang_intervals)):
-                    if ang_intervals[i][0] != -1 and ang_intervals[i][1] != -1 and ang_intervals[j][0] != -1 and ang_intervals[j][1] != -1:
-                        if max(ang_intervals[i][0], ang_intervals[j][0]) <= min(ang_intervals[i][1], ang_intervals[j][1]):
-                            # 将两个交叠区间进行合并
-                            ang_intervals[i][0] = min([ang_intervals[i][0], ang_intervals[i][1], ang_intervals[j][0], ang_intervals[j][1]])
-                            ang_intervals[i][1] = max([ang_intervals[i][0], ang_intervals[i][1], ang_intervals[j][0], ang_intervals[j][1]])
-                            # 将被合并的区间标记为(-1,-1)
-                            ang_intervals[j][0] = -1
-                            ang_intervals[j][1] = -1
-                        elif ang_intervals[i][1] > 2*PI and ang_intervals[j][1] < 2*PI:
-                            # 将两个交叠区间进行合并
-                            if ang_intervals[j][0] < ang_intervals[i][1]-2*PI:
-                                ang_intervals[i][0] = ang_intervals[i][0]
-                                if ang_intervals[j][1]+2*PI > ang_intervals[i][1]:
-                                    ang_intervals[i][1] = ang_intervals[j][1]+2*PI
-                                # 将被合并的区间标记为(-1,-1)
-                                ang_intervals[j][0] = -1
-                                ang_intervals[j][1] = -1
-                        elif ang_intervals[j][1] > 2*PI and ang_intervals[i][1] < 2*PI:
-                            # 将两个交叠区间进行合并
-                            if ang_intervals[i][0] < ang_intervals[j][1]-2*PI:
-                                ang_intervals[i][0] = ang_intervals[j][0]
-                                if ang_intervals[i][1]+2*PI > ang_intervals[j][1]:
-                                    ang_intervals[i][1] = ang_intervals[i][1]+2*PI
-                                else:
-                                    ang_intervals[i][1] = ang_intervals[j][1]
-                                # 将被合并的区间标记为(-1,-1)
-                                ang_intervals[j][0] = -1
-                                ang_intervals[j][1] = -1
-                        if ang_intervals[i][1]-ang_intervals[i][0]>2*PI:
-                            ang_intervals[i][0] = 0
-                            ang_intervals[i][1] = 2*PI
-                            for k in range(len(ang_intervals)):
-                                if k != i:
-                                    ang_intervals[k][0] = -1
-                                    ang_intervals[k][1] = -1
-                            break
-                # 若内层j循环正常执行完毕未被break，则外层i循环继续
-                else:
-                    continue
-                # 否则外层i循环也break
-                break
-            new_ang_interval, new_ang_interval_index, new_ang_interval_dists = [], [], []
-            for i in range(len(ang_intervals)):
-                if ang_intervals[i][0] != -1 or ang_intervals[i][1] != -1:
-                    new_ang_interval.append(ang_intervals[i])
-                    # 因为dangerous_ranges[i]的距离一定比dangerous_ranges[j]更小, 故保留i的index
-                    new_ang_interval_index.append(ang_intervals_index[i])
-                    new_ang_interval_dists.append(ang_intervals_dists[i])
-            ang_intervals, ang_intervals_index, ang_intervals_dists = new_ang_interval, new_ang_interval_index, new_ang_interval_dists
-            duplication = False
-            for i in range(len(ang_intervals)):
-                for j in range(i+1, len(ang_intervals)):
-                    if ang_intervals[i][0] != -1 and ang_intervals[i][1] != -1 and ang_intervals[j][0] != -1 and ang_intervals[j][1] != -1:
-                        if max(ang_intervals[i][0], ang_intervals[j][0]) <= min(ang_intervals[i][1], ang_intervals[j][1]):
-                            duplication = True
-                        elif ang_intervals[i][1] > 2*PI and ang_intervals[j][1] < 2*PI:
-                            # 将两个交叠区间进行合并
-                            if ang_intervals[j][0] < ang_intervals[i][1]-2*PI:
-                                duplication = True
-                        elif ang_intervals[j][1] > 2*PI and ang_intervals[i][1] < 2*PI:
-                            if ang_intervals[i][0] < ang_intervals[j][1]-2*PI:
-                                duplication = True
-        merged_ang_interval, merged_ang_interval_index, merged_ang_interval_dists = new_ang_interval, new_ang_interval_index, new_ang_interval_dists
-    else:
-        merged_ang_interval, merged_ang_interval_index, merged_ang_interval_dists = ang_intervals, ang_intervals_index, ang_intervals_dists
-    return merged_ang_interval, merged_ang_interval_index, merged_ang_interval_dists
+            ang_intervals.append([0, ang_intervals[i][1]])
+            ang_intervals_index.append(ang_intervals_index[i])
+            ang_intervals_dists.append(ang_intervals_dists[i])
+            ang_intervals[i][1] = 2*PI
+    # 若区间数小于2，不用合并交叠区间
+    if len(ang_intervals) < 2:
+        return ang_intervals, ang_intervals_index, ang_intervals_dists
+    # 三个列表都按照角度区间的左端点进行排序
+    ang_intervals_index = [x for _,x in sorted(zip(ang_intervals, ang_intervals_index))]
+    ang_intervals_dists = [x for _,x in sorted(zip(ang_intervals, ang_intervals_dists))]
+    ang_intervals.sort(key=lambda x: x[0])
+    # 初始化结果列表
+    merged_ang_intervals, merged_ang_interval_indexs, merged_ang_interval_dists = [],[],[]
+    # 合并过程
+    for i in range(len(ang_intervals)):
+        if not merged_ang_intervals or merged_ang_intervals[-1][1] < ang_intervals[i][0]:
+            merged_ang_intervals.append(ang_intervals[i])
+            merged_ang_interval_indexs.append(ang_intervals_index[i])
+            merged_ang_interval_dists.append(ang_intervals_dists[i])
+        else:
+            merged_ang_intervals[-1][1] = max(merged_ang_intervals[-1][1], ang_intervals[i][1])
+            merged_ang_interval_indexs[-1] = merged_ang_interval_indexs[-1] if merged_ang_interval_dists[-1] < ang_intervals_dists[i] else ang_intervals_index[i]
+            merged_ang_interval_dists[-1] = min(merged_ang_interval_dists[-1],ang_intervals_dists[i])
+    # 将[右端点,2π)和[0,左端点]合并为[左端点，右端点+2π]
+    for i in range(len(merged_ang_intervals)):
+        flag = False
+        if merged_ang_intervals[i][0] == 0:
+            for j in range(len(merged_ang_intervals)):
+                if j != i and merged_ang_intervals[j][1] == 2*PI:
+                    merged_ang_intervals[i][0] = merged_ang_intervals[j][0]
+                    merged_ang_intervals[i][1] += 2*PI
+                    merged_ang_interval_indexs[i] = merged_ang_interval_indexs[i] if merged_ang_interval_dists[i] < merged_ang_interval_dists[j] else merged_ang_interval_indexs[j]
+                    merged_ang_interval_dists[i] = min(merged_ang_interval_dists[i], merged_ang_interval_dists[j])
+                    merged_ang_intervals.pop(j)
+                    merged_ang_interval_indexs.pop(j)
+                    merged_ang_interval_dists.pop(j)
+                    flag = True
+                    break
+        if(flag): break
+    return merged_ang_intervals, merged_ang_interval_indexs, merged_ang_interval_dists
 
 
 @jit(nopython=True)

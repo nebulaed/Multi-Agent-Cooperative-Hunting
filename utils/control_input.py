@@ -28,8 +28,7 @@ def saturator(ori: float, vel_max: float, ang_vel_max: float, vel_desired: float
     """
     TS, PI = ParamsTable.TS, np.pi
     # 速率的饱和机制
-    if vel_desired > vel_max:
-        vel_desired = vel_max
+    vel_desired = min(vel_desired, vel_max)
     # 期望方向角和当前方向角的差
     ori_dif = correct(ori-theta_desired)
     # 若期望方向角和当前方向角的差超出最大角速度则取最大值
@@ -63,7 +62,5 @@ def saturator(ori: float, vel_max: float, ang_vel_max: float, vel_desired: float
     elif ang_vel*TS < -PI:
         ang_vel += 2*PI/TS
     # 速率的饱和机制
-    if vel_desired > vel_max:
-        vel_desired = vel_max
-    vel = vel_desired
+    vel = min(vel_desired, vel_max)
     return vel, ang_vel

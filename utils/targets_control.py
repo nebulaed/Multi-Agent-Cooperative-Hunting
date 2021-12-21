@@ -41,35 +41,26 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
         dangerous_ranges_organized: 目标的观察范围内的危险角度范围区间∈[0,2π)
     """
     S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI = ParamsTable.S_OBS_NUM, ParamsTable.M_OBS_NUM, ParamsTable.IRR_OBS_NUM, ParamsTable.M_IRR_OBS_NUM, np.pi
-    # 将所有目标和障碍物的距离按类别分行存储在d_obs中
-    d_obs = [[] for _ in range(6)]
-    for item in targets[mark].danger_m:
-        d_obs[0].append(targets[mark].d_m[item])
-    for item in targets[mark].danger_s:
-        d_obs[1].append(targets[mark].d_s[item])
-    for item in targets[mark].danger_ir:
-        d_obs[2].append(targets[mark].d_ir[item])
-    for item in targets[mark].danger_m_ir:
-        d_obs[3].append(targets[mark].d_m_ir[item])
-    for item in targets[mark].danger_border:
-        d_obs[4].append(targets[mark].border_d[item])
-    for item in danger_index:
-        d_obs[5].append(norm(targets[mark].target_to_wolf[item]))
+    # 用字典同时记录障碍物和目标的距离和障碍物的索引
     dict_d_obs = {}
-    for i in range(len(d_obs)):
-        for j in range(len(d_obs[i])):
-            if i == 0:
-                dict_d_obs[(i, targets[mark].danger_m[j])] = d_obs[i][j]
-            elif i == 1:
-                dict_d_obs[(i, targets[mark].danger_s[j])] = d_obs[i][j]
-            elif i == 2:
-                dict_d_obs[(i, targets[mark].danger_ir[j])] = d_obs[i][j]
-            elif i == 3:
-                dict_d_obs[(i, targets[mark].danger_m_ir[j])] = d_obs[i][j]
-            elif i == 4:
-                dict_d_obs[(i, targets[mark].danger_border[j])] = d_obs[i][j]
-            elif i == 5:
-                dict_d_obs[(i, j)] = d_obs[i][j]
+    for i in range(len(targets[mark].danger_m)):
+        obs_ind = targets[mark].danger_m[i]
+        dict_d_obs[(0, obs_ind)] = targets[mark].d_m[obs_ind]
+    for i in range(len(targets[mark].danger_s)):
+        obs_ind = targets[mark].danger_s[i]
+        dict_d_obs[(1, obs_ind)] = targets[mark].d_s[obs_ind]
+    for i in range(len(targets[mark].danger_ir)):
+        obs_ind = targets[mark].danger_ir[i]
+        dict_d_obs[(2, obs_ind)] = targets[mark].d_ir[obs_ind]
+    for i in range(len(targets[mark].danger_m_ir)):
+        obs_ind = targets[mark].danger_m_ir[i]
+        dict_d_obs[(3, obs_ind)] = targets[mark].d_m_ir[obs_ind]
+    for i in range(len(targets[mark].danger_border)):
+        obs_ind = targets[mark].danger_border[i]
+        dict_d_obs[(4, obs_ind)] = targets[mark].border_d[obs_ind]
+    for i in range(len(danger_index)):
+        obs_ind = danger_index[i]
+        dict_d_obs[(5, obs_ind)] = norm(targets[mark].target_to_wolf[obs_ind])
     if len(dict_d_obs) == 1:
         safety_bor, safety_mob, safety_sta, safety_m_irr, safety_enemy = 1.6, 2.0, 2.0, 2.8, 1.0
     elif len(dict_d_obs) >= 2:

@@ -67,7 +67,7 @@ def get_args():
                         help='whether display the figure')
     parser.add_argument('--output', type=str2bool, default=False,
                         help='whether save the data of robots and targets')
-    parser.add_argument('--record', type=str2bool, default=True,
+    parser.add_argument('--record', type=str2bool, default=False,
                         help='whether to record video')
     parser.add_argument('--showdata', type=str2bool, default=False,
                         help='whether to display the data curve')
@@ -75,6 +75,55 @@ def get_args():
     args = parser.parse_args()
     return args
 
+# 为方便重复调用，将画图前的迭代更新抽象为一个函数
+def before_plot(parameter, t):
+    WOLF_NUM, TARGET_NUM, TOTSTEP = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, ParamsTable.TOTSTEP
+    # 初始化当前步交互矩阵
+    parameter['interact'] = [[0]*(WOLF_NUM+TARGET_NUM)] * (WOLF_NUM+TARGET_NUM)
+    # 将当前仿真步数传入参数字典
+    parameter['t'] = t
+    # 障碍物的旋转和移动，不规则障碍物各边构成点的更新
+    all_update(**parameter)
+    # 通过围捕机器人的围捕算法计算出所有机器人的速度和角速度
+    parameter['old_track_target'], parameter['global_my_t'], parameter['vel_wolves'],parameter['ang_vel_wolves'], parameter['w_d_range'], parameter['v_vector'], parameter['old_attract'] = robots_movement_strategy(**parameter)
+    # 计算出目标的速度和角速度
+    parameter['vel_targets'], parameter['ang_vel_targets'], parameter['t_d_range'] = target_go(**parameter)
+    # 所有围捕机器人和目标根据算法给出的速度和角速度移动
+    all_move(**parameter)
+
+# 为方便重复调用，将画图后的迭代更新抽象为一个函数
+def after_plot(parameter, data, targets, irr_obss, m_irr_obss):
+    WOLF_NUM, TARGET_NUM, TOTSTEP = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, ParamsTable.TOTSTEP
+    # 记录围捕机器人、目标的速度、角速度、能量消耗，用于后续数据绘图
+    pos_targets_t, vel_targets_t, ang_vel_targets_t, energy_targets_t, pos_wolves_t, vel_wolves_t, ang_vel_wolves_t, energy_wolves_t, interact_t = record_data(**parameter)
+    data['pos_targets'].append(pos_targets_t)
+    data['vel_targets'].append(vel_targets_t)
+    data['ang_vel_targets'].append(ang_vel_targets_t)
+    data['energy_targets'].append(energy_targets_t)
+    data['pos_wolves'].append(pos_wolves_t)
+    data['vel_wolves'].append(vel_wolves_t)
+    data['ang_vel_wolves'].append(ang_vel_wolves_t)
+    data['energy_wolves'].append(energy_wolves_t)
+    data['interact'].append(interact_t)
+    # 判断围捕机器人是否撞上障碍物
+    judge_f = judge_fail(**parameter)
+    # 若是则跳出循环，判定这次围捕失败，否则继续
+    if judge_f == 1:
+        return 0, [0, 0, 0], []
+    elif judge_f == 2:
+        return 0, [3, 0, 0], []
+    # 清除不规则障碍物和移动不规则障碍物各边构成点
+    for irr_obs in irr_obss:
+        irr_obs.elements = []
+    for m_irr_obs in m_irr_obss:
+        m_irr_obs.elements = []
+    # 判断目标是否失去移动能力，是则判定这次围捕成功，结束循环，否则继续。
+    all_death = []
+    for i in range(TARGET_NUM):
+        all_death.append(targets[i].death)
+    if all(all_death):
+        return 1, [], all_death
+    return 2, [], all_death
 
 def main(opt):
     """
@@ -126,100 +175,25 @@ def main(opt):
                 for t in range(TOTSTEP):
                     # 清除当前绘图窗口中的所有对象
                     plt.cla()
-                    # 初始化当前步交互矩阵
-                    parameter['interact'] = [[0]*(WOLF_NUM+TARGET_NUM)] * (WOLF_NUM+TARGET_NUM)
-                    # 将当前仿真步数传入参数字典
-                    parameter['t'] = t
-                    # 障碍物的旋转和移动，不规则障碍物各边构成点的更新
-                    all_update(**parameter)
-                    # 通过围捕机器人的围捕算法计算出所有机器人的速度和角速度
-                    parameter['old_track_target'], parameter['global_my_t'], parameter['vel_wolves'],parameter['ang_vel_wolves'], parameter['w_d_range'], parameter['v_vector'], parameter['old_attract'] = robots_movement_strategy(**parameter)
-                    # 计算出目标的速度和角速度
-                    parameter['vel_targets'], parameter['ang_vel_targets'], parameter['t_d_range'] = target_go(**parameter)
-                    # 所有围捕机器人和目标根据算法给出的速度和角速度移动
-                    all_move(**parameter)
+                    before_plot(parameter, t)
                     # 绘图
                     plot_all(data, **parameter)
                     writer.grab_frame()
-                    # 记录围捕机器人、目标的速度、角速度、能量消耗，用于后续数据绘图
-                    pos_targets_t, vel_targets_t, ang_vel_targets_t, energy_targets_t, pos_wolves_t, vel_wolves_t, ang_vel_wolves_t, energy_wolves_t, interact_t = record_data(**parameter)
-                    data['pos_targets'].append(pos_targets_t)
-                    data['vel_targets'].append(vel_targets_t)
-                    data['ang_vel_targets'].append(ang_vel_targets_t)
-                    data['energy_targets'].append(energy_targets_t)
-                    data['pos_wolves'].append(pos_wolves_t)
-                    data['vel_wolves'].append(vel_wolves_t)
-                    data['ang_vel_wolves'].append(ang_vel_wolves_t)
-                    data['energy_wolves'].append(energy_wolves_t)
-                    data['interact'].append(interact_t)
-                    # 判断围捕机器人是否撞上障碍物
-                    judge_f = judge_fail(**parameter)
-                    # 若是则跳出循环，判定这次围捕失败，否则继续
-                    if judge_f == 1:
-                        return 0, 0, 0
-                    elif judge_f == 2:
-                        return 3, 0, 0
-                    # 清除不规则障碍物和移动不规则障碍物各边构成点
-                    for irr_obs in irr_obss:
-                        irr_obs.elements = []
-                    for m_irr_obs in m_irr_obss:
-                        m_irr_obs.elements = []
-                    # 判断目标是否失去移动能力，是则判定这次围捕成功，结束循环，否则继续。
-                    all_death = []
-                    for i in range(TARGET_NUM):
-                        all_death.append(targets[i].death)
-                    # if all(all_death):
-                    #     break
+                    branch, ret, all_death = after_plot(parameter, data, targets, irr_obss, m_irr_obss)
+                    if branch == 0: return ret[0], ret[1], ret[2]
+                    elif branch == 1: break
         else:
             t1 = time.time()
             # 仿真循环语句
             for t in range(TOTSTEP):
                 # 清除当前绘图窗口中的所有对象
                 plt.cla()
-                # 初始化当前步交互矩阵
-                parameter['interact'] = [[0]*(WOLF_NUM+TARGET_NUM)] * (WOLF_NUM+TARGET_NUM)
-                # 将当前仿真步数传入参数字典
-                parameter['t'] = t
-                # 障碍物的旋转和移动，不规则障碍物各边构成点的更新
-                all_update(**parameter)
-                # 通过围捕机器人的围捕算法计算出所有机器人的速度和角速度
-                parameter['old_track_target'], parameter['global_my_t'], parameter['vel_wolves'], parameter['ang_vel_wolves'], parameter['w_d_range'], parameter['v_vector'], parameter['old_attract'] = robots_movement_strategy(**parameter)
-                # 计算出目标的速度和角速度
-                parameter['vel_targets'], parameter['ang_vel_targets'], parameter['t_d_range'] = target_go(**parameter)
+                before_plot(parameter, t)
                 # 绘图
                 plot_all(data, **parameter)
-                # 所有围捕机器人和目标根据算法给出的速度和角速度移动
-                all_move(**parameter)
-                # 记录围捕机器人、目标的速度、角速度、能量消耗，用于后续数据绘图
-                pos_targets_t, vel_targets_t, ang_vel_targets_t, energy_targets_t, pos_wolves_t, vel_wolves_t, ang_vel_wolves_t, energy_wolves_t, interact_t = record_data(**parameter)
-                data['pos_targets'].append(pos_targets_t)
-                data['vel_targets'].append(vel_targets_t)
-                data['ang_vel_targets'].append(ang_vel_targets_t)
-                data['energy_targets'].append(energy_targets_t)
-                data['pos_wolves'].append(pos_wolves_t)
-                data['vel_wolves'].append(vel_wolves_t)
-                data['ang_vel_wolves'].append(ang_vel_wolves_t)
-                data['energy_wolves'].append(energy_wolves_t)
-                data['interact'].append(interact_t)
-                # 判断围捕机器人是否撞上障碍物
-                judge_f = judge_fail(**parameter)
-                # 若是则跳出循环，判定这次围捕失败，否则继续
-                if judge_f == 1:
-                    return 0, 0, 0
-                elif judge_f == 2:
-                    return 3, 0, 0
-                # 清除不规则障碍物和移动不规则障碍物各边构成点
-                for irr_obs in irr_obss:
-                    irr_obs.elements = []
-                for m_irr_obs in m_irr_obss:
-                    m_irr_obs.elements = []
-                # 判断目标是否失去移动能力，是则判定这次围捕成功，结束循环，否则继续。
-                all_death = []
-                for i in range(TARGET_NUM):
-                    all_death.append(targets[i].death)
-                if all(all_death):
-                    break
-
+                branch, ret, all_death = after_plot(parameter, data, targets, irr_obss, m_irr_obss)
+                if branch == 0: return ret[0], ret[1], ret[2]
+                elif branch == 1: break
         t2 = time.time()
         tact_time = t2-t1
         print(f'{tact_time} seconds, {t / tact_time} FPS')
@@ -230,47 +204,10 @@ def main(opt):
     else:
         # 仿真循环语句
         for t in range(TOTSTEP):
-            # 初始化当前步交互矩阵
-            parameter['interact'] = [[0]*(WOLF_NUM+TARGET_NUM)] * (WOLF_NUM+TARGET_NUM)
-            # 将当前仿真步数传入参数字典
-            parameter['t'] = t
-            # 障碍物的旋转和移动，不规则障碍物各边构成点的更新
-            all_update(**parameter)
-            # 通过围捕机器人的围捕算法计算出所有机器人的速度和角速度
-            parameter['old_track_target'], parameter['global_my_t'], parameter['vel_wolves'], parameter['ang_vel_wolves'], parameter['w_d_range'], parameter['v_vector'], parameter['old_attract'] = robots_movement_strategy(**parameter)
-            # 计算出目标的速度和角速度
-            parameter['vel_targets'], parameter['ang_vel_targets'], parameter['t_d_range'] = target_go(**parameter)
-            # 所有围捕机器人和目标根据算法给出的速度和角速度移动
-            all_move(**parameter)
-            # 记录围捕机器人、目标的速度、角速度、能量消耗，用于后续数据绘图
-            pos_targets_t, vel_targets_t, ang_vel_targets_t, energy_targets_t, pos_wolves_t, vel_wolves_t, ang_vel_wolves_t, energy_wolves_t, interact_t = record_data(**parameter)
-            data['pos_targets'].append(pos_targets_t)
-            data['vel_targets'].append(vel_targets_t)
-            data['ang_vel_targets'].append(ang_vel_targets_t)
-            data['energy_targets'].append(energy_targets_t)
-            data['pos_wolves'].append(pos_wolves_t)
-            data['vel_wolves'].append(vel_wolves_t)
-            data['ang_vel_wolves'].append(ang_vel_wolves_t)
-            data['energy_wolves'].append(energy_wolves_t)
-            data['interact'].append(interact_t)
-            # 判断围捕机器人是否撞上障碍物
-            judge_f = judge_fail(**parameter)
-            # 若是则跳出循环，判定这次围捕失败，否则继续
-            if judge_f == 1:
-                return 0, 0, 0
-            elif judge_f == 2:
-                return 3, 0, 0
-            # 清除不规则障碍物和移动不规则障碍物各边构成点
-            for irr_obs in irr_obss:
-                irr_obs.elements = []
-            for m_irr_obs in m_irr_obss:
-                m_irr_obs.elements = []
-            # 判断目标是否失去移动能力，是则判定这次围捕成功，结束循环，否则继续。
-            all_death = []
-            for i in range(TARGET_NUM):
-                all_death.append(targets[i].death)
-            if all(all_death):
-                break
+            before_plot(parameter, t)
+            branch, ret, all_death = after_plot(parameter, data, targets, irr_obss, m_irr_obss)
+            if branch == 0: return ret[0], ret[1], ret[2]
+            elif branch == 1: break
 
     # 若该文件存在，则删除此文件，然后保存仿真过程中围捕机器人的坐标、速度、角速度、累计能量消耗。
     if opt.output:

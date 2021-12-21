@@ -98,14 +98,14 @@ def plot_all(data: dict, wolves: list, targets: list, sta_obss: list, mob_obss: 
     plt.xlim(rectangle_border.X_MIN - 0.5, rectangle_border.X_MAX + 0.5)
     plt.ylim(rectangle_border.Y_MIN - 0.5, rectangle_border.Y_MAX + 0.5)
     ax.set_aspect('equal', adjustable='box')
-    # if wolves_wedges != None:
-    #     collection = PatchCollection(wolves_wedges, alpha=0.5, ls='-', lw=3, edgecolor='k')
-    #     collection.set_facecolor('#AFEEEE')
-    #     ax.add_collection(collection)
-    # if targets_wedges != None:
-    #     collection = PatchCollection(targets_wedges, alpha=0.5)
-    #     collection.set_facecolor('#FFD39B')
-    #     ax.add_collection(collection)
+    if wolves_wedges != None:
+        collection = PatchCollection(wolves_wedges, alpha=0.5, ls='-', lw=3, edgecolor='k')
+        collection.set_facecolor('#AFEEEE')
+        ax.add_collection(collection)
+    if targets_wedges != None:
+        collection = PatchCollection(targets_wedges, alpha=0.5)
+        collection.set_facecolor('#FFD39B')
+        ax.add_collection(collection)
     # 画出边界
     ax.add_patch(rectangle_border.plot_border())
     for item in sta_cir+mob_cir:
