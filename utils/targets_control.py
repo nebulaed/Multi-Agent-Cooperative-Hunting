@@ -14,10 +14,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, intervals_merge
 from utils.robots_control import saturator
-from utils.init import ParamsTable
+from utils.params import WOLF_NUM, TARGET_NUM, PI, TS
 
 
-def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_desired: float, targets: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, border: object, danger_direction: list = [], danger_index: list = []):
+def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_desired: float, targets: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, border: object, EXPANSION1: list, EXPANSION2: list, danger_direction: list = [], danger_index: list = []):
     """
     目标的避障算法
 
@@ -40,7 +40,6 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
         theta_target_desired: 考虑避障下，目标的期望方向角∈[0,2π)
         dangerous_ranges_organized: 目标的观察范围内的危险角度范围区间∈[0,2π)
     """
-    S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI = ParamsTable.S_OBS_NUM, ParamsTable.M_OBS_NUM, ParamsTable.IRR_OBS_NUM, ParamsTable.M_IRR_OBS_NUM, np.pi
     # 用字典同时记录障碍物和目标的距离和障碍物的索引
     dict_d_obs = {}
     for i in range(len(targets[mark].danger_m)):
@@ -62,9 +61,9 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
         obs_ind = danger_index[i]
         dict_d_obs[(5, obs_ind)] = norm(targets[mark].target_to_wolf[obs_ind])
     if len(dict_d_obs) == 1:
-        safety_bor, safety_mob, safety_sta, safety_m_irr, safety_enemy = 1.6, 2.0, 2.0, 2.8, 1.0
+        safety_bor, safety_mob, safety_sta, safety_m_irr, safety_enemy = EXPANSION1[0], EXPANSION1[1], EXPANSION1[2], EXPANSION1[3], EXPANSION1[4]
     elif len(dict_d_obs) >= 2:
-        safety_bor, safety_mob, safety_sta, safety_m_irr, safety_enemy = 1.3, 1.6, 1.6, 2.0, 1.0
+        safety_bor, safety_mob, safety_sta, safety_m_irr, safety_enemy = EXPANSION2[0], EXPANSION2[1], EXPANSION2[2], EXPANSION2[3], EXPANSION2[4]
     # 按照障碍物的距离将其和对应的索引进行排序
     dict_d_obs = sorted(dict_d_obs.items(), key=lambda item: item[1])
     dangerous_ranges_dists, dangerous_ranges, dangerous_ranges_indexs = [], [], []
@@ -247,7 +246,6 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
             theta_target_desired = nearest_side
             # plt.arrow(targets[mark].pos[0],targets[mark].pos[1],1*Cos(theta_target_desired),1*Sin(theta_target_desired),color='k', width=0.05, head_width=0.2, head_length=0.4)
         else:
-            TS = ParamsTable.TS
             # 期望方向角和当前方向角的差
             ori_dif = correct(targets[mark].ori-theta_target_desired)
             # 最大角速度由当前速度和轮子最大转速求出
@@ -327,7 +325,7 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
     return vel_target_desired, theta_target_desired, dangerous_ranges_organized
 
 
-def target_go(targets: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, t: int, interact: list, **kwargs):
+def target_go(targets: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, t: int, interact: list, EXPANSION1: list, EXPANSION2: list, **kwargs):
     """
     目标运动的主函数，在以上函数的基础上计算出目标下一步运动的速度和角速度
 
@@ -346,8 +344,7 @@ def target_go(targets: list, mob_obss: list, sta_obss: list, irr_obss: list, m_i
         ang_vel_target: 目标计算得到的当前步的控制输入角速度(单位为rad/s)，尚未实际移动
         t_d_rs: 目标当前步的观察范围内的危险角度范围区间∈[0,2π)
     """
-    WOLF_NUM, TARGET_NUM = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM
-    vel_target, ang_vel_target = np.zeros(ParamsTable.TARGET_NUM), np.zeros(ParamsTable.TARGET_NUM)
+    vel_target, ang_vel_target = np.zeros(TARGET_NUM), np.zeros(TARGET_NUM)
     # 最大角速度
     random_ang_vel_max = np.pi/6
     t_d_rs = []
@@ -387,7 +384,7 @@ def target_go(targets: list, mob_obss: list, sta_obss: list, irr_obss: list, m_i
             w = np.random.uniform(-random_ang_vel_max, random_ang_vel_max)
             theta = correct(targets[i].ori+w)
 
-        vel_target_desired, theta_target_desired, t_d_r = target_avoid_obs(t, i, variation, theta, targets, mob_obss, sta_obss, irr_obss, m_irr_obss, rectangle_border)
+        vel_target_desired, theta_target_desired, t_d_r = target_avoid_obs(t, i, variation, theta, targets, mob_obss, sta_obss, irr_obss, m_irr_obss, rectangle_border, EXPANSION1, EXPANSION2)
         t_d_rs.append(t_d_r)
         vel_target[i], ang_vel_target[i] = saturator(targets[i].ori, targets[i].vel_max, targets[i].ang_vel_max, vel_target_desired, theta_target_desired)
     return vel_target, ang_vel_target, t_d_rs

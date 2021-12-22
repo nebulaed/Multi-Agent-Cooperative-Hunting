@@ -16,7 +16,7 @@
 import numpy as np
 from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt, intervals_merge
 from utils.control_input import saturator
-from utils.init import ParamsTable
+from utils.params import WOLF_NUM, TARGET_NUM
 from utils.collision_avoidance import robot_avoid_obs
 
 
@@ -54,10 +54,9 @@ def find_near(wolves: list) -> None:
     输入：
         wolves: 存放所有围捕机器人对象的list
     """
-    WOLF_NUM = ParamsTable.WOLF_NUM
     # 执行个体的成员函数计算同伴由近到远的次序
-    for i in range(WOLF_NUM):
-        wolves[i].find_near(WOLF_NUM)
+    for wolf in wolves:
+        wolf.find_near()
 
 
 def assignment(wolves: list) -> list:
@@ -69,7 +68,6 @@ def assignment(wolves: list) -> list:
     输出：
         my_target: 存放各个围捕机器人选择的目标序号的list
     """
-    WOLF_NUM, TARGET_NUM = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM
     my_target = []
     target_dist = np.zeros((WOLF_NUM, TARGET_NUM))
     for i in range(WOLF_NUM):
@@ -131,7 +129,7 @@ def attractive(i: int, my_t: list, wolves: list, RADIUS: float, VARSIGMA: float,
     # 若该个体无法观察到目标
     else:
         # 按照由近到远的顺序判断同伴是否能观察到目标
-        for j in range(ParamsTable.WOLF_NUM-1):
+        for j in range(WOLF_NUM-1):
             x = int(wolves[i].neighbor[j])-1
             # 该个体与与x个体发生了交互
             interact[i][x] = 1
@@ -201,7 +199,7 @@ def repulsion(i: int, my_t: list, wolves: list, TAU_3: float, interact: list, at
     return horizontal_v, interact
 
 
-def robots_movement_strategy(wolves: list, targets: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, VARSIGMA: float, ALPHA: float, BETA: float, D_DANGER: float, D_DANGER_W: float, TAU_1: float, TAU_2: float, TAU_3: float, RADIUS: float, t: int, global_my_t: list, old_track_target: np.ndarray, old_attract: np.ndarray, interact: list, **kwargs):
+def robots_movement_strategy(wolves: list, targets: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, VARSIGMA: float, ALPHA: float, BETA: float, D_DANGER: float, D_DANGER_W: float, TAU_1: float, TAU_2: float, TAU_3: float, RADIUS: float, t: int, global_my_t: list, old_track_target: np.ndarray, old_attract: np.ndarray, interact: list, ASSIGN_CYCLE: int, EXPANSION3: list, EXPANSION4: list, **kwargs):
     """
     围捕机器人运动的主函数，在以上函数的基础上计算出围捕机器人下一步运动的速度和角速度
 
@@ -237,12 +235,11 @@ def robots_movement_strategy(wolves: list, targets: list, mob_obss: list, sta_ob
         v_vector: 算法计算出的围捕机器人的期望速度向量，可用于画图，便于debug
         save_attract: 当前步的前进速度向量(单位为m/s)
     """
-    WOLF_NUM, TARGET_NUM = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM
     # 个体将同伴按距离由近到远排序
     find_near(wolves)
     # 机器人个体的跟踪目标
     track_target = np.zeros((WOLF_NUM, 2))
-    if t % 5 == 0:
+    if t % ASSIGN_CYCLE == 0:
         my_target = assignment(wolves)
     else:
         my_target = global_my_t
@@ -272,7 +269,7 @@ def robots_movement_strategy(wolves: list, targets: list, mob_obss: list, sta_ob
         vel_wolf_desired = norm(variation)
         theta_wolf_desired = peri_arctan(variation)
         # 避障
-        vel_wolf_desired, theta_wolf_desired, w_d_r = robot_avoid_obs(t, j, vel_wolf_desired, theta_wolf_desired, my_target[j], wolves, mob_obss, sta_obss, irr_obss, m_irr_obss, rectangle_border, D_DANGER, D_DANGER_W)
+        vel_wolf_desired, theta_wolf_desired, w_d_r = robot_avoid_obs(t, j, vel_wolf_desired, theta_wolf_desired, my_target[j], wolves, mob_obss, sta_obss, irr_obss, m_irr_obss, rectangle_border, D_DANGER, D_DANGER_W, EXPANSION3, EXPANSION4)
         w_d_rs.append(w_d_r)
 
         v_vector[j, 0] = vel_wolf_desired*cos(theta_wolf_desired)

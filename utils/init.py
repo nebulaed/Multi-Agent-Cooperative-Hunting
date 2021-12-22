@@ -17,12 +17,8 @@ import numpy as np
 from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt
 from time import time
 from model import Robot, Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
-from utils.read_yml import Params
+from utils.params import WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI, BORDER, INIT_D
 
-
-# 读取参数
-ParamsTable = Params('params.yml')
-PI = np.pi
 
 def random_spawn(wolves: list) -> np.ndarray:
     """
@@ -35,7 +31,7 @@ def random_spawn(wolves: list) -> np.ndarray:
         np.array([x,y]): 目标的坐标
     """
     # 天选之子, 目标将诞生在你附近
-    chosen_son = np.random.randint(ParamsTable.WOLF_NUM)
+    chosen_son = np.random.randint(WOLF_NUM)
     # 锁定天选之子的坐标
     cen_p = wolves[chosen_son].pos
     # 计算目标在天选之子的哪个方向
@@ -63,7 +59,6 @@ def sta_obs_init(wolves: list, targets: list, border: Border) -> list:
         sta_obss: 存放所有固定障碍物对象的list
     """
     t1 = time()
-    WOLF_NUM, TARGET_NUM, S_OBS_NUM, INIT_D = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, ParamsTable.S_OBS_NUM, ParamsTable.INIT_D
     sta_obss = []
     for i in range(S_OBS_NUM):
         obs_r = np.random.uniform(0.25, 1.25)
@@ -118,7 +113,6 @@ def mob_obs_init(wolves: list, targets: list, sta_obss: list, border: Border) ->
         mob_obss: 存放所有移动障碍物对象的list
     """
     t1 = time()
-    WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, INIT_D = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, ParamsTable.S_OBS_NUM, ParamsTable.M_OBS_NUM, ParamsTable.IRR_OBS_NUM, ParamsTable.INIT_D
     mob_obss = []
     for i in range(M_OBS_NUM):
         obs_r = np.random.uniform(0.25, 1.25)
@@ -182,7 +176,6 @@ def irr_obs_init(wolves: list, targets: list, sta_obss: list, mob_obss: list, bo
         irr_obss: 存放所有不规则障碍物对象的list
     """
     t1 = time()
-    WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, INIT_D = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, ParamsTable.S_OBS_NUM, ParamsTable.M_OBS_NUM, ParamsTable.IRR_OBS_NUM, ParamsTable.INIT_D
     irr_obss = []
     for i in range(IRR_OBS_NUM):
         obs_r = np.random.uniform(0.5, 1.25)
@@ -255,7 +248,6 @@ def mob_irr_obs_init(wolves: list, targets: list, sta_obss: list, mob_obss: list
         m_irr_obss: 存放所有移动不规则障碍物对象的list
     """
     t1 = time()
-    WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, INIT_D = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, ParamsTable.S_OBS_NUM, ParamsTable.M_OBS_NUM, ParamsTable.IRR_OBS_NUM, ParamsTable.M_IRR_OBS_NUM, ParamsTable.INIT_D
     m_irr_obss = []
     for i in range(M_IRR_OBS_NUM):
         obs_r = np.random.uniform(0.5, 1.25)
@@ -320,7 +312,7 @@ def mob_irr_obs_init(wolves: list, targets: list, sta_obss: list, mob_obss: list
     return m_irr_obss
 
 
-def init():
+def init(DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float, R_ATTACKED: float, R_VISION: float, D_AVOID: float, **kwargs):
     """
     初始化地图以及调用以上函数初始化所有围捕机器人、目标、障碍物
 
@@ -336,14 +328,15 @@ def init():
     init_fail = True
     # 如果初始化失败(例如随机初始化的障碍物太大导致无论如何摆放在地图边界范围内都放不下)，重新初始化
     while(init_fail):
-        rectangle_border = Border(ParamsTable.border)
+        rectangle_border = Border(BORDER)
         wolves = [Robot([np.random.uniform(0, 2*PI), np.random.uniform(rectangle_border.X_MIN/4*3, rectangle_border.X_MAX/4*3),
-                        np.random.uniform(rectangle_border.Y_MIN/4*3, rectangle_border.Y_MAX/4*3)]) for i in range(ParamsTable.WOLF_NUM)]
-        spawn_p = np.zeros((ParamsTable.TARGET_NUM, 2))
-        for i in range(ParamsTable.TARGET_NUM):
+                        np.random.uniform(rectangle_border.Y_MIN/4*3, rectangle_border.Y_MAX/4*3)], DISPLAYBASE, DISPLAYHEIGHT, REALBASE, REALHEIGHT, vel_max, ang_vel_max, DIS_AVOID_BORDER, R_VISION, D_AVOID) for i in range(WOLF_NUM)]
+        spawn_p = np.zeros((TARGET_NUM, 2))
+        for i in range(TARGET_NUM):
             spawn_p[i] = random_spawn(wolves)
-        targets = [Target([np.random.uniform(0, 2*PI), spawn_p[i, 0], spawn_p[i, 1]])
-                   for i in range(ParamsTable.TARGET_NUM)]
+        targets = [Target([np.random.uniform(0, 2*PI), spawn_p[i, 0], spawn_p[i, 1]],
+                DISPLAYBASE, DISPLAYHEIGHT, REALBASE, REALHEIGHT, vel_max, ang_vel_max, DIS_AVOID_BORDER,
+                R_ATTACKED, R_VISION, D_AVOID) for i in range(TARGET_NUM)]
         sta_obss = sta_obs_init(wolves, targets, rectangle_border)
         # 初始化过程中有重叠，重新初始化
         if sta_obss == 0:

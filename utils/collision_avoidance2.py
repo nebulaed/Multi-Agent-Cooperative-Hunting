@@ -10,9 +10,8 @@
 
 
 import numpy as np
-from utils.math_func import correct,peri_arctan,arcsin,norm,sin,cos,exp,inc_angle,sqrt,intervals_merge
-from utils.control_input import saturator
-from utils.init import ParamsTable
+from utils.math_func import correct,peri_arctan,arcsin,norm,inc_angle,intervals_merge
+from utils.params import WOLF_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI
 
 
 def robot_avoid_obs(t: int, mark: int, vel_wolf_desired: float, theta_wolf_desired: float, my_t: int, wolves: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, border: object, D_DANGER: float, D_DANGER_W: float,dict_d_obs: dict):
@@ -39,7 +38,6 @@ def robot_avoid_obs(t: int, mark: int, vel_wolf_desired: float, theta_wolf_desir
         theta_wolf_desired: 考虑避障的情况下围捕机器人期望速度方向∈[0,2π)
         dangerous_ranges_organized: 围捕机器人的观察范围内的危险角度范围区间∈[0,2π)
     """
-    WOLF_NUM, PI = ParamsTable.WOLF_NUM, np.pi
     # 目标受攻击数预登记为0
     attack = 0
     for i in range(len(wolves)):
@@ -283,7 +281,7 @@ def robot_avoid_collision(t: int,mark: int,vel_wolf_desired: float,theta_wolf_de
     """
     围捕机器人的避碰算法
     """
-    WOLF_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI = ParamsTable.WOLF_NUM, ParamsTable.S_OBS_NUM, ParamsTable.M_OBS_NUM, ParamsTable.IRR_OBS_NUM, ParamsTable.M_IRR_OBS_NUM, np.pi
+
     wolves[mark].avoidCollisionFlag[t] = 0
     wolves[mark].avoidCollisionFlag2[t] = 0
     danger_w3 = []

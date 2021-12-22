@@ -10,7 +10,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams, gridspec
-from utils.init import ParamsTable
+from utils.params import WOLF_NUM, TARGET_NUM
 
 
 # 设置字体
@@ -43,7 +43,6 @@ def record_data(wolves: list, targets: list, t: int, interact: list, **kwargs) -
         energy_wolves: 当前步所有围捕机器人的能量消耗(单位为J)
         interact: 当前步拓扑矩阵
     """
-    WOLF_NUM, TARGET_NUM = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM
     pos_targets = []
     vel_targets = []
     ang_vel_targets = []
@@ -52,16 +51,16 @@ def record_data(wolves: list, targets: list, t: int, interact: list, **kwargs) -
     vel_wolves = []
     ang_vel_wolves = []
     energy_wolves = []
-    for i in range(TARGET_NUM):
-        pos_targets.append(targets[i].pos.tolist())
-        vel_targets.append(targets[i].vel)
-        ang_vel_targets.append(targets[i].ang_vel)
-        energy_targets.append(targets[i].energy)
-    for i in range(WOLF_NUM):
-        pos_wolves.append(wolves[i].pos.tolist())
-        vel_wolves.append(wolves[i].vel)
-        ang_vel_wolves.append(wolves[i].ang_vel)
-        energy_wolves.append(wolves[i].energy)
+    for target in targets:
+        pos_targets.append(target.pos.tolist())
+        vel_targets.append(target.vel)
+        ang_vel_targets.append(target.ang_vel)
+        energy_targets.append(target.energy)
+    for wolf in wolves:
+        pos_wolves.append(wolf.pos.tolist())
+        vel_wolves.append(wolf.vel)
+        ang_vel_wolves.append(wolf.ang_vel)
+        energy_wolves.append(wolf.energy)
     return pos_targets, vel_targets, ang_vel_targets, energy_targets, pos_wolves, vel_wolves, ang_vel_wolves, energy_wolves, interact
 
 
@@ -78,7 +77,6 @@ def plot_data(var: str, vel_wolves: list, ang_vel_wolves: list, energy_wolves: l
         ang_vel_targets: 目标当前步的角速度(单位为rad/s)
         energy_targets: 目标当前步的累计能量消耗(单位为J)
     """
-    TOTSTEP = ParamsTable.TOTSTEP
     # 打开绘图窗口
     plt.figure(figsize=(8, 6), constrained_layout=True)
     # 绘图窗口中轴上刻度的字体控制
@@ -156,7 +154,6 @@ def plot_ax(ax: object, n: int, var: str, vel_wolves: list, ang_vel_wolves: list
         ang_vel_wolves: 围捕机器人当前步的角速度(单位为rad/s)
         energy_wolves: 围捕机器人当前步的累计能量消耗(单位为J)
     """
-    TOTSTEP = ParamsTable.TOTSTEP
     vel_wolves_n, ang_vel_wolves_n, energy_wolves_n = [], [], []
     for i in range(len(vel_wolves)):
         vel_wolves_n.append(vel_wolves[i][n])

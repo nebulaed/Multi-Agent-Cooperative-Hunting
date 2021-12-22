@@ -9,7 +9,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from cv2 import pointPolygonTest
-from utils.math_func import norm, cos, sin
+from utils.math_func import norm
 
 
 def two_line_segment_test(x1: float, y1: float, x2: float, y2: float, x3: float, y3: float, x4: float, y4: float) -> bool:

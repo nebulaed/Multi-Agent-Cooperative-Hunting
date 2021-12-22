@@ -10,8 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 from matplotlib import rcParams, patches
-from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt
-from utils.init import ParamsTable
+from utils.math_func import norm
+from utils.params import WOLF_NUM, TARGET_NUM, PI
 from matplotlib.font_manager import FontProperties  # 字体属性管理器
 
 
@@ -45,7 +45,6 @@ def plot_all(data: dict, wolves: list, targets: list, sta_obss: list, mob_obss: 
         v_vector: 存放围捕机器人的期望速度矢量，用于画图方便debug
         t_d_range: 存放matplotlib扇形对象的list，用于画图
     """
-    WOLF_NUM, TARGET_NUM, PI = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, np.pi
     ax = plt.gca()
     wolves_wedges, targets_wedges = [], []
     for i in range(WOLF_NUM):

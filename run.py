@@ -31,7 +31,7 @@ np.random.seed(100)
 import os
 import matplotlib.pyplot as plt
 import time
-from utils.init import init, ParamsTable
+from utils.init import init
 from utils.draw_data import plot_data, record_data
 from utils.draw import plot_all
 from utils.updateobs import all_update
@@ -39,6 +39,7 @@ from utils.robots_control import robots_movement_strategy
 from utils.targets_control import target_go
 from utils.move import all_move
 from utils.determine import judge_fail
+from utils.params import WOLF_NUM, TARGET_NUM, TOTSTEP
 from matplotlib.animation import FFMpegWriter
 # 导入FFMPEG, 用于制作动画
 plt.rcParams['animation.ffmpeg_path'] = 'D:\\Software\\Anaconda3\\Library\\bin\\ffmpeg.exe'
@@ -77,7 +78,6 @@ def get_args():
 
 # 为方便重复调用，将画图前的迭代更新抽象为一个函数
 def before_plot(parameter, t):
-    WOLF_NUM, TARGET_NUM, TOTSTEP = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, ParamsTable.TOTSTEP
     # 初始化当前步交互矩阵
     parameter['interact'] = [[0]*(WOLF_NUM+TARGET_NUM)] * (WOLF_NUM+TARGET_NUM)
     # 将当前仿真步数传入参数字典
@@ -93,7 +93,6 @@ def before_plot(parameter, t):
 
 # 为方便重复调用，将画图后的迭代更新抽象为一个函数
 def after_plot(parameter, data, targets, irr_obss, m_irr_obss):
-    WOLF_NUM, TARGET_NUM, TOTSTEP = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, ParamsTable.TOTSTEP
     # 记录围捕机器人、目标的速度、角速度、能量消耗，用于后续数据绘图
     pos_targets_t, vel_targets_t, ang_vel_targets_t, energy_targets_t, pos_wolves_t, vel_wolves_t, ang_vel_wolves_t, energy_wolves_t, interact_t = record_data(**parameter)
     data['pos_targets'].append(pos_targets_t)
@@ -119,11 +118,19 @@ def after_plot(parameter, data, targets, irr_obss, m_irr_obss):
         m_irr_obs.elements = []
     # 判断目标是否失去移动能力，是则判定这次围捕成功，结束循环，否则继续。
     all_death = []
-    for i in range(TARGET_NUM):
-        all_death.append(targets[i].death)
+    for target in targets:
+        all_death.append(target.death)
     if all(all_death):
         return 1, [], all_death
     return 2, [], all_death
+
+# 若该文件存在，则删除此文件，然后保存
+def rewrite(path, data):
+    if opt.output:
+        if os.path.exists(path):
+            os.remove(path)
+        with open(path, 'w') as f:
+            f.write(str(data))
 
 def main(opt):
     """
@@ -138,16 +145,9 @@ def main(opt):
         c: 围捕任务完成所需时间(单位为step)
     """
 
-    # 从外部初始化参数中获得围捕机器人数量WOLF_NUM、目标数量TARGET_NUM和仿真总步数TOTSTEP
-    WOLF_NUM, TARGET_NUM, TOTSTEP = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, ParamsTable.TOTSTEP
-    # 初始化围捕机器人wolves，目标targets，固定障碍物sta_obss，移动障碍物mob_obss，不规则障碍物irr_obss，移动不规则障碍物m_irr_obss，地图边界rectangle_border
-    wolves, targets, sta_obss, mob_obss, irr_obss, m_irr_obss, rectangle_border = init()
-    # 初始化存放围捕机器人和目标的速度、角速度、能量消耗的字典。
-    data = {'pos_targets': [], 'vel_targets': [], 'ang_vel_targets': [], 'energy_targets': [],
-            'pos_wolves': [], 'vel_wolves': [], 'ang_vel_wolves': [], 'energy_wolves': [], 'interact': []}
-
     # 初始化仿真过程中传递参数的字典
-    parameter = {'VARSIGMA': 0.3869405500381927,
+    parameter = {# 以下这部分是优化后选取的算法参数
+                 'VARSIGMA': 0.3869405500381927,
                  'D_DANGER': 0.28489136293795562,
                  'D_DANGER_W': 0.50,
                  'ALPHA': 5.050359027046031,
@@ -155,11 +155,38 @@ def main(opt):
                  'TAU_1': 2.114010945835207,
                  'TAU_2': -0.6788510831700431,
                  'TAU_3': 1.0300341638172719,
-                 'RADIUS': 0.65,
-                 'wolves': wolves, 'targets': targets, 'sta_obss': sta_obss, 'mob_obss': mob_obss, 'irr_obss': irr_obss, 'm_irr_obss': m_irr_obss, 'rectangle_border': rectangle_border,
+                 # 以下这部分是默认设定的一些仿真参数
+                 'RADIUS': 0.65,    # 围捕半径
+                 'R_VISION': 3.0,   # 机器人的观察范围
+                 'D_AVOID': 1.6479672158640435, # 机器人的避障距离
+                 'DISPLAYBASE': 0.35,       # 三角形小车的显示底边长度(单位为m)
+                 'DISPLAYHEIGHT': 0.28,     # 三角形小车的显示高长度(单位为m)
+                 'REALBASE': 0.2,           # 三角形小车的实际底边长度(单位为m)
+                 'REALHEIGHT': 0.2,         # 三角形小车的实际高长度(单位为m)
+                 'vel_max': 1.5,            # 线速度v最大值(单位为m/s)
+                 'ang_vel_max': 7.0,        # 角速度ω最大值(单位为rad/s) 
+                 'DIS_AVOID_BORDER': 1.4,   # 避墙距离(单位为m) 
+                 'R_ATTACKED': 0.8,         # 目标受攻击的距离(单位为m)
+                 'VEL_OBS': 0.5,            # 障碍物在全局坐标系中的速度x轴分量最大值和y轴分量最大值
+                 'EXPANSION1': [1.6, 2.0, 2.0, 2.8, 1.0],   # 障碍物少的情况下目标的危险角度区间的扩展系数
+                 'EXPANSION2': [1.3, 1.6, 1.6, 2.0, 1.0],   # 障碍物多的情况下目标的危险角度区间的扩展系数
+                 'EXPANSION3': [1.6, 2.4, 2.4, 3.2],        # 障碍物少的情况下机器人的危险角度区间的扩展系数
+                 'EXPANSION4': [1.3, 1.8, 1.8, 2.2],        # 障碍物多的情况下机器人的危险角度区间的扩展系数
+                 'ASSIGN_CYCLE': 5,                         # 机器人重新分配目标的仿真步数周期，即每5步重新分配目标
+                 # 以下这些是为了方便传参放进来的一些不断更新的数据
+                 'wolves': [], 'targets': [], 'sta_obss': [], 'mob_obss': [], 'irr_obss': [], 'm_irr_obss': [], 'rectangle_border': [],
                  'global_my_t': [],
                  'old_attract': np.zeros((WOLF_NUM, 2)),
                  'old_track_target': np.zeros((WOLF_NUM, 2))}
+    
+    # 初始化围捕机器人wolves，目标targets，固定障碍物sta_obss，移动障碍物mob_obss，不规则障碍物irr_obss，移动不规则障碍物m_irr_obss，地图边界rectangle_border
+    wolves, targets, sta_obss, mob_obss, irr_obss, m_irr_obss, rectangle_border = init(**parameter)
+    parameter['wolves'], parameter['targets'], parameter['sta_obss'], parameter['mob_obss'], parameter['irr_obss'], parameter['m_irr_obss'], parameter['rectangle_border'] = wolves, targets, sta_obss, mob_obss, irr_obss, m_irr_obss, rectangle_border
+
+    # 初始化存放围捕机器人和目标的速度、角速度、能量消耗的字典。
+    data = {'pos_targets': [], 'vel_targets': [], 'ang_vel_targets': [], 'energy_targets': [],
+            'pos_wolves': [], 'vel_wolves': [], 'ang_vel_wolves': [], 'energy_wolves': [], 'interact': []}
+
     if opt.display:
         # 打开matplotlib绘图窗口
         figure = plt.figure(figsize=(12, 10), constrained_layout=True)
@@ -211,25 +238,10 @@ def main(opt):
 
     # 若该文件存在，则删除此文件，然后保存仿真过程中围捕机器人的坐标、速度、角速度、累计能量消耗。
     if opt.output:
-        if os.path.exists('output/wolves_pos.txt'):
-            os.remove('output/wolves_pos.txt')
-        with open('output/wolves_pos.txt', 'w') as f:
-            f.write(str(data['pos_wolves']))
-
-        if os.path.exists('output/wolves_vel.txt'):
-            os.remove('output/wolves_vel.txt')
-        with open('output/wolves_vel.txt', 'w') as f:
-            f.write(str(data['vel_wolves']))
-
-        if os.path.exists('output/wolves_ang_vel.txt'):
-            os.remove('output/wolves_ang_vel.txt')
-        with open('output/wolves_ang_vel.txt', 'w') as f:
-            f.write(str(data['ang_vel_wolves']))
-
-        if os.path.exists('output/wolves_energy.txt'):
-            os.remove('output/wolves_energy.txt')
-        with open('output/wolves_energy.txt', 'w') as f:
-            f.write(str(data['energy_wolves']))
+        rewrite('output/wolves_pos.txt', data['pos_wolves'])
+        rewrite('output/wolves_vel.txt', data['vel_wolves'])
+        rewrite('output/wolves_ang_vel.txt', data['ang_vel_wolves'])
+        rewrite('output/wolves_energy.txt', data['energy_wolves'])
 
     # 画出围捕机器人和目标速度、角速度、能量消耗的变化曲线
     if opt.showdata:
@@ -239,8 +251,8 @@ def main(opt):
 
     # 若这次围捕成功，在终端输出机器人的总能量消耗和完成围捕消耗步数
     all_t_death = []
-    for i in range(TARGET_NUM):
-        all_t_death.append(targets[i].t_death)
+    for target in targets:
+        all_t_death.append(target.t_death)
     if all(all_death):
         E_sum = 0
         for i in range(WOLF_NUM):

@@ -8,9 +8,7 @@
 
 
 import numpy as np
-from cv2 import pointPolygonTest
-from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle
-from utils.init import ParamsTable
+from utils.params import WOLF_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM
 from utils.collision_detection import two_triangle_test,circle_triangle_test,two_polygon_test
 
 
@@ -27,7 +25,7 @@ def judge_fail(wolves: list, sta_obss: list, mob_obss: list, irr_obss: list, m_i
     输出：
         0表示未撞上障碍物或其他机器人，1表示机器人已撞上障碍物，2表示有机器人撞上了其他机器人
     """
-    WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, ParamsTable.S_OBS_NUM, ParamsTable.M_OBS_NUM, ParamsTable.IRR_OBS_NUM, ParamsTable.M_IRR_OBS_NUM
+
     for i in range(WOLF_NUM):
         tri1 = [[wolves[i].real_x0, wolves[i].real_y0],
                 [wolves[i].real_x1, wolves[i].real_y1],

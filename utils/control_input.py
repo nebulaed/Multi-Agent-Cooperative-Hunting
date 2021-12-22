@@ -7,8 +7,8 @@
 # 本文件定义了一个控制输入计算函数
 
 import numpy as np
-from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt
-from utils.init import ParamsTable
+from utils.math_func import correct
+from utils.params import PI, TS
 
 
 def saturator(ori: float, vel_max: float, ang_vel_max: float, vel_desired: float, theta_desired: float) -> float:
@@ -26,7 +26,7 @@ def saturator(ori: float, vel_max: float, ang_vel_max: float, vel_desired: float
         vel: 小车实际下个step的速度(单位为m/s)
         ang_vel: 小车实际下个step的角速度(单位为rad/s)
     """
-    TS, PI = ParamsTable.TS, np.pi
+
     # 速率的饱和机制
     vel_desired = min(vel_desired, vel_max)
     # 期望方向角和当前方向角的差

@@ -8,7 +8,7 @@
 
 
 import numpy as np
-from utils.init import ParamsTable
+from utils.params import WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM
 from utils.math_func import norm
 
 
@@ -25,7 +25,6 @@ def vector_count(wolves: list, targets: list, sta_obss: list, mob_obss: list, ir
         m_irr_obss: 存放所有移动不规则障碍物对象的list
         border: 边界对象
     """
-    WOLF_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, TARGET_NUM, PI = ParamsTable.WOLF_NUM, ParamsTable.S_OBS_NUM, ParamsTable.M_OBS_NUM, ParamsTable.IRR_OBS_NUM, ParamsTable.M_IRR_OBS_NUM, ParamsTable.TARGET_NUM, np.pi
 
     # 目标到各边界距离以及最近边界
     for i in range(TARGET_NUM):

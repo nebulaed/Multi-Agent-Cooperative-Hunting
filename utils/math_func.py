@@ -9,8 +9,8 @@
 
 import numpy as np
 from numba import jit
+from utils.params import PI
 
-PI = np.pi
 
 @jit(nopython=True)
 def correct(angle: float) -> float:

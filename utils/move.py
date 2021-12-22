@@ -6,9 +6,8 @@
 # --------------------------------------------------------
 # 本文件定义了AllMove函数，实现围捕机器人和目标的实际移动。
 
-from utils.read_yml import Params
 from utils.relative_pos import vector_count
-from utils.init import ParamsTable
+from utils.params import WOLF_NUM, TARGET_NUM
 
 
 def all_move(wolves: list, targets: list, sta_obss: list, mob_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, t: int, vel_wolves: float, ang_vel_wolves: float, vel_targets: float, ang_vel_targets: float, **kwargs) -> None:
@@ -29,7 +28,6 @@ def all_move(wolves: list, targets: list, sta_obss: list, mob_obss: list, irr_ob
         vel_targets: 目标速度
         ang_vel_targets: 目标角速度
     """
-    WOLF_NUM, TARGET_NUM = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM
     for i in range(WOLF_NUM):
         # 个体移动
         if t != 0:

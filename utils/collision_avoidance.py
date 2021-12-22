@@ -10,11 +10,10 @@
 
 
 import numpy as np
-from utils.math_func import correct,peri_arctan,arcsin,norm,sin,cos,exp,inc_angle,sqrt,intervals_merge
-from utils.control_input import saturator
-from utils.init import ParamsTable
+from utils.math_func import correct,peri_arctan,arcsin,norm,sin,cos,inc_angle,intervals_merge
+from utils.params import WOLF_NUM, PI
 
-def robot_avoid_obs(t: int, mark: int, vel_wolf_desired: float, theta_wolf_desired: float, my_t: int, wolves: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, border: object, D_DANGER: float, D_DANGER_W: float):
+def robot_avoid_obs(t: int, mark: int, vel_wolf_desired: float, theta_wolf_desired: float, my_t: int, wolves: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, border: object, D_DANGER: float, D_DANGER_W: float, EXPANSION3: list, EXPANSION4: list):
     """
     围捕机器人的避障算法
 
@@ -38,7 +37,7 @@ def robot_avoid_obs(t: int, mark: int, vel_wolf_desired: float, theta_wolf_desir
         theta_wolf_desired: 考虑避障的情况下围捕机器人期望速度方向∈[0,2π)
         dangerous_ranges_organized: 围捕机器人的观察范围内的危险角度范围区间∈[0,2π)
     """
-    WOLF_NUM, PI = ParamsTable.WOLF_NUM, np.pi
+    
     danger_w3 = []
     # 以下部分为围捕机器人之间紧急避障
     for i in range(WOLF_NUM):
@@ -86,9 +85,9 @@ def robot_avoid_obs(t: int, mark: int, vel_wolf_desired: float, theta_wolf_desir
         key, = dict_d_obs
         if key[0] == 4 and norm(wolves[mark].wolf_to_target[my_t]) < 0.8:
             return vel_wolf_desired, theta_wolf_desired, []
-        safety_bor, safety_mob, safety_sta, safety_m_irr = 1.6, 2.4, 2.4, 3.2
+        safety_bor, safety_mob, safety_sta, safety_m_irr = EXPANSION3[0], EXPANSION3[1], EXPANSION3[2], EXPANSION3[3]
     elif len(dict_d_obs) >= 2:
-        safety_bor, safety_mob, safety_sta, safety_m_irr = 1.3, 1.8, 1.8, 2.2
+        safety_bor, safety_mob, safety_sta, safety_m_irr = EXPANSION4[0], EXPANSION4[1], EXPANSION4[2], EXPANSION4[3]
     # 按照障碍物的距离将其和对应的索引进行排序
     dict_d_obs = sorted(dict_d_obs.items(), key=lambda item: item[1])
     dangerous_ranges_dists, dangerous_ranges, dangerous_ranges_indexs = [], [], []
@@ -347,7 +346,6 @@ def robot_avoid_obs(t: int, mark: int, vel_wolf_desired: float, theta_wolf_desir
             # 期望方向改为最近边
             theta_wolf_desired = nearest_side
         else:
-            TS = ParamsTable.TS
             theta_wolf_desired = target_direction
             # # 期望方向角和当前方向角的差
             # ori_dif = correct(wolves[mark].ori-theta_wolf_desired)
@@ -398,7 +396,7 @@ def robot_avoid_obs(t: int, mark: int, vel_wolf_desired: float, theta_wolf_desir
             if abs(wolves[mark].ori-theta_wolf_desired) > PI/2:
                 vel_wolf_desired = 0
             else:
-                avoid_v = 1.5
+                avoid_v = wolves[mark].vel_max
                 vel_wolf_desired = avoid_v
             return vel_wolf_desired, theta_wolf_desired, dangerous_ranges_organized
     return vel_wolf_desired, theta_wolf_desired, dangerous_ranges_organized

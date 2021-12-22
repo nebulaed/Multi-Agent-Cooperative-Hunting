@@ -10,12 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import patches
 from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt
-from utils.read_yml import Params
+from utils.params import WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI, TOTSTEP, TS
 from utils.collision_detection import two_triangle_test, circle_triangle_test, two_polygon_test
-
-# 从外部读取初始化参数
-ParamsTable = Params('params.yml')
-WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI, TOTSTEP, TS = ParamsTable.WOLF_NUM, ParamsTable.TARGET_NUM, ParamsTable.S_OBS_NUM, ParamsTable.M_OBS_NUM, ParamsTable.IRR_OBS_NUM, ParamsTable.M_IRR_OBS_NUM, np.pi, ParamsTable.TOTSTEP, ParamsTable.TS
 
 
 class Agent(object):
@@ -34,7 +30,7 @@ class Agent(object):
         f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)。
     """
 
-    def __init__(self, f_in: list):
+    def __init__(self, f_in: list, DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float):
         # 位置pos_x, pos_y
         self.__pos_x = f_in[1]
         self.__pos_y = f_in[2]
@@ -42,33 +38,19 @@ class Agent(object):
         self.__theta = correct(f_in[0])
 
         # 三角形小车的显示底边长度(单位为m)
-        self.DISPLAYBASE = 0.35
+        self.DISPLAYBASE = DISPLAYBASE
         # 三角形小车的显示高长度(单位为m)
-        self.DISPLAYHEIGHT = 0.28
+        self.DISPLAYHEIGHT = DISPLAYHEIGHT
         # 三角形小车的实际底边长度(单位为m)
-        self.REALBASE = 0.2
+        self.REALBASE = REALBASE
         # 三角形小车的实际高长度(单位为m)
-        self.REALHEIGHT = 0.2
-        # 三角形画图顶点vertex_0,vertex_1,vertex_2(为画图效果比实际小车要大)
-        self.vertex_x0 = self.__pos_x+self.DISPLAYHEIGHT*cos(self.__theta)
-        self.vertex_y0 = self.__pos_y+self.DISPLAYHEIGHT*sin(self.__theta)
-        Q1 = self.__theta-PI/2
-        Q2 = self.__theta+PI/2
-        self.vertex_x1 = self.__pos_x+self.DISPLAYBASE/2*cos(Q1)
-        self.vertex_y1 = self.__pos_y+self.DISPLAYBASE/2*sin(Q1)
-        self.vertex_x2 = self.__pos_x+self.DISPLAYBASE/2*cos(Q2)
-        self.vertex_y2 = self.__pos_y+self.DISPLAYBASE/2*sin(Q2)
-        # 小车实际顶点real_x0,real_x1,real_x2
-        self.real_x0 = self.__pos_x+self.REALHEIGHT*cos(self.__theta)
-        self.real_y0 = self.__pos_y+self.REALHEIGHT*sin(self.__theta)
-        self.real_x1 = self.__pos_x+self.REALBASE/2*cos(Q1)
-        self.real_y1 = self.__pos_y+self.REALBASE/2*sin(Q1)
-        self.real_x2 = self.__pos_x+self.REALBASE/2*cos(Q2)
-        self.real_y2 = self.__pos_y+self.REALBASE/2*sin(Q2)
+        self.REALHEIGHT = REALHEIGHT
+        # 更新三角形画图顶点和小车实际顶点
+        self.update_vertex()
         # 线速度v最大值(单位为m/s)
-        self.vel_max = 1.5
+        self.vel_max = vel_max
         # 角速度ω最大值(单位为rad/s)
-        self.ang_vel_max = 7.0
+        self.ang_vel_max = ang_vel_max
         # 线速度v(单位为m/s)和角速度ω(单位为rad/s)
         self.__vel = 0
         self.__ang_vel = 0
@@ -85,7 +67,7 @@ class Agent(object):
         # 仿真过程中每一步是否有其他机器人距离过近，是则self.danger_w为1，否则为0
         self.danger_w2 = np.zeros((TOTSTEP, WOLF_NUM), dtype=int)
         # 避墙距离(单位为m)
-        self.DIS_AVOID_BORDER = 1.4
+        self.DIS_AVOID_BORDER = DIS_AVOID_BORDER
         # 避碰标签
         self.avoidCollisionFlag = [0]*TOTSTEP
         # 避碰标签2
@@ -115,6 +97,24 @@ class Agent(object):
         # 初始化该个体避墙距离内的边界列表
         self.danger_border = []
 
+    def update_vertex(self) -> None:
+        # 三角形画图顶点vertex_0,vertex_1,vertex_2(为画图效果比实际小车要大)
+        self.vertex_x0 = self.__pos_x+self.DISPLAYHEIGHT*cos(self.__theta)
+        self.vertex_y0 = self.__pos_y+self.DISPLAYHEIGHT*sin(self.__theta)
+        Q1 = self.__theta-PI/2
+        Q2 = self.__theta+PI/2
+        self.vertex_x1 = self.__pos_x+self.DISPLAYBASE/2*cos(Q1)
+        self.vertex_y1 = self.__pos_y+self.DISPLAYBASE/2*sin(Q1)
+        self.vertex_x2 = self.__pos_x+self.DISPLAYBASE/2*cos(Q2)
+        self.vertex_y2 = self.__pos_y+self.DISPLAYBASE/2*sin(Q2)
+        # 小车实际顶点real_x0,real_x1,real_x2
+        self.real_x0 = self.__pos_x+self.REALHEIGHT*cos(self.__theta)
+        self.real_y0 = self.__pos_y+self.REALHEIGHT*sin(self.__theta)
+        self.real_x1 = self.__pos_x+self.REALBASE/2*cos(Q1)
+        self.real_y1 = self.__pos_y+self.REALBASE/2*sin(Q1)
+        self.real_x2 = self.__pos_x+self.REALBASE/2*cos(Q2)
+        self.real_y2 = self.__pos_y+self.REALBASE/2*sin(Q2)
+
     def move(self, vel: float, ang_vel: float) -> None:
         """
         unicycle模型遵循的运动学方程:
@@ -133,22 +133,7 @@ class Agent(object):
         self.__ang_vel = ang_vel
         # 计算累计能量消耗，默认质量为1kg，速度为m/s，因此能量单位为J
         self.energy += 1/2*1*(self.vel**2)
-        # 顶点vertex_0,vertex_1,vertex_2
-        self.vertex_x0 = self.__pos_x+self.DISPLAYHEIGHT*cos(self.__theta)
-        self.vertex_y0 = self.__pos_y+self.DISPLAYHEIGHT*sin(self.__theta)
-        Q1 = self.__theta-PI/2
-        Q2 = self.__theta+PI/2
-        self.vertex_x1 = self.__pos_x+self.DISPLAYBASE/2*cos(Q1)
-        self.vertex_y1 = self.__pos_y+self.DISPLAYBASE/2*sin(Q1)
-        self.vertex_x2 = self.__pos_x+self.DISPLAYBASE/2*cos(Q2)
-        self.vertex_y2 = self.__pos_y+self.DISPLAYBASE/2*sin(Q2)
-        # 实际顶点vertex_0,vertex_1,vertex_2
-        self.real_x0 = self.__pos_x+self.REALHEIGHT*cos(self.__theta)
-        self.real_y0 = self.__pos_y+self.REALHEIGHT*sin(self.__theta)
-        self.real_x1 = self.__pos_x+self.REALBASE/2*cos(Q1)
-        self.real_y1 = self.__pos_y+self.REALBASE/2*sin(Q1)
-        self.real_x2 = self.__pos_x+self.REALBASE/2*cos(Q2)
-        self.real_y2 = self.__pos_y+self.REALBASE/2*sin(Q2)
+        self.update_vertex()
 
     def plot_agent(self) -> None:
         """在matplotlib绘图窗口中画出车体"""
@@ -224,27 +209,27 @@ class Agent(object):
                     # 若当前机器人三角形与另外一机器人的显示三角形交叠，则判定不可行
                     if two_triangle_test(tri1, tri2):
                         return False
-            for i in range(S_OBS_NUM):
-                if circle_triangle_test(sta_obss[i].pos, sta_obss[i].R, tri1):
+            for sta_obs in sta_obss:
+                if circle_triangle_test(sta_obs.pos, sta_obs.R, tri1):
                     return False
-            for i in range(M_OBS_NUM):
-                if circle_triangle_test(mob_obss[i].pos, mob_obss[i].R, tri1):
+            for mob_obs in mob_obss:
+                if circle_triangle_test(mob_obs.pos, mob_obs.R, tri1):
                     return False
             poly1 = np.array([[[tri1[0][0],tri1[0][1]]],
                                 [[tri1[1][0],tri1[1][1]]],
                                 [[tri1[2][0],tri1[2][1]]]]).astype(np.float32)
-            for j in range(IRR_OBS_NUM):
-                poly2 = np.zeros(((irr_obss[j].samples_num, 1, 2))).astype(np.float32)
-                for k in range(irr_obss[j].samples_num):
-                    poly2[k, 0] = np.array([irr_obss[j].vertex_x[irr_obss[j].pose_order[k]],
-                                        irr_obss[j].vertex_y[irr_obss[j].pose_order[k]]])
+            for irr_obs in irr_obss:
+                poly2 = np.zeros(((irr_obs.samples_num, 1, 2))).astype(np.float32)
+                for k in range(irr_obs.samples_num):
+                    poly2[k, 0] = np.array([irr_obs.vertex_x[irr_obs.pose_order[k]],
+                                        irr_obs.vertex_y[irr_obs.pose_order[k]]])
                 if two_polygon_test(poly1,poly2):
                     return False
-            for j in range(M_IRR_OBS_NUM):
-                poly2 = np.zeros(((m_irr_obss[j].samples_num, 1, 2))).astype(np.float32)
-                for k in range(m_irr_obss[j].samples_num):
-                    poly2[k, 0] = np.array([m_irr_obss[j].vertex_x[m_irr_obss[j].pose_order[k]],
-                                        m_irr_obss[j].vertex_y[m_irr_obss[j].pose_order[k]]])
+            for m_irr_obss in m_irr_obss:
+                poly2 = np.zeros(((m_irr_obss.samples_num, 1, 2))).astype(np.float32)
+                for k in range(m_irr_obss.samples_num):
+                    poly2[k, 0] = np.array([m_irr_obss.vertex_x[m_irr_obss.pose_order[k]],
+                                        m_irr_obss.vertex_y[m_irr_obss.pose_order[k]]])
                 if two_polygon_test(poly1,poly2):
                     return False
             return True
@@ -299,15 +284,15 @@ class Robot(Agent):
         f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)。
     """
 
-    def __init__(self, f_in: list):
+    def __init__(self, f_in: list, DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float, R_VISION, AVOID_DIST):
         # 将父类Agent的__init__函数包含进来
-        super(Robot, self).__init__(f_in)
+        super(Robot, self).__init__(f_in, DISPLAYBASE, DISPLAYHEIGHT, REALBASE, REALHEIGHT, vel_max, ang_vel_max, DIS_AVOID_BORDER)
         # 机器人的车身颜色: 蓝色
         self.__color = 'b'
         # 机器人的观察范围(单位为m)
-        self.R_VISION = 3.0
+        self.R_VISION = R_VISION
         # 机器人的避障距离(单位为m)
-        self.AVOID_DIST = 1.6479672158640435
+        self.AVOID_DIST = AVOID_DIST
         # 机器人是否检测到目标
         self.detection = False
 
@@ -333,12 +318,10 @@ class Robot(Agent):
         # 画出围捕机器人的观察范围
         self.plot_circle(self.R_VISION, 'b--')
 
-    def find_near(self, WOLF_NUM: int) -> None:
+    def find_near(self) -> None:
         """
         将同类围捕机器人按照由近及远的顺序进行排序
 
-        输入：
-            WOLF_NUM: 围捕机器人的数量
         """
         n = np.arange(1, WOLF_NUM+1, 1)
         m = np.zeros(WOLF_NUM)
@@ -362,17 +345,17 @@ class Target(Agent):
         f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)。
     """
 
-    def __init__(self, f_in: list):
+    def __init__(self, f_in: list, DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float, R_ATTACKED: float, R_VISION: float, AVOID_DIST: float):
         # 将父类Agent的__init__函数包含进来
-        super(Target, self).__init__(f_in)
+        super(Target, self).__init__(f_in, DISPLAYBASE, DISPLAYHEIGHT, REALBASE, REALHEIGHT, vel_max, ang_vel_max, DIS_AVOID_BORDER)
         # 目标的车身颜色: 红色
         self.__color = 'r'
         # 目标受攻击的距离(单位为m)
-        self.R_ATTACKED = 0.8
+        self.R_ATTACKED = R_ATTACKED
         # 目标的观察范围(单位为m)
-        self.R_VISION = 3.0
+        self.R_VISION = R_VISION
         # 目标的避障距离(单位为m)
-        self.AVOID_DIST = 1.6479672158640435
+        self.AVOID_DIST = AVOID_DIST
         # 目标首次观察到个体的时间，初始化为0
         self.t_ob = 0
         # 目标受个体攻击数，初始化为0

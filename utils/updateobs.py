@@ -8,11 +8,10 @@
 
 
 import numpy as np
-from utils.init import ParamsTable
 from utils.relative_pos import vector_count
 
 
-def all_update(wolves: list, targets: list, sta_obss: list, mob_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, **kwargs) -> None:
+def all_update(wolves: list, targets: list, sta_obss: list, mob_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, VEL_OBS: float, **kwargs) -> None:
     """
     障碍物的移动和旋转
 
@@ -25,17 +24,15 @@ def all_update(wolves: list, targets: list, sta_obss: list, mob_obss: list, irr_
         m_irr_obss: 存放所有移动不规则障碍物对象的list
         rectangle_border: 边界对象
     """
-    M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM = ParamsTable.M_OBS_NUM, ParamsTable.IRR_OBS_NUM, ParamsTable.M_IRR_OBS_NUM
-    # 障碍物在全局坐标系中的速度x轴分量最大值和y轴分量最大值
-    VEL_OBS = 0.5
+    
     # 移动障碍物移动
-    for i in range(M_OBS_NUM):
-        mob_obss[i].move([np.random.normal(0, VEL_OBS), np.random.normal(0, VEL_OBS)])
+    for mob_obs in mob_obss:
+        mob_obs.move([np.random.normal(0, VEL_OBS), np.random.normal(0, VEL_OBS)])
     # 不规则障碍物旋转
-    for i in range(IRR_OBS_NUM):
-        irr_obss[i].update()
+    for irr_obs in irr_obss:
+        irr_obs.update()
     # 移动不规则障碍物移动和旋转
-    for i in range(M_IRR_OBS_NUM):
-        m_irr_obss[i].update([np.random.normal(0, VEL_OBS), np.random.normal(0, VEL_OBS)])
+    for m_irr_obs in m_irr_obss:
+        m_irr_obs.update([np.random.normal(0, VEL_OBS), np.random.normal(0, VEL_OBS)])
     # 更新向量差
     vector_count(wolves, targets, sta_obss, mob_obss, irr_obss, m_irr_obss, rectangle_border)

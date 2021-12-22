@@ -2,3 +2,5 @@ __pycache__
 *.aux
 *.log
 *.synctex.gz
+.VSCodeCounter
+collision_avoidance2.py
