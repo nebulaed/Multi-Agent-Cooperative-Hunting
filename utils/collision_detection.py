@@ -10,8 +10,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from cv2 import pointPolygonTest
 from utils.math_func import norm
+from numba import jit
 
 
+@jit(nopython=True)
 def two_line_segment_test(x1: float, y1: float, x2: float, y2: float, x3: float, y3: float, x4: float, y4: float) -> bool:
     """
     判断输入两根线段是否有交点。
@@ -39,6 +41,7 @@ def two_line_segment_test(x1: float, y1: float, x2: float, y2: float, x3: float,
         return True  # ,[px, py]
     else:
         return False  # ,[0,0]
+
 
 def two_triangle_test(tri1: list, tri2: list) -> bool:
     """
@@ -86,7 +89,8 @@ def two_triangle_test(tri1: list, tri2: list) -> bool:
             return True
     return False
 
-def get_foot_point(point, line_p1, line_p2):
+@jit(nopython=True)
+def get_foot_point(point: np.ndarray, line_p1: np.ndarray, line_p2: np.ndarray):
     """
     计算点到直线的垂足坐标。
 
@@ -119,7 +123,8 @@ def get_foot_point(point, line_p1, line_p2):
 
     return (xn, yn)
 
-def get_dis_point2line(point, line_p1, line_p2):
+@jit(nopython=True)
+def get_dis_point2line(point: np.ndarray, line_p1: np.ndarray, line_p2: np.ndarray):
     """
     计算点到线段的距离。
 
@@ -138,7 +143,8 @@ def get_dis_point2line(point, line_p1, line_p2):
                    norm(np.array([line_p2[0] - point[0], line_p2[1] - point[1]])))
     return dist
 
-def circle_triangle_test(center: list, radius: float, tri: list) -> bool:
+@jit(nopython=True)
+def circle_triangle_test(center: np.ndarray, radius: float, tri: np.ndarray) -> bool:
     """
     判断输入的圆形和三角形是否有交集。
 
@@ -151,9 +157,9 @@ def circle_triangle_test(center: list, radius: float, tri: list) -> bool:
         True表示有交集，False表示无交集
     """
     # 三角形的边[边1:[起点:[x,y],终点:[x,y]], 边2:...]
-    tri_sides = [[[tri[0][0], tri[0][1]], [tri[1][0], tri[1][1]]],
+    tri_sides = np.array([[[tri[0][0], tri[0][1]], [tri[1][0], tri[1][1]]],
                  [[tri[1][0], tri[1][1]], [tri[2][0], tri[2][1]]],
-                 [[tri[2][0], tri[2][1]], [tri[0][0], tri[0][1]]]]
+                 [[tri[2][0], tri[2][1]], [tri[0][0], tri[0][1]]]])
     for i in range(3):
         if norm(np.array([tri[i][0]-center[0], tri[i][1]-center[1]])) <= radius:
             return True
@@ -161,6 +167,7 @@ def circle_triangle_test(center: list, radius: float, tri: list) -> bool:
         if get_dis_point2line(center, tri_sides[i][0], tri_sides[i][1]) <= radius:
             return True
     return False
+
 
 def two_polygon_test(poly1,poly2):
     """

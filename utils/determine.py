@@ -12,7 +12,7 @@ from utils.params import WOLF_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_
 from utils.collision_detection import two_triangle_test,circle_triangle_test,two_polygon_test
 
 
-def judge_fail(wolves: list, sta_obss: list, mob_obss: list, irr_obss: list, m_irr_obss: list, **kwargs) -> bool:
+def judge_fail(wolves: list, sta_obss: list, mob_obss: list, irr_obss: list, m_irr_obss: list, **kwargs) -> int:
     """判断围捕过程中围捕机器人是否撞上障碍物，是输出True，否输出False
 
     输入：
@@ -27,15 +27,15 @@ def judge_fail(wolves: list, sta_obss: list, mob_obss: list, irr_obss: list, m_i
     """
 
     for i in range(WOLF_NUM):
-        tri1 = [[wolves[i].real_x0, wolves[i].real_y0],
+        tri1 = np.array([[wolves[i].real_x0, wolves[i].real_y0],
                 [wolves[i].real_x1, wolves[i].real_y1],
-                [wolves[i].real_x2, wolves[i].real_y2]]
+                [wolves[i].real_x2, wolves[i].real_y2]])
         # 检查围捕机器人是否互撞
         for j in range(WOLF_NUM):
             if j != i:
-                tri2 = [[wolves[j].real_x0, wolves[j].real_y0],
+                tri2 = np.array([[wolves[j].real_x0, wolves[j].real_y0],
                         [wolves[j].real_x1, wolves[j].real_y1],
-                        [wolves[j].real_x2, wolves[j].real_y2]]
+                        [wolves[j].real_x2, wolves[j].real_y2]])
                 if two_triangle_test(tri1, tri2):
                     return 2
         # 检查围捕机器人是否撞上固定障碍物

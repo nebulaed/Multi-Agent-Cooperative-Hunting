@@ -8,6 +8,7 @@
 
 
 import numpy as np
+from numba import jit
 from utils.params import WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM
 from utils.math_func import norm
 
@@ -45,6 +46,7 @@ def vector_count(wolves: list, targets: list, sta_obss: list, mob_obss: list, ir
             targets[i].nearest = np.array([targets[i].pos[0], border.Y_MAX])
         else:
             raise ValueError(f'Numerical error in variable w: {w}.')
+
 
     # 个体到各边界距离以及最近边界
     for i in range(WOLF_NUM):
@@ -94,27 +96,15 @@ def vector_count(wolves: list, targets: list, sta_obss: list, mob_obss: list, ir
                 wolves[i].danger_s.append(j)
         wolves[i].danger_ir = []
         for j in range(IRR_OBS_NUM):
-            points_dist = []
-            for point in irr_obss[j].elements:
-                point_dist = norm(point-wolves[i].pos)
-                points_dist.append(point_dist)
-            # 个体i和各不规则障碍物j的距离
-            wolves[i].d_ir[j] = min(points_dist)
-            wolves[i].wolf_to_irr_obs[j] = irr_obss[j].elements[np.argmin(points_dist)]-wolves[i].pos
+            wolves[i].d_ir[j], wolves[i].wolf_to_irr_obs[j] = find_closest_point(irr_obss[j].elements, wolves[i].pos)
             if 0 < wolves[i].d_ir[j] < wolves[i].AVOID_DIST:
-                plt.plot(irr_obss[j].elements[np.argmin(points_dist)][0],irr_obss[j].elements[np.argmin(points_dist)][1],'ko')
+                # plt.plot(irr_obss[j].elements[mind_point][0],irr_obss[j].elements[mind_point][1],'ko')
                 wolves[i].danger_ir.append(j)
         wolves[i].danger_m_ir = []
         for j in range(M_IRR_OBS_NUM):
-            points_dist = []
-            for point in m_irr_obss[j].elements:
-                point_dist = norm(point-wolves[i].pos)
-                points_dist.append(point_dist)
-            # 个体i和各移动不规则障碍物j的距离
-            wolves[i].d_m_ir[j] = min(points_dist)
-            wolves[i].wolf_to_m_irr_obs[j] = m_irr_obss[j].elements[np.argmin(points_dist)]-wolves[i].pos
+            wolves[i].d_m_ir[j], wolves[i].wolf_to_m_irr_obs[j] = find_closest_point(m_irr_obss[j].elements, wolves[i].pos)
             if 0 < wolves[i].d_m_ir[j] < wolves[i].AVOID_DIST:
-                plt.plot(m_irr_obss[j].elements[np.argmin(points_dist)][0],m_irr_obss[j].elements[np.argmin(points_dist)][1],'ko')
+                # plt.plot(m_irr_obss[j].elements[mind_point][0],m_irr_obss[j].elements[mind_point][1],'ko')
                 wolves[i].danger_m_ir.append(j)
         # 个体i距离较近的墙
         wolves[i].danger_border = []
@@ -170,22 +160,12 @@ def vector_count(wolves: list, targets: list, sta_obss: list, mob_obss: list, ir
                 targets[i].danger_s.append(j)
         targets[i].danger_ir = []
         for j in range(IRR_OBS_NUM):
-            points_dist = []
-            for point in irr_obss[j].elements:
-                point_dist = norm(point-targets[i].pos)
-                points_dist.append(point_dist)
-            # 目标和各不规则障碍物j的距离
-            targets[i].d_ir[j] = min(points_dist)
+            targets[i].d_ir[j], _ = find_closest_point(irr_obss[j].elements, targets[i].pos)
             if 0 < targets[i].d_ir[j] < targets[i].AVOID_DIST:
                 targets[i].danger_ir.append(j)
         targets[i].danger_m_ir = []
         for j in range(M_IRR_OBS_NUM):
-            points_dist = []
-            for point in m_irr_obss[j].elements:
-                point_dist = norm(point-targets[i].pos)
-                points_dist.append(point_dist)
-            # 个体i和各移动不规则障碍物j的距离
-            targets[i].d_m_ir[j] = min(points_dist)
+            targets[i].d_m_ir[j], _ = find_closest_point(m_irr_obss[j].elements, targets[i].pos)
             if 0 < targets[i].d_m_ir[j] < targets[i].AVOID_DIST:
                 targets[i].danger_m_ir.append(j)
         # 目标距离较近的墙
@@ -193,3 +173,12 @@ def vector_count(wolves: list, targets: list, sta_obss: list, mob_obss: list, ir
         for j in range(np.size(targets[i].border_d)):
             if 0 < targets[i].border_d[j] < targets[i].DIS_AVOID_BORDER:
                 targets[i].danger_border.append(j)
+
+@jit(nopython = True)
+def find_closest_point(elements: np.ndarray, pos: np.ndarray):
+    points_dist = np.zeros(len(elements))
+    for i in range(len(elements)):
+        points_dist[i] = norm(elements[i]-pos)
+    # 个体i和各不规则障碍物j的距离
+    mind_point = np.argmin(points_dist)
+    return points_dist[mind_point], elements[mind_point]-pos

@@ -34,5 +34,5 @@ def all_update(wolves: list, targets: list, sta_obss: list, mob_obss: list, irr_
     # 移动不规则障碍物移动和旋转
     for m_irr_obs in m_irr_obss:
         m_irr_obs.update([np.random.normal(0, VEL_OBS), np.random.normal(0, VEL_OBS)])
-    # 更新向量差
+
     vector_count(wolves, targets, sta_obss, mob_obss, irr_obss, m_irr_obss, rectangle_border)

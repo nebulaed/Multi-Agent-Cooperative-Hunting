@@ -91,6 +91,7 @@ def before_plot(parameter, t):
     # 所有围捕机器人和目标根据算法给出的速度和角速度移动
     all_move(**parameter)
 
+
 # 为方便重复调用，将画图后的迭代更新抽象为一个函数
 def after_plot(parameter, data, targets, irr_obss, m_irr_obss):
     # 记录围捕机器人、目标的速度、角速度、能量消耗，用于后续数据绘图
@@ -112,16 +113,17 @@ def after_plot(parameter, data, targets, irr_obss, m_irr_obss):
     elif judge_f == 2:
         return 0, [3, 0, 0], []
     # 清除不规则障碍物和移动不规则障碍物各边构成点
-    for irr_obs in irr_obss:
-        irr_obs.elements = []
-    for m_irr_obs in m_irr_obss:
-        m_irr_obs.elements = []
+    # for irr_obs in irr_obss:
+    #     irr_obs.elements = []
+    # for m_irr_obs in m_irr_obss:
+    #     m_irr_obs.elements = []
     # 判断目标是否失去移动能力，是则判定这次围捕成功，结束循环，否则继续。
     all_death = []
     for target in targets:
         all_death.append(target.death)
     if all(all_death):
         return 1, [], all_death
+
     return 2, [], all_death
 
 # 若该文件存在，则删除此文件，然后保存
@@ -229,12 +231,16 @@ def main(opt):
         plt.ioff()
         plt.show()
     else:
+        t1 = time.time()
         # 仿真循环语句
         for t in range(TOTSTEP):
             before_plot(parameter, t)
             branch, ret, all_death = after_plot(parameter, data, targets, irr_obss, m_irr_obss)
             if branch == 0: return ret[0], ret[1], ret[2]
             elif branch == 1: break
+        t2 = time.time()
+        tact_time = t2-t1
+        print(f'{tact_time} seconds, {t / tact_time} FPS')
 
     # 若该文件存在，则删除此文件，然后保存仿真过程中围捕机器人的坐标、速度、角速度、累计能量消耗。
     if opt.output:

@@ -7,6 +7,7 @@
 # 本文件定义的Agent表示基本unicycle模型，Robot表示围捕机器人，Target表示目标，后两者是Agent的子类。此外本文件还定义了固定障碍物StaObs，移动障碍物MobObs，不规则障碍物IrregularObs，移动不规则障碍物MobIrregularObs，边界Border。
 
 import numpy as np
+from numba import jit
 import matplotlib.pyplot as plt
 from matplotlib import patches
 from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt
@@ -183,55 +184,55 @@ class Agent(object):
         new_pos_y = self.__pos_y+vel*sin(self.__theta)*TS
         # 若新位置未超出边界
         if border.X_MIN < new_pos_x < border.X_MAX and border.Y_MIN < new_pos_y < border.Y_MAX:
-            # 新车头方向
-            new_theta = correct(self.__theta+ang_vel*TS)
-            # 根据机器人实际大小算出机器人三角形各顶点的位置
-            tri1 = [[new_pos_x+self.REALHEIGHT*cos(new_theta), new_pos_y+self.REALHEIGHT*sin(new_theta)],
-                    [new_pos_x+self.REALBASE/2*cos(new_theta-PI/2), new_pos_y+self.REALBASE/2*sin(new_theta-PI/2)],
-                    [new_pos_x+self.REALBASE/2*cos(new_theta+PI/2), new_pos_y+self.REALBASE/2*sin(new_theta+PI/2)]]
-            for i in range(len(wolves)):
-                if i != mark:
-                    '''
-                    # 另外一机器人的领域中心
-                    field_center = wolves[i].pos+0.2*np.array([cos(wolves[i].ori),sin(wolves[i].ori)])
-                    theta = np.linspace(0, 6.28, 129)
-                    Circle1 = field_center[0]+0.2*cos(theta)
-                    Circle2 = field_center[1]+0.2*sin(theta)
-                    plt.plot(Circle1, Circle2, 'k-', linewidth=1.0)
-                    # 若当前机器人三角形与另外一机器人的领域圆交叠，则判定不可行
-                    if circle_triangle_test(field_center, 0.35, tri1):
-                        return False
-                    '''
-                    # 另一机器人的显示三角形各顶点位置
-                    tri2 = [[wolves[i].real_x0, wolves[i].real_y0],
-                            [wolves[i].real_x1, wolves[i].real_y1],
-                            [wolves[i].real_x2, wolves[i].real_y2]]
-                    # 若当前机器人三角形与另外一机器人的显示三角形交叠，则判定不可行
-                    if two_triangle_test(tri1, tri2):
-                        return False
-            for sta_obs in sta_obss:
-                if circle_triangle_test(sta_obs.pos, sta_obs.R, tri1):
-                    return False
-            for mob_obs in mob_obss:
-                if circle_triangle_test(mob_obs.pos, mob_obs.R, tri1):
-                    return False
-            poly1 = np.array([[[tri1[0][0],tri1[0][1]]],
-                                [[tri1[1][0],tri1[1][1]]],
-                                [[tri1[2][0],tri1[2][1]]]]).astype(np.float32)
-            for irr_obs in irr_obss:
-                poly2 = np.zeros(((irr_obs.samples_num, 1, 2))).astype(np.float32)
-                for k in range(irr_obs.samples_num):
-                    poly2[k, 0] = np.array([irr_obs.vertex_x[irr_obs.pose_order[k]],
-                                        irr_obs.vertex_y[irr_obs.pose_order[k]]])
-                if two_polygon_test(poly1,poly2):
-                    return False
-            for m_irr_obss in m_irr_obss:
-                poly2 = np.zeros(((m_irr_obss.samples_num, 1, 2))).astype(np.float32)
-                for k in range(m_irr_obss.samples_num):
-                    poly2[k, 0] = np.array([m_irr_obss.vertex_x[m_irr_obss.pose_order[k]],
-                                        m_irr_obss.vertex_y[m_irr_obss.pose_order[k]]])
-                if two_polygon_test(poly1,poly2):
-                    return False
+            # # 新车头方向
+            # new_theta = correct(self.__theta+ang_vel*TS)
+            # # 根据机器人实际大小算出机器人三角形各顶点的位置
+            # tri1 = np.array([[new_pos_x+self.REALHEIGHT*cos(new_theta), new_pos_y+self.REALHEIGHT*sin(new_theta)],
+            #         [new_pos_x+self.REALBASE/2*cos(new_theta-PI/2), new_pos_y+self.REALBASE/2*sin(new_theta-PI/2)],
+            #         [new_pos_x+self.REALBASE/2*cos(new_theta+PI/2), new_pos_y+self.REALBASE/2*sin(new_theta+PI/2)]])
+            # for i in range(len(wolves)):
+            #     if i != mark:
+            #         '''
+            #         # 另外一机器人的领域中心
+            #         field_center = wolves[i].pos+0.2*np.array([cos(wolves[i].ori),sin(wolves[i].ori)])
+            #         theta = np.linspace(0, 6.28, 129)
+            #         Circle1 = field_center[0]+0.2*cos(theta)
+            #         Circle2 = field_center[1]+0.2*sin(theta)
+            #         plt.plot(Circle1, Circle2, 'k-', linewidth=1.0)
+            #         # 若当前机器人三角形与另外一机器人的领域圆交叠，则判定不可行
+            #         if circle_triangle_test(field_center, 0.35, tri1):
+            #             return False
+            #         '''
+            #         # 另一机器人的显示三角形各顶点位置
+            #         tri2 = np.array([[wolves[i].real_x0, wolves[i].real_y0],
+            #                 [wolves[i].real_x1, wolves[i].real_y1],
+            #                 [wolves[i].real_x2, wolves[i].real_y2]])
+            #         # 若当前机器人三角形与另外一机器人的显示三角形交叠，则判定不可行
+            #         if two_triangle_test(tri1, tri2):
+            #             return False
+            # for sta_obs in sta_obss:
+            #     if circle_triangle_test(sta_obs.pos, sta_obs.R, tri1):
+            #         return False
+            # for mob_obs in mob_obss:
+            #     if circle_triangle_test(mob_obs.pos, mob_obs.R, tri1):
+            #         return False
+            # poly1 = np.array([[[tri1[0][0],tri1[0][1]]],
+            #                     [[tri1[1][0],tri1[1][1]]],
+            #                     [[tri1[2][0],tri1[2][1]]]]).astype(np.float32)
+            # for irr_obs in irr_obss:
+            #     poly2 = np.zeros(((irr_obs.samples_num, 1, 2))).astype(np.float32)
+            #     for k in range(irr_obs.samples_num):
+            #         poly2[k, 0] = np.array([irr_obs.vertex_x[irr_obs.pose_order[k]],
+            #                             irr_obs.vertex_y[irr_obs.pose_order[k]]])
+            #     if two_polygon_test(poly1,poly2):
+            #         return False
+            # for m_irr_obss in m_irr_obss:
+            #     poly2 = np.zeros(((m_irr_obss.samples_num, 1, 2))).astype(np.float32)
+            #     for k in range(m_irr_obss.samples_num):
+            #         poly2[k, 0] = np.array([m_irr_obss.vertex_x[m_irr_obss.pose_order[k]],
+            #                             m_irr_obss.vertex_y[m_irr_obss.pose_order[k]]])
+            #     if two_polygon_test(poly1,poly2):
+            #         return False
             return True
         # 若新位置超出边界，则判定不可行
         else:
@@ -506,7 +507,7 @@ class IrregularObs(object):
         # 圆内顶点的y坐标
         self.vertex_y = np.zeros(self.samples_num)
         # 不规则障碍物顶点各边的构成点
-        self.elements = []
+        self.elements = np.zeros(self.samples_num * 5)
         # 不规则障碍物的多边形
         self.poly = []
         # 单位圆内对应的x,y
@@ -539,27 +540,7 @@ class IrregularObs(object):
 
         # 障碍物的旋转幅度为(-π/16,π/16)的均匀随机分布
         variation = np.random.uniform(-PI/16, PI/16)
-        # 各顶点围绕生成点旋转
-        self.t += [variation]*self.samples_num
-        for item in self.t:
-            item = correct(item)
-        unit_x = cos(self.t)
-        unit_y = sin(self.t)
-        # 计算出新顶点i为(vertex_x[i],vertex_y[i])
-        for i in range(self.samples_num):
-            polar_r = sqrt(self.r_num[i])*(self.R)
-            self.vertex_x[i] = unit_x[i]*polar_r+self._pos_x
-            self.vertex_y[i] = unit_y[i]*polar_r+self._pos_y
-        # 按照当前顶点在[0,2π)的角度顺序进行连接，并在每条边上取5个点作为该边的构成点
-        for i in range(self.samples_num-1):
-            side_x = np.linspace(self.vertex_x[self.pose_order[i]], self.vertex_x[self.pose_order[i+1]], 5)
-            side_y = np.linspace(self.vertex_y[self.pose_order[i]], self.vertex_y[self.pose_order[i+1]], 5)
-            for j in range(5):
-                self.elements.append(np.array([side_x[j], side_y[j]]))
-        side_x = np.linspace(self.vertex_x[self.pose_order[-1]], self.vertex_x[self.pose_order[0]], 5)
-        side_y = np.linspace(self.vertex_y[self.pose_order[-1]], self.vertex_y[self.pose_order[0]], 5)
-        for i in range(5):
-            self.elements.append(np.array([side_x[i], side_y[i]]))
+        self.elements = rotate_update(self.t, self.samples_num, self.r_num, self.R, self.vertex_x, self.vertex_y, self._pos_x, self._pos_y, self.pose_order, variation)
 
     def plot_irr_obs(self) -> patches.Polygon:
         """输出matplotlib.Polygon对象，用于在绘图窗口中画出不规则障碍物
@@ -617,27 +598,7 @@ class MobIrregularObs(IrregularObs):
 
         # 障碍物的旋转幅度为(-π/16,π/16)的均匀随机分布
         variation = np.random.uniform(-PI/16, PI/16)
-        # 各顶点围绕生成点旋转
-        self.t += [variation]*self.samples_num
-        for item in self.t:
-            item = correct(item)
-        unit_x = cos(self.t)
-        unit_y = sin(self.t)
-        # 计算出新顶点i为(vertex_x[i],vertex_y[i])
-        for i in range(self.samples_num):
-            polar_r = sqrt(self.r_num[i])*(self.R)
-            self.vertex_x[i] = unit_x[i]*polar_r+self.pos[0]
-            self.vertex_y[i] = unit_y[i]*polar_r+self.pos[1]
-        # 按照当前顶点在[0,2π)的角度顺序进行连接，并在每条边上取5个点作为该边的构成点
-        for i in range(self.samples_num-1):
-            side_x = np.linspace(self.vertex_x[self.pose_order[i]], self.vertex_x[self.pose_order[i+1]], 5)
-            side_y = np.linspace(self.vertex_y[self.pose_order[i]], self.vertex_y[self.pose_order[i+1]], 5)
-            for j in range(5):
-                self.elements.append(np.array([side_x[j], side_y[j]]))
-        side_x = np.linspace(self.vertex_x[self.pose_order[-1]], self.vertex_x[self.pose_order[0]], 5)
-        side_y = np.linspace(self.vertex_y[self.pose_order[-1]], self.vertex_y[self.pose_order[0]], 5)
-        for i in range(5):
-            self.elements.append(np.array([side_x[i], side_y[i]]))
+        self.elements = rotate_update(self.t, self.samples_num, self.r_num, self.R, self.vertex_x, self.vertex_y, self._pos_x, self._pos_y, self.pose_order, variation)
         # 障碍物的移动
         self._pos_x += v_in[0]*TS
         self._pos_y += v_in[1]*TS
@@ -701,3 +662,32 @@ class Border(object):
     @property
     def Y_MAX(self) -> float:
         return self.__Y_MAX
+
+@jit(nopython = True)
+def rotate_update(t: np.ndarray, samples_num: int, r_num: np.ndarray, R: float, vertex_x: np.ndarray, vertex_y: np.ndarray, pos_x: float, pos_y: float, pose_order: np.ndarray, variation: float):
+    elements = np.zeros((samples_num * 5, 2))
+    count = 0
+    # 各顶点围绕生成点旋转
+    t += variation
+    for item in t:
+        item = correct(item)
+    unit_x = cos(t)
+    unit_y = sin(t)
+    # 计算出新顶点i为(vertex_x[i],vertex_y[i])
+    for i in range(samples_num):
+        polar_r = sqrt(r_num[i])*(R)
+        vertex_x[i] = unit_x[i]*polar_r+pos_x
+        vertex_y[i] = unit_y[i]*polar_r+pos_y
+    # 按照当前顶点在[0,2π)的角度顺序进行连接，并在每条边上取5个点作为该边的构成点
+    for i in range(samples_num-1):
+        side_x = np.linspace(vertex_x[pose_order[i]], vertex_x[pose_order[i+1]], 5)
+        side_y = np.linspace(vertex_y[pose_order[i]], vertex_y[pose_order[i+1]], 5)
+        for j in range(5):
+            elements[count] = np.array([side_x[j], side_y[j]])
+            count += 1
+    side_x = np.linspace(vertex_x[pose_order[-1]], vertex_x[pose_order[0]], 5)
+    side_y = np.linspace(vertex_y[pose_order[-1]], vertex_y[pose_order[0]], 5)
+    for i in range(5):
+        elements[count] = np.array([side_x[i], side_y[i]])
+        count += 1
+    return elements
