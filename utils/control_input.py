@@ -11,7 +11,7 @@ from utils.math_func import correct
 from utils.params import PI, TS
 
 
-def saturator(ori: float, vel_max: float, ang_vel_max: float, vel_desired: float, theta_desired: float) -> float:
+def saturator(ori: float, vel_max: float, ang_vel_max: float, vel_desired: float, theta_desired: float):
     """
     控制输入计算函数，用当前小车方向ori，最大线速度vel_max，最大角速度ang_vel_max，算法给出的期望速度vel_desired，算法给出的期望方向theta_desired，计算出实际的速度vel和角速度ang_vel
 

@@ -14,13 +14,14 @@
 
 
 import numpy as np
-from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt
 from time import time
+from typing import List, Dict
 from model import Robot, Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
+from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt
 from utils.params import WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI, BORDER, INIT_D
 
 
-def random_spawn(wolves: list) -> np.ndarray:
+def random_spawn(wolves: List[Robot]) -> np.ndarray:
     """
     在随机个体的观察范围内随机选择一点作为目标的出生点
 
@@ -46,7 +47,7 @@ def random_spawn(wolves: list) -> np.ndarray:
     return np.array([x, y])
 
 
-def sta_obs_init(wolves: list, targets: list, border: Border) -> list:
+def sta_obs_init(wolves: List[Robot], targets: List[Target], border: Border):
     """
     计算固定障碍物的初始位置
 
@@ -99,7 +100,7 @@ def sta_obs_init(wolves: list, targets: list, border: Border) -> list:
     return sta_obss
 
 
-def mob_obs_init(wolves: list, targets: list, sta_obss: list, border: Border) -> list:
+def mob_obs_init(wolves: List[Robot], targets: List[Target], sta_obss: List[StaObs], border: Border):
     """
     计算移动障碍物的初始位置
 
@@ -161,7 +162,7 @@ def mob_obs_init(wolves: list, targets: list, sta_obss: list, border: Border) ->
     return mob_obss
 
 
-def irr_obs_init(wolves: list, targets: list, sta_obss: list, mob_obss: list, border: Border) -> list:
+def irr_obs_init(wolves: List[Robot], targets: List[Target], sta_obss: List[StaObs], mob_obss: List[MobObs], border: Border):
     """
     计算不规则障碍物的初始位置
 
@@ -232,7 +233,7 @@ def irr_obs_init(wolves: list, targets: list, sta_obss: list, mob_obss: list, bo
     return irr_obss
 
 
-def mob_irr_obs_init(wolves: list, targets: list, sta_obss: list, mob_obss: list, irr_obss: list, border: Border) -> list:
+def mob_irr_obs_init(wolves: List[Robot], targets: List[Target], sta_obss: List[StaObs], mob_obss: List[MobObs], irr_obss: List[IrregularObs], border: Border):
     """
     计算移动不规则障碍物的初始位置
 

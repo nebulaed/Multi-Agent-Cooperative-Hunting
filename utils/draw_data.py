@@ -10,6 +10,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams, gridspec
+from typing import List
+from model import Robot, Target
 from utils.params import WOLF_NUM, TARGET_NUM
 
 
@@ -22,7 +24,7 @@ config = {
 rcParams.update(config)
 
 
-def record_data(wolves: list, targets: list, t: int, interact: list, **kwargs) -> list:
+def record_data(wolves: List[Robot], targets: List[Target], t: int, interact: List, **kwargs):
     """
     记录个体的速度和角速度
 
@@ -64,7 +66,7 @@ def record_data(wolves: list, targets: list, t: int, interact: list, **kwargs) -
     return pos_targets, vel_targets, ang_vel_targets, energy_targets, pos_wolves, vel_wolves, ang_vel_wolves, energy_wolves, interact
 
 
-def plot_data(var: str, vel_wolves: list, ang_vel_wolves: list, energy_wolves: list, vel_targets: list, ang_vel_targets: list, energy_targets: list, **kwargs) -> None:
+def plot_data(var: str, vel_wolves: List, ang_vel_wolves: List, energy_wolves: List, vel_targets: List, ang_vel_targets: List, energy_targets: List, **kwargs) -> None:
     """
     为运动数据提供画图界面
 
@@ -142,7 +144,7 @@ def plot_data(var: str, vel_wolves: list, ang_vel_wolves: list, energy_wolves: l
     plt.show()
 
 
-def plot_ax(ax: object, n: int, var: str, vel_wolves: list, ang_vel_wolves: list, energy_wolves: list) -> None:
+def plot_ax(ax: object, n: int, var: str, vel_wolves: List, ang_vel_wolves: List, energy_wolves: List) -> None:
     """
     画出机器人的速度曲线
 

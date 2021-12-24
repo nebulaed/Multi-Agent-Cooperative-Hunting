@@ -14,13 +14,15 @@
 
 
 import numpy as np
+from typing import List
+from model import Robot, Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
 from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt, intervals_merge
 from utils.control_input import saturator
 from utils.params import WOLF_NUM, TARGET_NUM
 from utils.collision_avoidance import robot_avoid_obs
 
 
-def axis_transform(xb: float, yb: float, theta: float) -> float:
+def axis_transform(xb: float, yb: float, theta: float):
     """
     计算输入矢量在以目标方向为y'轴，逆时针旋转90°为x'轴的x'Oy'坐标系中的x'轴分量
 
@@ -47,7 +49,7 @@ def axis_transform(xb: float, yb: float, theta: float) -> float:
     return po2[0, 0], po2[1, 0]
 
 
-def find_near(wolves: list) -> None:
+def find_near(wolves: List) -> None:
     """
     围捕机器人确定同伴由近到远的次序
 
@@ -59,7 +61,7 @@ def find_near(wolves: list) -> None:
         wolf.find_near()
 
 
-def assignment(wolves: list) -> list:
+def assignment(wolves: List) -> List[int]:
     """
     分配围捕目标，原理是各个机器人就近选择目标，假如选择某个目标的机器人数量超过了[机器人数/总目标数]，则离该目标最远的机器人选择离自己次近的目标
 
@@ -90,7 +92,7 @@ def assignment(wolves: list) -> list:
     return my_target
 
 
-def attractive(i: int, my_t: list, wolves: list, RADIUS: float, VARSIGMA: float, TAU_1: float, TAU_2: float, old_track_target: np.ndarray, old_attract: np.ndarray, interact: list):
+def attractive(i: int, my_t: List[int], wolves: List, RADIUS: float, VARSIGMA: float, TAU_1: float, TAU_2: float, old_track_target: np.ndarray, old_attract: np.ndarray, interact: List):
     """
     计算围捕机器人的前进速度
 
@@ -151,7 +153,7 @@ def attractive(i: int, my_t: list, wolves: list, RADIUS: float, VARSIGMA: float,
     return attract_v, track_target, interact
 
 
-def repulsion(i: int, my_t: list, wolves: list, TAU_3: float, interact: list, attract_v: np.ndarray):
+def repulsion(i: int, my_t: int, wolves: List, TAU_3: float, interact: List, attract_v: np.ndarray):
     """
     计算同伴对围捕机器人的排斥速度
 
@@ -199,7 +201,7 @@ def repulsion(i: int, my_t: list, wolves: list, TAU_3: float, interact: list, at
     return horizontal_v, interact
 
 
-def robots_movement_strategy(wolves: list, targets: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, VARSIGMA: float, ALPHA: float, BETA: float, D_DANGER: float, D_DANGER_W: float, TAU_1: float, TAU_2: float, TAU_3: float, RADIUS: float, t: int, global_my_t: list, old_track_target: np.ndarray, old_attract: np.ndarray, interact: list, ASSIGN_CYCLE: int, EXPANSION3: list, EXPANSION4: list, **kwargs):
+def robots_movement_strategy(wolves: List[Robot], targets: List[Target], mob_obss: List[MobObs], sta_obss: List[StaObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], rectangle_border: Border, VARSIGMA: float, ALPHA: float, BETA: float, D_DANGER: float, D_DANGER_W: float, TAU_1: float, TAU_2: float, TAU_3: float, RADIUS: float, t: int, global_my_t: List[int], old_track_target: np.ndarray, old_attract: np.ndarray, interact: List, ASSIGN_CYCLE: int, EXPANSION3: List[float], EXPANSION4: List[float], **kwargs):
     """
     围捕机器人运动的主函数，在以上函数的基础上计算出围捕机器人下一步运动的速度和角速度
 

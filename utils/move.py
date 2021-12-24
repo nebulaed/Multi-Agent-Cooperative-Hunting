@@ -6,11 +6,14 @@
 # --------------------------------------------------------
 # 本文件定义了AllMove函数，实现围捕机器人和目标的实际移动。
 
+from typing import List
+import numpy as np
+from model import Robot, Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
 from utils.relative_pos import vector_count
 from utils.params import WOLF_NUM, TARGET_NUM
 
 # TODO: 速度优化重点
-def all_move(wolves: list, targets: list, sta_obss: list, mob_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, t: int, vel_wolves: float, ang_vel_wolves: float, vel_targets: float, ang_vel_targets: float, **kwargs) -> None:
+def all_move(wolves: List[Robot], targets: List[Target], sta_obss: List[StaObs], mob_obss: List[MobObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], rectangle_border: Border, t: int, vel_wolves: np.ndarray, ang_vel_wolves: np.ndarray, vel_targets: np.ndarray, ang_vel_targets: np.ndarray, **kwargs) -> None:
     """
     围捕机器人和目标的实际移动
 

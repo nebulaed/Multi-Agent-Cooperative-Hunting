@@ -30,7 +30,10 @@ import numpy as np
 np.random.seed(100)
 import os
 import matplotlib.pyplot as plt
+from matplotlib.animation import FFMpegWriter
 import time
+from typing import List, Dict, Any
+from model import Target
 from utils.init import init
 from utils.draw_data import plot_data, record_data
 from utils.draw import plot_all
@@ -40,7 +43,6 @@ from utils.targets_control import target_go
 from utils.move import all_move
 from utils.determine import judge_fail
 from utils.params import WOLF_NUM, TARGET_NUM, TOTSTEP
-from matplotlib.animation import FFMpegWriter
 # 导入FFMPEG, 用于制作动画
 plt.rcParams['animation.ffmpeg_path'] = 'D:\\Software\\Anaconda3\\Library\\bin\\ffmpeg.exe'
 
@@ -64,7 +66,7 @@ def get_args():
     """用python执行文件时给定不同的命令产生不同的效果"""
 
     parser = argparse.ArgumentParser('Hunting Escape Model - XuBozhe')
-    parser.add_argument('--display', type=str2bool, default=True,
+    parser.add_argument('--display', type=str2bool, default=False,
                         help='whether display the figure')
     parser.add_argument('--output', type=str2bool, default=False,
                         help='whether save the data of robots and targets')
@@ -77,7 +79,7 @@ def get_args():
     return args
 
 # 为方便重复调用，将画图前的迭代更新抽象为一个函数
-def before_plot(parameter, t):
+def before_plot(parameter: Dict[str, Any], t: int):
     # 初始化当前步交互矩阵
     parameter['interact'] = [[0]*(WOLF_NUM+TARGET_NUM)] * (WOLF_NUM+TARGET_NUM)
     # 将当前仿真步数传入参数字典
@@ -93,7 +95,7 @@ def before_plot(parameter, t):
 
 
 # 为方便重复调用，将画图后的迭代更新抽象为一个函数
-def after_plot(parameter, data, targets, irr_obss, m_irr_obss):
+def after_plot(parameter: Dict[str, Any], data: Dict[str, List], targets: List[Target], irr_obss: List, m_irr_obss: List):
     # 记录围捕机器人、目标的速度、角速度、能量消耗，用于后续数据绘图
     pos_targets_t, vel_targets_t, ang_vel_targets_t, energy_targets_t, pos_wolves_t, vel_wolves_t, ang_vel_wolves_t, energy_wolves_t, interact_t = record_data(**parameter)
     data['pos_targets'].append(pos_targets_t)
@@ -106,7 +108,11 @@ def after_plot(parameter, data, targets, irr_obss, m_irr_obss):
     data['energy_wolves'].append(energy_wolves_t)
     data['interact'].append(interact_t)
     # 判断围捕机器人是否撞上障碍物
+    t1 = time.time()
     judge_f = judge_fail(**parameter)
+    t2 = time.time()
+    tact_time = t2-t1
+    print(f'after_plot: {tact_time} seconds')
     # 若是则跳出循环，判定这次围捕失败，否则继续
     if judge_f == 1:
         return 0, [0, 0, 0], []
@@ -127,7 +133,7 @@ def after_plot(parameter, data, targets, irr_obss, m_irr_obss):
     return 2, [], all_death
 
 # 若该文件存在，则删除此文件，然后保存
-def rewrite(path, data):
+def rewrite(path: str, data: List):
     if opt.output:
         if os.path.exists(path):
             os.remove(path)
@@ -231,16 +237,12 @@ def main(opt):
         plt.ioff()
         plt.show()
     else:
-        t1 = time.time()
         # 仿真循环语句
         for t in range(TOTSTEP):
             before_plot(parameter, t)
             branch, ret, all_death = after_plot(parameter, data, targets, irr_obss, m_irr_obss)
             if branch == 0: return ret[0], ret[1], ret[2]
             elif branch == 1: break
-        t2 = time.time()
-        tact_time = t2-t1
-        print(f'{tact_time} seconds, {t / tact_time} FPS')
 
     # 若该文件存在，则删除此文件，然后保存仿真过程中围捕机器人的坐标、速度、角速度、累计能量消耗。
     if opt.output:

@@ -9,11 +9,13 @@
 
 import numpy as np
 from numba import jit
+from typing import List
+from model import Robot, Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
 from utils.params import WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM
 from utils.math_func import norm
 
 
-def vector_count(wolves: list, targets: list, sta_obss: list, mob_obss: list, irr_obss: list, m_irr_obss: list, border: object) -> None:
+def vector_count(wolves: List[Robot], targets: List[Target], sta_obss: List[StaObs], mob_obss: List[MobObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], border: Border) -> None:
     """
     计算一些对象(包括围捕机器人、目标、固定和移动障碍物)间的向量差以及围捕机器人和目标到边界距离。
 
@@ -173,6 +175,7 @@ def vector_count(wolves: list, targets: list, sta_obss: list, mob_obss: list, ir
         for j in range(np.size(targets[i].border_d)):
             if 0 < targets[i].border_d[j] < targets[i].DIS_AVOID_BORDER:
                 targets[i].danger_border.append(j)
+
 
 @jit(nopython = True)
 def find_closest_point(elements: np.ndarray, pos: np.ndarray):

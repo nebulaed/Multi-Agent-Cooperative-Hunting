@@ -10,10 +10,12 @@
 
 
 import numpy as np
+from typing import List
+from model import Robot, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
 from utils.math_func import correct,peri_arctan,arcsin,norm,sin,cos,inc_angle,intervals_merge
 from utils.params import WOLF_NUM, PI
 
-def robot_avoid_obs(t: int, mark: int, vel_wolf_desired: float, theta_wolf_desired: float, my_t: int, wolves: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, border: object, D_DANGER: float, D_DANGER_W: float, EXPANSION3: list, EXPANSION4: list):
+def robot_avoid_obs(t: int, mark: int, vel_wolf_desired: float, theta_wolf_desired: float, my_t: int, wolves: List[Robot], mob_obss: List[MobObs], sta_obss: List[StaObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], border: Border, D_DANGER: float, D_DANGER_W: float, EXPANSION3: List[float], EXPANSION4: List[float]):
     """
     围捕机器人的避障算法
 

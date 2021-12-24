@@ -17,7 +17,7 @@ class Params(object):
         project_file: yml文件路径
     """
 
-    def __init__(self, project_file):
+    def __init__(self, project_file: str):
         self.params = yaml.safe_load(open(project_file).read())
 
     def __getattr__(self, item):

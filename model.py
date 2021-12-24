@@ -10,6 +10,7 @@ import numpy as np
 from numba import jit
 import matplotlib.pyplot as plt
 from matplotlib import patches
+from typing import List
 from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt
 from utils.params import WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI, TOTSTEP, TS
 from utils.collision_detection import two_triangle_test, circle_triangle_test, two_polygon_test
@@ -31,7 +32,7 @@ class Agent(object):
         f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)。
     """
 
-    def __init__(self, f_in: list, DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float):
+    def __init__(self, f_in: List[float], DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float):
         # 位置pos_x, pos_y
         self.__pos_x = f_in[1]
         self.__pos_y = f_in[2]
@@ -145,7 +146,7 @@ class Agent(object):
         p3 = plt.plot([self.vertex_x1, self.vertex_x0], [self.vertex_y1, self.vertex_y0], linewidth=1.0, color='k', label='r1')
         p4 = plt.plot([self.vertex_x2, self.vertex_x0], [self.vertex_y2, self.vertex_y0], linewidth=1.0, color='k', label='r1')
     
-    def plot_agent2(self):
+    def plot_agent2(self) -> None:
         """在matplotlib绘图窗口中画出车体"""
         polyvertexs = [[self.vertex_x0,self.vertex_y0],[self.vertex_x1,self.vertex_y1],[self.vertex_x2,self.vertex_y2]]
         # 黑色条纹填充
@@ -164,7 +165,7 @@ class Agent(object):
         Circle2 = self.__pos_y+r*sin(theta)
         plt.plot(Circle1, Circle2, s, linewidth=1.0)
 
-    def check_feasibility(self, vel: float, ang_vel: float, border: object, wolves: list, sta_obss: list, mob_obss: list, irr_obss: list, m_irr_obss: list, mark: int) -> bool:
+    def check_feasibility(self, vel: float, ang_vel: float, border: object, wolves: List, sta_obss: List, mob_obss: List, irr_obss: List, m_irr_obss: List, mark: int) -> bool:
         '''
         若移动后的新位置不超出边界范围且不与其他小车碰撞，按照输入速度和角速度移动
 
@@ -285,7 +286,7 @@ class Robot(Agent):
         f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)。
     """
 
-    def __init__(self, f_in: list, DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float, R_VISION, AVOID_DIST):
+    def __init__(self, f_in: List[float], DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float, R_VISION: float, AVOID_DIST: float):
         # 将父类Agent的__init__函数包含进来
         super(Robot, self).__init__(f_in, DISPLAYBASE, DISPLAYHEIGHT, REALBASE, REALHEIGHT, vel_max, ang_vel_max, DIS_AVOID_BORDER)
         # 机器人的车身颜色: 蓝色
@@ -322,8 +323,8 @@ class Robot(Agent):
     def find_near(self) -> None:
         """
         将同类围捕机器人按照由近及远的顺序进行排序
-
         """
+
         n = np.arange(1, WOLF_NUM+1, 1)
         m = np.zeros(WOLF_NUM)
         for j in range(WOLF_NUM):
@@ -346,7 +347,7 @@ class Target(Agent):
         f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)。
     """
 
-    def __init__(self, f_in: list, DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float, R_ATTACKED: float, R_VISION: float, AVOID_DIST: float):
+    def __init__(self, f_in: List[float], DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float, R_ATTACKED: float, R_VISION: float, AVOID_DIST: float):
         # 将父类Agent的__init__函数包含进来
         super(Target, self).__init__(f_in, DISPLAYBASE, DISPLAYHEIGHT, REALBASE, REALHEIGHT, vel_max, ang_vel_max, DIS_AVOID_BORDER)
         # 目标的车身颜色: 红色
@@ -395,14 +396,15 @@ class Obs(object):
         f_in: 长度为3的list，f_in[0]为障碍物半径(单位为m)，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)。
     """
 
-    def __init__(self, f_in: list):
+    def __init__(self, f_in: List[float]):
         # 障碍物的位置pos_x, pos_y和半径__R(单位为m)
         self._pos_x = f_in[1]
         self._pos_y = f_in[2]
         self.__R = f_in[0]
 
     def plot_obs(self) -> patches.Circle:
-        """画出障碍物
+        """
+        画出障碍物
 
         输出：
             cir: matplotlib.Circle类型，用于画图
@@ -461,7 +463,7 @@ class MobObs(Obs):
                          color='green', fill=False, hatch='\\\\', linewidth=1.5)
         return cir
 
-    def move(self, v_in: list) -> None:
+    def move(self, v_in: List[float]) -> None:
         """
         移动障碍物遵循质点运动规则：
         x[k+1] = x[k] + v_x[k]*TS
@@ -487,7 +489,7 @@ class IrregularObs(object):
         f_in: 长度为3的list，f_in[0]为障碍物半径(单位为m)，f_in[1]为生成点位置pos_x(单位为m)，f_in[2]为生成点位置pos_y(单位为m)。
     """
 
-    def __init__(self, f_in: list):
+    def __init__(self, f_in: List[float]):
         # 不规则障碍物顶点的生成圆圆心pos_x, pos_y
         self._pos_x = f_in[1]
         self._pos_y = f_in[2]
@@ -585,7 +587,7 @@ class MobIrregularObs(IrregularObs):
         plot_irr_obs: 输出matplotlib多边形对象，用于在绘图窗口中画出移动不规则障碍物
     """
 
-    def update(self, v_in: list) -> None:
+    def update(self, v_in: List[float]) -> None:
         """
         障碍物的移动、旋转和各边构成点的更新。
         移动不规则障碍物的移动遵循质点运动规则：
@@ -631,7 +633,7 @@ class Border(object):
               矩形边界的四个顶点分别为[x_min,y_min],[x_max,y_min],[x_min,y_max],[x_max,y_max]
     """
 
-    def __init__(self, f_in: list):
+    def __init__(self, f_in: List[float]):
         self.__X_MIN = f_in[0]
         self.__Y_MIN = f_in[1]
         self.__X_MAX = f_in[2]

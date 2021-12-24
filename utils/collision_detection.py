@@ -8,9 +8,9 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+from numba import jit
 from cv2 import pointPolygonTest
 from utils.math_func import norm
-from numba import jit
 
 
 @jit(nopython=True)
@@ -43,7 +43,7 @@ def two_line_segment_test(x1: float, y1: float, x2: float, y2: float, x3: float,
         return False  # ,[0,0]
 
 
-def two_triangle_test(tri1: list, tri2: list) -> bool:
+def two_triangle_test(tri1: np.ndarray, tri2: np.ndarray) -> bool:
     """
     判断输入的两个三角形是否有交集。
 
@@ -124,7 +124,7 @@ def get_foot_point(point: np.ndarray, line_p1: np.ndarray, line_p2: np.ndarray):
     return (xn, yn)
 
 @jit(nopython=True)
-def get_dis_point2line(point: np.ndarray, line_p1: np.ndarray, line_p2: np.ndarray):
+def get_dis_point2line(point: np.ndarray, line_p1: np.ndarray, line_p2: np.ndarray) -> float:
     """
     计算点到线段的距离。
 
@@ -169,7 +169,7 @@ def circle_triangle_test(center: np.ndarray, radius: float, tri: np.ndarray) -> 
     return False
 
 
-def two_polygon_test(poly1,poly2):
+def two_polygon_test(poly1: np.ndarray, poly2: np.ndarray) -> bool:
     """
     判断输入的两个多边形是否有交集。思路：首先判断两个多边形的点是否在另一多边形内，然后判断两个多边形是否有边相交。
 

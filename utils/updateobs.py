@@ -8,10 +8,12 @@
 
 
 import numpy as np
+from typing import List
+from model import Robot, Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
 from utils.relative_pos import vector_count
 
 
-def all_update(wolves: list, targets: list, sta_obss: list, mob_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, VEL_OBS: float, **kwargs) -> None:
+def all_update(wolves: List[Robot], targets: List[Target], sta_obss: List[StaObs], mob_obss: List[MobObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], rectangle_border: Border, VEL_OBS: float, **kwargs) -> None:
     """
     障碍物的移动和旋转
 

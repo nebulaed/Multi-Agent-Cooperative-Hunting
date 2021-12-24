@@ -12,12 +12,14 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from typing import List
+from model import Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
 from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, intervals_merge
 from utils.robots_control import saturator
 from utils.params import WOLF_NUM, TARGET_NUM, PI, TS
 
 
-def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_desired: float, targets: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, border: object, EXPANSION1: list, EXPANSION2: list, danger_direction: list = [], danger_index: list = []):
+def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_desired: float, targets: List[Target], mob_obss: List[MobObs], sta_obss: List[StaObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], border: Border, EXPANSION1: List[float], EXPANSION2: List[float], danger_direction: List = [], danger_index: List = []):
     """
     目标的避障算法
 
@@ -325,7 +327,7 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
     return vel_target_desired, theta_target_desired, dangerous_ranges_organized
 
 
-def target_go(targets: list, mob_obss: list, sta_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, t: int, interact: list, EXPANSION1: list, EXPANSION2: list, **kwargs):
+def target_go(targets: List[Target], mob_obss: List[MobObs], sta_obss: List[StaObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], rectangle_border: Border, t: int, interact: List, EXPANSION1: List[float], EXPANSION2: List[float], **kwargs):
     """
     目标运动的主函数，在以上函数的基础上计算出目标下一步运动的速度和角速度
 

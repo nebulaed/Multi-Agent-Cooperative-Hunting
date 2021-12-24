@@ -10,9 +10,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 from matplotlib import rcParams, patches
+from matplotlib.font_manager import FontProperties  # 字体属性管理器
+from typing import List, Dict
+from model import Robot, Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
 from utils.math_func import norm
 from utils.params import WOLF_NUM, TARGET_NUM, PI
-from matplotlib.font_manager import FontProperties  # 字体属性管理器
 
 
 # 设置字体
@@ -27,7 +29,7 @@ rcParams.update(config)
 font1 = FontProperties(fname=r"C:\Windows\Fonts\times.ttf", size=14)
 
 
-def plot_all(data: dict, wolves: list, targets: list, sta_obss: list, mob_obss: list, irr_obss: list, m_irr_obss: list, rectangle_border: object, t: int, w_d_range: list, v_vector: np.ndarray, t_d_range: list, **kwargs) -> None:
+def plot_all(data: Dict[str, List], wolves: List[Robot], targets: List[Target], sta_obss: List[StaObs], mob_obss: List[MobObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], rectangle_border: Border, t: int, w_d_range: List, v_vector: np.ndarray, t_d_range: List, **kwargs) -> None:
     """
     画图函数，将仿真中每一步时的位置情况呈现在绘图窗口中
 

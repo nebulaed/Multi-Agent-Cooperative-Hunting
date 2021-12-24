@@ -9,6 +9,7 @@
 
 import numpy as np
 from numba import jit
+from typing import List
 from utils.params import PI
 
 
@@ -33,7 +34,7 @@ def correct(angle: float) -> float:
 
 
 @jit(nopython=True)
-def peri_arctan(c):
+def peri_arctan(c: np.ndarray) -> float:
     """
     将向量转换到[0,2π)间的角度，把向量的起点定为圆心，终点定在圆上，则其方向角度∈[0,2π)计算如该函数。
 
@@ -63,7 +64,7 @@ def peri_arctan(c):
 
 
 @jit(nopython=True)
-def inc_angle(angle1, angle2):
+def inc_angle(angle1: float, angle2: float) -> float:
     """
     计算两个方向角之间的夹角
 
@@ -79,7 +80,7 @@ def inc_angle(angle1, angle2):
         return abs(angle1-angle2)
 
 
-def intervals_merge(ang_intervals: list, ang_intervals_index: list, ang_intervals_dists: list):
+def intervals_merge(ang_intervals: List, ang_intervals_index: List[int], ang_intervals_dists: List[float]):
     """
     将有交叠的角度区间进行合并，所有输入角度区间的起点和终点都∈[0,2π)
     思路：先检查列表中的角度区间，若有右端点大于左端点，将其拆分为[右端点,2π)和[0,左端点]，然后对列表中的区间按照左端点升序排序，同时index和dists也按照前面排好的顺序排序，然后按顺序依次考虑每个区间：1.假如是第一个区间或当前区间的左端点在结果列表中最后一个区间的右端点之后，那么它们不重合，直接把当前区间放入结果列表中，2.否则重合，更新结果列表中最后一个区间的右端点，变为(结果列表中最后一个区间的右端点,当前区间的右端点)中的最大值。最后将[右端点,2π)和[0,左端点]合并为[左端点，右端点+2π]
@@ -140,30 +141,30 @@ def intervals_merge(ang_intervals: list, ang_intervals_index: list, ang_interval
 
 
 @jit(nopython=True)
-def cos(x):
+def cos(x: float) -> float:
     return np.cos(x)
 
 
 @jit(nopython=True)
-def sin(x):
+def sin(x: float) -> float:
     return np.sin(x)
 
 
 @jit(nopython=True)
-def sqrt(x):
+def sqrt(x: float) -> float:
     return np.sqrt(x)
 
 
 @jit(nopython=True)
-def arcsin(x):
+def arcsin(x: float) -> float:
     return np.arcsin(x)
 
 
 @jit(nopython=True)
-def norm(x):
+def norm(x: np.ndarray) -> float:
     return np.linalg.norm(x)
 
 
 @jit(nopython=True)
-def exp(x):
+def exp(x: float) -> float:
     return np.exp(x)

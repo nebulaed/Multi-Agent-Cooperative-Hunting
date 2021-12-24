@@ -8,11 +8,13 @@
 
 
 import numpy as np
+from typing import List
+from model import Robot, StaObs, MobObs, IrregularObs, MobIrregularObs
 from utils.params import WOLF_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM
 from utils.collision_detection import two_triangle_test,circle_triangle_test,two_polygon_test
 
 
-def judge_fail(wolves: list, sta_obss: list, mob_obss: list, irr_obss: list, m_irr_obss: list, **kwargs) -> int:
+def judge_fail(wolves: List[Robot], sta_obss: List[StaObs], mob_obss: List[MobObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], **kwargs) -> int:
     """判断围捕过程中围捕机器人是否撞上障碍物，是输出True，否输出False
 
     输入：
