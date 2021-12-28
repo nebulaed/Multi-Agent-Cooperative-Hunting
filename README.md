@@ -1,4 +1,4 @@
-# Cooperative_Hunting
+# Cooperative_Hunting ![]https://img.shields.io/badge/python-%3E%3D3.7-blue
 这是我在2020-2021年用python语言设计的群机器人的协同围捕的仿真工程。
 
 ## I. 描述
