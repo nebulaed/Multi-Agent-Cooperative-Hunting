@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams, gridspec
 from typing import List
 from model import Robot, Target
-from utils.params import WOLF_NUM, TARGET_NUM
 
 
 # 设置字体

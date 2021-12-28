@@ -9,7 +9,6 @@
 from typing import List
 import numpy as np
 from model import Robot, Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
-from utils.relative_pos import vector_count
 from utils.params import WOLF_NUM, TARGET_NUM
 
 # TODO: 速度优化重点

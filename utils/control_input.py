@@ -6,7 +6,6 @@
 # --------------------------------------------------------
 # 本文件定义了一个控制输入计算函数
 
-import numpy as np
 from utils.math_func import correct
 from utils.params import PI, TS
 

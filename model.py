@@ -11,9 +11,9 @@ from numba import jit
 import matplotlib.pyplot as plt
 from matplotlib import patches
 from typing import List
-from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt
+from utils.math_func import correct, peri_arctan, sin, cos, sqrt
 from utils.params import WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI, TOTSTEP, TS
-from utils.collision_detection import two_triangle_test, circle_triangle_test, two_polygon_test
+# from utils.collision_detection import two_triangle_test, circle_triangle_test, two_polygon_test
 
 
 class Agent(object):

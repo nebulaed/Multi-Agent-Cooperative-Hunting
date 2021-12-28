@@ -27,7 +27,7 @@
 
 import argparse
 import numpy as np
-np.random.seed(100)
+# np.random.seed(100)
 import os
 import matplotlib.pyplot as plt
 from matplotlib.animation import FFMpegWriter
@@ -66,7 +66,7 @@ def get_args():
     """用python执行文件时给定不同的命令产生不同的效果"""
 
     parser = argparse.ArgumentParser('Hunting Escape Model - XuBozhe')
-    parser.add_argument('--display', type=str2bool, default=False,
+    parser.add_argument('--display', type=str2bool, default=True,
                         help='whether display the figure')
     parser.add_argument('--output', type=str2bool, default=False,
                         help='whether save the data of robots and targets')
@@ -108,11 +108,7 @@ def after_plot(parameter: Dict[str, Any], data: Dict[str, List], targets: List[T
     data['energy_wolves'].append(energy_wolves_t)
     data['interact'].append(interact_t)
     # 判断围捕机器人是否撞上障碍物
-    t1 = time.time()
     judge_f = judge_fail(**parameter)
-    t2 = time.time()
-    tact_time = t2-t1
-    print(f'after_plot: {tact_time} seconds')
     # 若是则跳出循环，判定这次围捕失败，否则继续
     if judge_f == 1:
         return 0, [0, 0, 0], []
@@ -134,11 +130,10 @@ def after_plot(parameter: Dict[str, Any], data: Dict[str, List], targets: List[T
 
 # 若该文件存在，则删除此文件，然后保存
 def rewrite(path: str, data: List):
-    if opt.output:
-        if os.path.exists(path):
-            os.remove(path)
-        with open(path, 'w') as f:
-            f.write(str(data))
+    if os.path.exists(path):
+        os.remove(path)
+    with open(path, 'w') as f:
+        f.write(str(data))
 
 def main(opt):
     """
@@ -237,12 +232,16 @@ def main(opt):
         plt.ioff()
         plt.show()
     else:
+        t1 = time.time()
         # 仿真循环语句
         for t in range(TOTSTEP):
             before_plot(parameter, t)
             branch, ret, all_death = after_plot(parameter, data, targets, irr_obss, m_irr_obss)
             if branch == 0: return ret[0], ret[1], ret[2]
             elif branch == 1: break
+        t2 = time.time()
+        tact_time = t2-t1
+        print(f'{tact_time} seconds, {t / tact_time} FPS')
 
     # 若该文件存在，则删除此文件，然后保存仿真过程中围捕机器人的坐标、速度、角速度、累计能量消耗。
     if opt.output:

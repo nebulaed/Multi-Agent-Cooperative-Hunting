@@ -15,9 +15,9 @@
 
 import numpy as np
 from time import time
-from typing import List, Dict
+from typing import List
 from model import Robot, Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
-from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt
+from utils.math_func import norm, sin, cos
 from utils.params import WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI, BORDER, INIT_D
 
 

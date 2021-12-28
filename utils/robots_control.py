@@ -16,7 +16,7 @@
 import numpy as np
 from typing import List
 from model import Robot, Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
-from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, sqrt, intervals_merge
+from utils.math_func import correct, peri_arctan, norm, sin, cos
 from utils.control_input import saturator
 from utils.params import WOLF_NUM, TARGET_NUM
 from utils.collision_avoidance import robot_avoid_obs
