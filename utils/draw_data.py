@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams, gridspec
 from typing import List
-from model import Robot, Target
+from model import Robot, Target, MobObs, IrregularObs, MobIrregularObs
 
 
 # 设置字体
@@ -23,7 +23,7 @@ config = {
 rcParams.update(config)
 
 
-def record_data(wolves: List[Robot], targets: List[Target], t: int, interact: List, **kwargs):
+def record_data(wolves: List[Robot], targets: List[Target], mob_obss: List[MobObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], t: int, interact: List, **kwargs):
     """
     记录个体的速度和角速度
 
@@ -45,24 +45,37 @@ def record_data(wolves: List[Robot], targets: List[Target], t: int, interact: Li
         interact: 当前步拓扑矩阵
     """
     pos_targets = []
+    ori_targets = []
     vel_targets = []
     ang_vel_targets = []
     energy_targets = []
     pos_wolves = []
+    ori_wolves = []
     vel_wolves = []
     ang_vel_wolves = []
     energy_wolves = []
+    mob_obss_params = []
+    irr_obss_params = []
+    m_irr_obss_params = []
     for target in targets:
         pos_targets.append(target.pos.tolist())
+        ori_targets.append(target.ori)
         vel_targets.append(target.vel)
         ang_vel_targets.append(target.ang_vel)
         energy_targets.append(target.energy)
     for wolf in wolves:
         pos_wolves.append(wolf.pos.tolist())
+        ori_wolves.append(wolf.ori)
         vel_wolves.append(wolf.vel)
         ang_vel_wolves.append(wolf.ang_vel)
         energy_wolves.append(wolf.energy)
-    return pos_targets, vel_targets, ang_vel_targets, energy_targets, pos_wolves, vel_wolves, ang_vel_wolves, energy_wolves, interact
+    for mob_obs in mob_obss:
+        mob_obss_params.append([mob_obs.R, mob_obs.pos[0], mob_obs.pos[1]])
+    for irr_obs in irr_obss:
+        irr_obss_params.append(irr_obs.poly)
+    for m_irr_obs in m_irr_obss:
+        m_irr_obss_params.append(m_irr_obs.poly)
+    return pos_targets, ori_targets, vel_targets, ang_vel_targets, energy_targets, pos_wolves, ori_wolves, vel_wolves, ang_vel_wolves, energy_wolves, interact, mob_obss_params, irr_obss_params, m_irr_obss_params
 
 
 def plot_data(var: str, vel_wolves: List, ang_vel_wolves: List, energy_wolves: List, vel_targets: List, ang_vel_targets: List, energy_targets: List, **kwargs) -> None:

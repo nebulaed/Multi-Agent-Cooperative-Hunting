@@ -27,12 +27,13 @@
 
 import argparse
 import numpy as np
-# np.random.seed(100)
+np.random.seed(100)
 import os
 import matplotlib.pyplot as plt
 from matplotlib.animation import FFMpegWriter
 import time
 from typing import List, Dict, Any
+
 from model import Target
 from utils.init import init
 from utils.draw_data import plot_data, record_data
@@ -42,7 +43,7 @@ from utils.robots_control import robots_movement_strategy
 from utils.targets_control import target_go
 from utils.move import all_move
 from utils.determine import judge_fail
-from utils.params import WOLF_NUM, TARGET_NUM, TOTSTEP
+from utils.params import S_OBS_NUM, WOLF_NUM, TARGET_NUM, TOTSTEP
 # 导入FFMPEG, 用于制作动画
 plt.rcParams['animation.ffmpeg_path'] = 'D:\\Software\\Anaconda3\\Library\\bin\\ffmpeg.exe'
 
@@ -97,7 +98,7 @@ def before_plot(parameter: Dict[str, Any], t: int):
 # 为方便重复调用，将画图后的迭代更新抽象为一个函数
 def after_plot(parameter: Dict[str, Any], data: Dict[str, List], targets: List[Target], irr_obss: List, m_irr_obss: List):
     # 记录围捕机器人、目标的速度、角速度、能量消耗，用于后续数据绘图
-    pos_targets_t, vel_targets_t, ang_vel_targets_t, energy_targets_t, pos_wolves_t, vel_wolves_t, ang_vel_wolves_t, energy_wolves_t, interact_t = record_data(**parameter)
+    pos_targets_t, ori_targets_t, vel_targets_t, ang_vel_targets_t, energy_targets_t, pos_wolves_t, ori_wolves_t, vel_wolves_t, ang_vel_wolves_t, energy_wolves_t, interact_t, mob_obss_t, irr_obss_t, m_irr_obss_t = record_data(**parameter)
     data['pos_targets'].append(pos_targets_t)
     data['vel_targets'].append(vel_targets_t)
     data['ang_vel_targets'].append(ang_vel_targets_t)
@@ -107,6 +108,11 @@ def after_plot(parameter: Dict[str, Any], data: Dict[str, List], targets: List[T
     data['ang_vel_wolves'].append(ang_vel_wolves_t)
     data['energy_wolves'].append(energy_wolves_t)
     data['interact'].append(interact_t)
+    data['ori_targets'].append(ori_targets_t)
+    data['ori_wolves'].append(ori_wolves_t)
+    data['mob_obs_params'].append(mob_obss_t)
+    data['irr_obs_params'].append(irr_obss_t)
+    data['m_irr_obs_params'].append(m_irr_obss_t)
     # 判断围捕机器人是否撞上障碍物
     judge_f = judge_fail(**parameter)
     # 若是则跳出循环，判定这次围捕失败，否则继续
@@ -188,7 +194,9 @@ def main(opt):
 
     # 初始化存放围捕机器人和目标的速度、角速度、能量消耗的字典。
     data = {'pos_targets': [], 'vel_targets': [], 'ang_vel_targets': [], 'energy_targets': [],
-            'pos_wolves': [], 'vel_wolves': [], 'ang_vel_wolves': [], 'energy_wolves': [], 'interact': []}
+            'pos_wolves': [], 'vel_wolves': [], 'ang_vel_wolves': [], 'energy_wolves': [], 'interact': [], 
+            'ori_targets': [], 'ori_wolves': [], 'mob_obs_params': [], 'irr_obs_params': [], 
+            'm_irr_obs_params': [], 'sta_obs_params': [[sta_obss[i].R, sta_obss[i].pos[0], sta_obss[i].pos[1]]for i in range(S_OBS_NUM)]}
 
     if opt.display:
         # 打开matplotlib绘图窗口
@@ -243,12 +251,14 @@ def main(opt):
         tact_time = t2-t1
         print(f'{tact_time} seconds, {t / tact_time} FPS')
 
-    # 若该文件存在，则删除此文件，然后保存仿真过程中围捕机器人的坐标、速度、角速度、累计能量消耗。
     if opt.output:
         rewrite('output/wolves_pos.txt', data['pos_wolves'])
         rewrite('output/wolves_vel.txt', data['vel_wolves'])
         rewrite('output/wolves_ang_vel.txt', data['ang_vel_wolves'])
         rewrite('output/wolves_energy.txt', data['energy_wolves'])
+        save_path = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
+        np.savez('output/' + save_path + '.npz', pos_targets = data['pos_targets'], ori_targets = data['ori_targets'], vel_targets = data['vel_targets'], ang_vel_targets = data['ang_vel_targets'], energy_targets = data['energy_targets'], pos_wolves = data['pos_wolves'], ori_wolves = data['ori_wolves'], vel_wolves = data['vel_wolves'], ang_vel_wolves = data['ang_vel_wolves'], energy_wolves = data['energy_wolves'], sta_obs_params = data['sta_obs_params'], mob_obs_params = data['mob_obs_params'], irr_obs_params = data['irr_obs_params'], m_irr_obs_params = data['m_irr_obs_params'], DISPLAYBASE = parameter['DISPLAYBASE'], DISPLAYHEIGHT = parameter['DISPLAYHEIGHT'], R_VISION = parameter['R_VISION'], BORDER = [rectangle_border.X_MIN, rectangle_border.Y_MIN, rectangle_border.X_MAX, rectangle_border.Y_MAX], R_ATTACKED = parameter['R_ATTACKED'])
+        print('仿真数据保存成功.')
 
     # 画出围捕机器人和目标速度、角速度、能量消耗的变化曲线
     if opt.showdata:

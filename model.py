@@ -137,33 +137,31 @@ class Agent(object):
         self.energy += 1/2*1*(self.vel**2)
         self.update_vertex()
 
-    def plot_agent(self) -> None:
+    def plot_agent(self, ax) -> None:
         """在matplotlib绘图窗口中画出车体"""
 
         # 画等腰三角形，底边中点坐标为[self.__pos_x,self.__pos_y]
-        p1 = plt.plot([self.__pos_x, self.vertex_x1], [self.__pos_y, self.vertex_y1], linewidth=1.0, color='k', label='r1')
-        p2 = plt.plot([self.__pos_x, self.vertex_x2], [self.__pos_y, self.vertex_y2], linewidth=1.0, color='k', label='r1')
-        p3 = plt.plot([self.vertex_x1, self.vertex_x0], [self.vertex_y1, self.vertex_y0], linewidth=1.0, color='k', label='r1')
-        p4 = plt.plot([self.vertex_x2, self.vertex_x0], [self.vertex_y2, self.vertex_y0], linewidth=1.0, color='k', label='r1')
+        polyvertexs = [[self.vertex_x0,self.vertex_y0],[self.vertex_x1,self.vertex_y1],[self.vertex_x2,self.vertex_y2]]
+        poly = plt.Polygon(polyvertexs,ec="k",fill=False,linewidth=1.0, label = 'r1')
+        ax.add_patch(poly)
     
-    def plot_agent2(self) -> None:
+    def plot_agent2(self, ax) -> None:
         """在matplotlib绘图窗口中画出车体"""
         polyvertexs = [[self.vertex_x0,self.vertex_y0],[self.vertex_x1,self.vertex_y1],[self.vertex_x2,self.vertex_y2]]
         # 黑色条纹填充
         poly = plt.Polygon(polyvertexs,ec="b",fill=True,facecolor='b',linewidth=1.5)
-        return poly
+        ax.add_patch(poly)
 
-    def plot_circle(self, r: float, s: str) -> None:
+    def plot_circle(self, ax, r: float, ec: str, ls: str = '-') -> None:
         """画圆
 
         输入：
             r: 圆的半径
-            s: 线条颜色和线型
+            ec: 线条颜色
+            ls: 线型，默认为实线
         """
-        theta = np.linspace(0, 6.28, 129)
-        Circle1 = self.__pos_x+r*cos(theta)
-        Circle2 = self.__pos_y+r*sin(theta)
-        plt.plot(Circle1, Circle2, s, linewidth=1.0)
+        Circle = plt.Circle((self.__pos_x, self.__pos_y), r, ec=ec, ls = ls, fill=False, linewidth=1.0)
+        ax.add_patch(Circle)
 
     def check_feasibility(self, vel: float, ang_vel: float, border: object, wolves: List, sta_obss: List, mob_obss: List, irr_obss: List, m_irr_obss: List, mark: int) -> bool:
         '''
@@ -313,12 +311,13 @@ class Robot(Agent):
         # 围捕机器人的同类由近到远排序的索引list
         self.neighbor = np.zeros(WOLF_NUM-1)
 
-    def plot_robot(self) -> None:
+    def plot_robot(self, ax) -> None:
         """在matplotlib绘图窗口中画出围捕机器人的车体"""
-        self.plot_agent()
-        p5 = plt.plot([self.pos[0], self.vertex_x0], [self.pos[1], self.vertex_y0], linewidth=1.2, color=self.__color, label='r1')
+        self.plot_agent(ax)
+        p5 = plt.Line2D([self.pos[0], self.vertex_x0], [self.pos[1], self.vertex_y0], linewidth=1.2, color=self.__color, label='r1')
+        ax.add_line(p5)
         # 画出围捕机器人的观察范围
-        self.plot_circle(self.R_VISION, 'b--')
+        self.plot_circle(ax, self.R_VISION, 'b', '--')
 
     def find_near(self) -> None:
         """
@@ -375,14 +374,15 @@ class Target(Agent):
         # 目标到移动障碍物的向量(单位为m)
         self.target_to_m_obs = np.zeros((M_OBS_NUM, 2))
 
-    def plot_target(self) -> None:
+    def plot_target(self, ax) -> None:
         """在matplotlib绘图窗口中画出目标"""
-        self.plot_agent()
-        plt.plot([self.pos[0], self.vertex_x0], [self.pos[1], self.vertex_y0], linewidth=1.1, color=self.__color)
+        self.plot_agent(ax)
+        p5 = plt.Line2D([self.pos[0], self.vertex_x0], [self.pos[1], self.vertex_y0], linewidth=1.1, color=self.__color)
+        ax.add_line(p5)
         # 画出目标的受攻击范围
-        self.plot_circle(self.R_ATTACKED, 'r')
+        self.plot_circle(ax, self.R_ATTACKED, 'r')
         # 画出目标的观察范围
-        self.plot_circle(self.R_VISION, 'r--')
+        self.plot_circle(ax, self.R_VISION, 'r', '--')
 
 
 class Obs(object):
@@ -402,18 +402,15 @@ class Obs(object):
         self._pos_y = f_in[2]
         self.__R = f_in[0]
 
-    def plot_obs(self) -> patches.Circle:
+    def plot_obs(self, ax):
         """
         画出障碍物
-
-        输出：
-            cir: matplotlib.Circle类型，用于画图
         """
 
         # 黑色线条，且有黑色斜纹填充的matplotlib圆对象，以pos_x，pos_y为圆心，以__R为半径
         cir = plt.Circle((self._pos_x, self._pos_y), self.__R,
                          color='black', fill=False, hatch='//', linewidth=1.5)
-        return cir
+        ax.add_patch(cir)
 
     @property
     def pos(self) -> np.ndarray:
@@ -451,17 +448,15 @@ class MobObs(Obs):
         f_in: 长度为3的list，f_in[0]为障碍物半径(单位为m)，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)
     """
 
-    def plot_obs(self) -> patches.Circle:
-        """画出移动障碍物
-
-        输出：
-            cir: matplotlib.Circle类型，用于画图
+    def plot_obs(self, ax):
+        """
+        画出移动障碍物
         """
 
         # 绿色线条，且有绿色斜纹填充的matplotlib圆对象，以pos_x，pos_y为圆心，以__R为半径
         cir = plt.Circle((self.pos[0], self.pos[1]), self.R,
                          color='green', fill=False, hatch='\\\\', linewidth=1.5)
-        return cir
+        ax.add_patch(cir)
 
     def move(self, v_in: List[float]) -> None:
         """
@@ -527,39 +522,36 @@ class IrregularObs(object):
             angle[i] = peri_arctan(vertex_pose[i]-self.pos)
         self.pose_order = np.argsort(angle, kind='heapsort')
 
-    def plot_obs(self) -> patches.Circle:
-        """输出matplotlib圆对象，用于画不规则障碍物的出生圆
-
-        输出：
-            cir: matplotlib.Circle类型，用于画图
+    def plot_obs(self, ax):
+        """
+        输出matplotlib圆对象，用于画不规则障碍物的出生圆
         """
         cir = plt.Circle((self._pos_x, self._pos_y), self.R,
                          color='black', fill=False, linewidth=1.5, linestyle='--')
-        return cir
+        ax.add_patch(cir)
 
     def update(self) -> None:
         """障碍物的旋转和构成点的更新"""
 
+        self.poly = []
         # 障碍物的旋转幅度为(-π/16,π/16)的均匀随机分布
         variation = np.random.uniform(-PI/16, PI/16)
         self.elements = rotate_update(self.t, self.samples_num, self.r_num, self.R, self.vertex_x, self.vertex_y, self._pos_x, self._pos_y, self.pose_order, variation)
-
-    def plot_irr_obs(self) -> patches.Polygon:
-        """输出matplotlib.Polygon对象，用于在绘图窗口中画出不规则障碍物
-
-        输出：
-            poly: matplotlib.Polygon类型，用于画图
-        """
         for i in range(self.samples_num):
             self.poly.append((self.vertex_x[self.pose_order[i]], self.vertex_y[self.pose_order[i]]))
+
+    def plot_irr_obs(self, ax):
+        """
+        输出matplotlib.Polygon对象，用于在绘图窗口中画出不规则障碍物
+        """
+        
         # 标出不规则障碍物每条边的构成点
         # for item in self.elements:
         #     plt.plot(item[0],item[1],'k.')
         # 黑色条纹填充
         poly = plt.Polygon(self.poly, ec="k", fill=False,
                            hatch='//', linewidth=1.5)
-        self.poly = []
-        return poly
+        ax.add_patch(poly)
 
     @property
     def pos(self) -> np.ndarray:
@@ -598,29 +590,28 @@ class MobIrregularObs(IrregularObs):
             v_in: 长度为2的list，v_in[0]为全局坐标系中速度的x轴方向分量v_x(单位为m/s)，v_in[1]为全局坐标系中速度的y轴方向分量v_y(单位为m/s)
         """
 
+        self.poly = []
         # 障碍物的旋转幅度为(-π/16,π/16)的均匀随机分布
         variation = np.random.uniform(-PI/16, PI/16)
         self.elements = rotate_update(self.t, self.samples_num, self.r_num, self.R, self.vertex_x, self.vertex_y, self._pos_x, self._pos_y, self.pose_order, variation)
         # 障碍物的移动
         self._pos_x += v_in[0]*TS
         self._pos_y += v_in[1]*TS
-
-    def plot_irr_obs(self) -> patches.Polygon:
-        """输出matplotlib.Polygon对象，用于在绘图窗口中画出不规则障碍物
-
-        输出：
-            poly: matplotlib.Polygon类型，用于画图
-        """
+        self.poly = []
         for i in range(self.samples_num):
             self.poly.append((self.vertex_x[self.pose_order[i]], self.vertex_y[self.pose_order[i]]))
+
+    def plot_irr_obs(self, ax):
+        """
+        输出matplotlib.Polygon对象，用于在绘图窗口中画出不规则障碍物
+        """
         # 标出不规则障碍物每条边的构成点
         # for item in self.elements:
         #     plt.plot(item[0],item[1],'k.')
         # 绿色条纹填充
         poly = plt.Polygon(self.poly, ec="g", fill=False,
                            hatch='\\\\', linewidth=1.5)
-        self.poly = []
-        return poly
+        ax.add_patch(poly)
 
 
 class Border(object):
@@ -639,15 +630,13 @@ class Border(object):
         self.__X_MAX = f_in[2]
         self.__Y_MAX = f_in[3]
 
-    def plot_border(self) -> patches.Rectangle:
-        """输出matplotlib.patches.Rectangle对象，用于在地图中画出边界
-
-        输出：
-            border: matplotlib.patches.Rectangle类型，用于画图
+    def plot_border(self, ax):
+        """
+        输出matplotlib.patches.Rectangle对象，用于在地图中画出边界
         """
         border = patches.Rectangle((self.__X_MIN, self.__Y_MIN), self.__X_MAX -
                                    self.__X_MIN, self.__Y_MAX-self.__Y_MIN, fill=False, linewidth=5)
-        return border
+        ax.add_patch(border)
 
     @property
     def X_MIN(self) -> float:
@@ -664,6 +653,7 @@ class Border(object):
     @property
     def Y_MAX(self) -> float:
         return self.__Y_MAX
+
 
 @jit(nopython = True)
 def rotate_update(t: np.ndarray, samples_num: int, r_num: np.ndarray, R: float, vertex_x: np.ndarray, vertex_y: np.ndarray, pos_x: float, pos_y: float, pose_order: np.ndarray, variation: float):

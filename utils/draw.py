@@ -50,46 +50,32 @@ def plot_all(data: Dict[str, List], wolves: List[Robot], targets: List[Target], 
     ax = plt.gca()
     wolves_wedges, targets_wedges = [], []
     for i in range(WOLF_NUM):
-        wolves[i].plot_robot()
+        wolves[i].plot_robot(ax)
         plt.text(wolves[i].pos[0], wolves[i].pos[1], i, fontproperties=font1)
         pos_wolvesx, pos_wolvesy = [], []
         for step in range(t):
             pos_wolvesx.append(data['pos_wolves'][step][i][0])
             pos_wolvesy.append(data['pos_wolves'][step][i][1])
-        plt.plot(pos_wolvesx, pos_wolvesy, ls='--', color='b', lw=0.8)
+        path = plt.Line2D(pos_wolvesx, pos_wolvesy, ls='--', color='b', lw=0.8)
+        ax.add_line(path)
         for j in range(len(w_d_range[i])):
             wedge = patches.Wedge(wolves[i].pos, wolves[i].R_VISION, w_d_range[i][j]
                                   [0]/PI*180, w_d_range[i][j][1]/PI*180, ec="red", lw=1, ls='-')
             wolves_wedges.append(wedge)
 
     for i in range(TARGET_NUM):
-        targets[i].plot_target()
+        targets[i].plot_target(ax)
         pos_targetsx, pos_targetsy = [], []
         for step in range(t):
             pos_targetsx.append(data['pos_targets'][step][i][0])
             pos_targetsy.append(data['pos_targets'][step][i][1])
-        plt.plot(pos_targetsx, pos_targetsy, ls='--', color='r', lw=0.8)
+        path = plt.Line2D(pos_targetsx, pos_targetsy, ls='--', color='r', lw=0.8)
+        ax.add_line(path)
         for j in range(len(t_d_range[i])):
             wedge = patches.Wedge(targets[i].pos, targets[i].R_VISION, t_d_range[i]
                                   [j][0]/PI*180, t_d_range[i][j][1]/PI*180, ec="none")
             targets_wedges.append(wedge)
 
-    # 画出固定障碍物和移动障碍物
-    sta_cir, mob_cir, irr_cir, m_irr_cir = [], [], [], []
-    for sta_obs in sta_obss:
-        sta_cir.append(sta_obs.plot_obs())
-    for mob_obs in mob_obss:
-        mob_cir.append(mob_obs.plot_obs())
-    for irr_obs in irr_obss:
-        irr_dist = np.zeros(WOLF_NUM)
-        for i in range(WOLF_NUM):
-            irr_dist[i] = norm(wolves[i].pos-irr_obs.pos)
-        irr_cir.append(irr_obs.plot_irr_obs())
-    for m_irr_obs in m_irr_obss:
-        m_irr_dist = np.zeros(WOLF_NUM)
-        for i in range(WOLF_NUM):
-            m_irr_dist[i] = norm(wolves[i].pos-m_irr_obs.pos)
-        m_irr_cir.append(m_irr_obs.plot_irr_obs())
     debug_car = []
     for wolf in wolves:
         if wolf.dangerObsFlag['obs'][t] == 1:
@@ -108,11 +94,16 @@ def plot_all(data: Dict[str, List], wolves: List[Robot], targets: List[Target], 
         collection.set_facecolor('#FFD39B')
         ax.add_collection(collection)
     # 画出边界
-    ax.add_patch(rectangle_border.plot_border())
-    for item in sta_cir+mob_cir:
-        ax.add_artist(item)
-    for item in irr_cir+m_irr_cir+debug_car:
-        ax.add_patch(item)
+    rectangle_border.plot_border(ax)
+    # 画出各种障碍物
+    for sta_obs in sta_obss:
+        sta_obs.plot_obs(ax)
+    for mob_obs in mob_obss:
+        mob_obs.plot_obs(ax)
+    for irr_obs in irr_obss:
+        irr_obs.plot_irr_obs(ax)
+    for m_irr_obs in m_irr_obss:
+        m_irr_obs.plot_irr_obs(ax)
 
     plt.title(f'仿真步数t={t}', fontsize=14, fontfamily='SimSun')
     # 设置刻度标签字体

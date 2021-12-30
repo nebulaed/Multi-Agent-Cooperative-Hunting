@@ -4,3 +4,4 @@ __pycache__
 *.synctex.gz
 .VSCodeCounter
 collision_avoidance2.py
+output/*
