@@ -27,12 +27,12 @@ def axis_transform(xb: float, yb: float, theta: float):
     计算输入矢量在以目标方向为y'轴，逆时针旋转90°为x'轴的x'Oy'坐标系中的x'轴分量
 
     输入：
-        xb: 向量的x轴分量
-        yb: 向量的y轴
-        theta: y'轴的方向角度∈[0,2π)
+        @param xb: 向量的x轴分量(单位m/s)
+        @param yb: 向量的y轴分量(单位m/s)
+        @param theta: y'轴的方向角度∈[0,2π)
     输出：
-        po2[0,0]: 计算得到x'轴分量转换回全局xOy坐标系后的x轴分量。
-        po2[1,0]: 计算得到x'轴分量转换回全局xOy坐标系后的x轴分量。
+        @return po2[0,0]: 计算得到x'轴分量转换回全局xOy坐标系后的x轴分量(单位m/s)
+        @return po2[1,0]: 计算得到x'轴分量转换回全局xOy坐标系后的x轴分量(单位m/s)
     """
     cosx, sinx = cos(theta), sin(theta)
     # 坐标变换矩阵
@@ -54,7 +54,7 @@ def find_near(wolves: List) -> None:
     围捕机器人确定同伴由近到远的次序
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
+        @param wolves: 存放所有围捕机器人对象的list
     """
     # 执行个体的成员函数计算同伴由近到远的次序
     for wolf in wolves:
@@ -66,9 +66,9 @@ def assignment(wolves: List) -> List[int]:
     分配围捕目标，原理是各个机器人就近选择目标，假如选择某个目标的机器人数量超过了[机器人数/总目标数]，则离该目标最远的机器人选择离自己次近的目标
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
+        @param wolves: 存放所有围捕机器人对象的list
     输出：
-        my_target: 存放各个围捕机器人选择的目标序号的list
+        @return my_target: 存放各个围捕机器人选择的目标序号的list
     """
     my_target = []
     target_dist = np.zeros((WOLF_NUM, TARGET_NUM))
@@ -83,10 +83,10 @@ def assignment(wolves: List) -> List[int]:
                 if my_target[j] == i:
                     my_target_dists[0].append(j)
                     my_target_dists[1].append(target_dist[j, i])
-            exclusion = np.argsort(my_target_dists[1], kind='heapsort')
+            exclusion = np.argsort(my_target_dists[1], kind = 'introsort')
             for item in range(len(my_target_dists[0])):
                 if item > (WOLF_NUM/TARGET_NUM):
-                    exclusion_index = np.argsort(target_dist[my_target_dists[0][exclusion[item]]], kind='heapsort')
+                    exclusion_index = np.argsort(target_dist[my_target_dists[0][exclusion[item]]])
                     my_target[my_target_dists[0]
                               [exclusion[item]]] = exclusion_index[1]
     return my_target
@@ -97,21 +97,20 @@ def attractive(i: int, my_t: List[int], wolves: List, RADIUS: float, VARSIGMA: f
     计算围捕机器人的前进速度
 
     输入：
-        i: 围捕机器人序号
-        my_t: 存放围捕机器人选择的目标list
-        wolves: 存放所有围捕机器人对象的list
-        RADIUS: 围捕半径(单位为m)
-        VARSIGMA: 跟随同伴速度的系数
-        TAU_1: 吸引速度的系数
-        TAU_2: 追踪速度的系数
-        old_track_target: 实际未用到的量，可忽略
-        old_attract: 上一步的吸引速度矢量
-        interact: 交互拓扑
+        @param i: 围捕机器人序号
+        @param my_t: 存放围捕机器人选择的目标list
+        @param wolves: 存放所有围捕机器人对象的list
+        @param RADIUS: 围捕半径(单位为m)
+        @param VARSIGMA: 跟随同伴速度的系数
+        @param TAU_1: 吸引速度的系数
+        @param TAU_2: 追踪速度的系数
+        @param old_track_target: 实际未用到的量，可忽略
+        @param old_attract: 上一步的吸引速度矢量(单位为m/s)
+        @param interact: 交互拓扑
 
     输出：
-        attract_v: 计算得到的吸引速度矢量
-        track_target: 长度为2的np.ndarray，第一个元素为0表示在追击目标，为1表示在跟随同伴，第二个元素表示目标或围捕机器人的序号
-        interact: 交互拓扑
+        @return attract_v: 计算得到的吸引速度矢量(单位为m/s)
+        @return track_target: 长度为2的np.ndarray，第一个元素为0表示在追击目标，为1表示在跟随同伴，第二个元素表示目标或围捕机器人的序号
     """
     attract_v = np.zeros(2)
     track_target = np.zeros(2)
@@ -150,7 +149,7 @@ def attractive(i: int, my_t: List[int], wolves: List, RADIUS: float, VARSIGMA: f
         attract_v = 1.5*old_attract/norm(old_attract)
         track_target[0] = 0
         track_target[1] = my_t[i]
-    return attract_v, track_target, interact
+    return attract_v, track_target
 
 
 def repulsion(i: int, my_t: int, wolves: List, TAU_3: float, interact: List, attract_v: np.ndarray):
@@ -158,16 +157,15 @@ def repulsion(i: int, my_t: int, wolves: List, TAU_3: float, interact: List, att
     计算同伴对围捕机器人的排斥速度
 
     输入：
-        i: 围捕机器人序号
-        my_t: 存放围捕机器人选择的目标list
-        wolves: 存放所有围捕机器人对象的list
-        TAU_3: 排斥速度的参数
-        interact: 交互矩阵
-        attract_v: 前进速度
+        @param i: 围捕机器人序号
+        @param my_t: 存放围捕机器人选择的目标list
+        @param wolves: 存放所有围捕机器人对象的list
+        @param TAU_3: 排斥速度的参数
+        @param interact: 交互矩阵
+        @param attract_v: 前进速度矢量(单位为m/s)
 
     输出：
-        horizontal_v: 计算得到的排斥速度矢量
-        interact: 交互矩阵
+        @return horizontal_v: 计算得到的排斥速度矢量(单位为m/s)
     """
     horizontal_v = np.zeros(2)
     loose = np.zeros(2)
@@ -198,44 +196,44 @@ def repulsion(i: int, my_t: int, wolves: List, TAU_3: float, interact: List, att
     target_theta = correct(peri_arctan(attract_v)-np.pi/2)
     # 通过坐标系转换算出实际的排斥速度
     horizontal_v[0], horizontal_v[1] = axis_transform(loose[0], loose[1], target_theta)
-    return horizontal_v, interact
+    return horizontal_v
 
 
-def robots_movement_strategy(wolves: List[Robot], targets: List[Target], mob_obss: List[MobObs], sta_obss: List[StaObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], rectangle_border: Border, VARSIGMA: float, ALPHA: float, BETA: float, D_DANGER: float, D_DANGER_W: float, TAU_1: float, TAU_2: float, TAU_3: float, RADIUS: float, t: int, global_my_t: List[int], old_track_target: np.ndarray, old_attract: np.ndarray, interact: List, ASSIGN_CYCLE: int, EXPANSION3: List[float], EXPANSION4: List[float], **kwargs):
+def robots_movement_strategy(wolves: List[Robot], mob_obss: List[MobObs], sta_obss: List[StaObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], rectangle_border: Border, VARSIGMA: float, ALPHA: float, BETA: float, D_DANGER: float, D_DANGER_W: float, TAU_1: float, TAU_2: float, TAU_3: float, RADIUS: float, t: int, global_my_t: List[int], old_track_target: np.ndarray, old_attract: np.ndarray, interact: List, ASSIGN_CYCLE: int, **kwargs):
     """
     围捕机器人运动的主函数，在以上函数的基础上计算出围捕机器人下一步运动的速度和角速度
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
-        targets: 存放所有目标对象的list
-        mob_obss: 存放所有移动障碍物对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        irr_obss: 存放所有不规则障碍物对象的list
-        m_irr_obss: 存放所有移动不规则障碍物对象的list
-        rectangle_border: 边界对象
-        VARSIGMA: 跟随同伴速度的系数
-        ALPHA: 前进速度attract_v的系数
-        BETA: 同伴排斥速度horizontal_v的系数
-        D_DANGER: 围捕机器人启动紧急避障的距离(单位为m)
-        D_DANGER_W: 围捕机器人启动紧急避免互撞的距离(单位为m)
-        TAU_1: 吸引速度的系数
-        TAU_2: 追踪速度的系数
-        TAU_3: 排斥速度的参数
-        RADIUS: 围捕半径(单位为m)
-        t: 当前仿真步数(单位为step)
-        global_my_t: 当前步各围捕机器人选择的目标list
-        old_track_target: 上一步中各围捕机器人跟踪或追击的对象, 长度为2的np.ndarray，第一个元素为0表示在追击目标，为1表示在跟随同伴，第二个元素表示目标或围捕机器人的序号
-        old_attract: 上一步中各围捕机器人的前进速度向量(单位为m/s)
-        interact: 初始化的交互拓扑
+        @param wolves: 存放所有围捕机器人对象的list
+        @param mob_obss: 存放所有移动障碍物对象的list
+        @param sta_obss: 存放所有固定障碍物对象的list
+        @param irr_obss: 存放所有不规则障碍物对象的list
+        @param m_irr_obss: 存放所有移动不规则障碍物对象的list
+        @param rectangle_border: 边界对象
+        @param VARSIGMA: 跟随同伴速度的系数
+        @param ALPHA: 前进速度attract_v的系数
+        @param BETA: 同伴排斥速度horizontal_v的系数
+        @param D_DANGER: 围捕机器人启动紧急避障的距离(单位为m)
+        @param D_DANGER_W: 围捕机器人启动紧急避免互撞的距离(单位为m)
+        @param TAU_1: 吸引速度的系数
+        @param TAU_2: 追踪速度的系数
+        @param TAU_3: 排斥速度的参数
+        @param RADIUS: 围捕半径(单位为m)
+        @param t: 当前仿真步数(单位为step)
+        @param global_my_t: 当前步各围捕机器人选择的目标list
+        @param old_track_target: 上一步中各围捕机器人跟踪或追击的对象, 长度为2的np.ndarray，第一个元素为0表示在追击目标，为1表示在跟随同伴，第二个元素表示目标或围捕机器人的序号
+        @param old_attract: 上一步中各围捕机器人的前进速度向量(单位为m/s)
+        @param interact: 初始化的交互拓扑
+        @param ASSIGN_CYCLE: 每隔ASSIGN_CYCLE步群机器人重新分配围捕目标
 
     输出：
-        track_target: 当前步各围捕机器人跟踪或追击的对象, 长度为2的np.ndarray，第一个元素为0表示在追击目标，为1表示在跟随同伴，第二个元素表示目标或围捕机器人的序号
-        my_target: 多目标情况下当前步各围捕机器人选择的目标
-        vel_wolves: 围捕机器人计算得到的当前步的控制输入线速度(单位为m/s)，尚未实际移动
-        ang_vel_wolves: 围捕机器人计算得到的当前步的控制输入角速度(单位为rad/s)，尚未实际移动
-        w_d_rs: 围捕机器人的观察范围内的危险角度范围区间∈[0,2π)
-        v_vector: 算法计算出的围捕机器人的期望速度向量，可用于画图，便于debug
-        save_attract: 当前步的前进速度向量(单位为m/s)
+        @return track_target: 当前步各围捕机器人跟踪或追击的对象, 长度为2的np.ndarray，第一个元素为0表示在追击目标，为1表示在跟随同伴，第二个元素表示目标或围捕机器人的序号
+        @return my_target: 多目标情况下当前步各围捕机器人选择的目标
+        @return vel_wolves: 围捕机器人计算得到的当前步的控制输入线速度(单位为m/s)，尚未实际移动
+        @return ang_vel_wolves: 围捕机器人计算得到的当前步的控制输入角速度(单位为rad/s)，尚未实际移动
+        @return w_d_rs: 围捕机器人的观察范围内的危险角度范围区间∈[0,2π)
+        @return v_vector: 算法计算出的围捕机器人的期望速度向量(单位为m/s)，可用于画图，便于debug
+        @return save_attract: 当前步的前进速度向量(单位为m/s)
     """
     # 个体将同伴按距离由近到远排序
     find_near(wolves)
@@ -256,22 +254,22 @@ def robots_movement_strategy(wolves: List[Robot], targets: List[Target], mob_obs
                 targets_hunter[j].append(i)
 
     for j in range(WOLF_NUM):
-        interact[j] = [0] * (WOLF_NUM+TARGET_NUM)
+        # interact[j] = [0] * (WOLF_NUM+TARGET_NUM)
         if norm(wolves[j].wolf_to_target[my_target[j]]) < wolves[j].R_VISION:
             wolves[j].detection = True
         else:
             wolves[j].detection = False
-        attract_v, track_target[j], interact = attractive(j, my_target, wolves, RADIUS, VARSIGMA, TAU_1, TAU_2, old_track_target[j], old_attract[j], interact)
+        attract_v, track_target[j] = attractive(j, my_target, wolves, RADIUS, VARSIGMA, TAU_1, TAU_2, old_track_target[j], old_attract[j], interact)
         save_attract[j] = attract_v
         attract_v = ALPHA*attract_v
-        horizontal_v, interact = repulsion(j, my_target[j], wolves, TAU_3, interact, attract_v)
+        horizontal_v= repulsion(j, my_target[j], wolves, TAU_3, interact, attract_v)
         horizontal_v = BETA*horizontal_v
         # 将速度矢量转换为期望速度和期望航向角
         variation = attract_v+horizontal_v
         vel_wolf_desired = norm(variation)
         theta_wolf_desired = peri_arctan(variation)
         # 避障
-        vel_wolf_desired, theta_wolf_desired, w_d_r = robot_avoid_obs(t, j, vel_wolf_desired, theta_wolf_desired, my_target[j], wolves, mob_obss, sta_obss, irr_obss, m_irr_obss, rectangle_border, D_DANGER, D_DANGER_W, EXPANSION3, EXPANSION4)
+        vel_wolf_desired, theta_wolf_desired, w_d_r = robot_avoid_obs(t, j, vel_wolf_desired, theta_wolf_desired, my_target[j], wolves, mob_obss, sta_obss, irr_obss, m_irr_obss, rectangle_border, D_DANGER, D_DANGER_W)
         w_d_rs.append(w_d_r)
 
         v_vector[j, 0] = vel_wolf_desired*cos(theta_wolf_desired)

@@ -27,14 +27,13 @@
 
 import argparse
 import numpy as np
-np.random.seed(100)
 import os
 import matplotlib.pyplot as plt
 from matplotlib.animation import FFMpegWriter
 import time
 from typing import List, Dict, Any
+# import scipy    # 用pyinstaller打包成exe时需要这一行，以保证numba能导入正确的scipy版本
 
-from model import Target
 from utils.init import init
 from utils.draw_data import plot_data, record_data
 from utils.draw import plot_all
@@ -47,16 +46,15 @@ from utils.params import S_OBS_NUM, WOLF_NUM, TARGET_NUM, TOTSTEP
 # 导入FFMPEG, 用于制作动画
 plt.rcParams['animation.ffmpeg_path'] = 'D:\\Software\\Anaconda3\\Library\\bin\\ffmpeg.exe'
 
-
 def str2bool(s: str) -> bool:
     """
     将字符串变量'True'或'False'转换为bool变量True或False
-
     输入：
-        s: 字符串变量，'True'或'False'
+        @param s: 字符串变量，'True'或'False'
 
     输出：
-        bool变量
+        @return: bool变量
+
     """
     if s not in {'False', 'True'}:
         raise ValueError('Not a valid boolean string')
@@ -64,7 +62,12 @@ def str2bool(s: str) -> bool:
 
 
 def get_args():
-    """用python执行文件时给定不同的命令产生不同的效果"""
+    """
+    用python执行文件时给定不同的命令产生不同的效果
+
+    输出：
+        @return args: 运行命令时附带后缀的解析结果
+    """
 
     parser = argparse.ArgumentParser('Hunting Escape Model - XuBozhe')
     parser.add_argument('--display', type=str2bool, default=True,
@@ -79,10 +82,16 @@ def get_args():
     args = parser.parse_args()
     return args
 
-# 为方便重复调用，将画图前的迭代更新抽象为一个函数
+
 def before_plot(parameter: Dict[str, Any], t: int):
+    """
+    为方便重复调用，将画图前的迭代更新部分抽象为一个函数
+    输入：
+        @param parameter: 包含算法、画图参数及机器人、目标、障碍物的字典
+        @param t: 仿真步数t
+    """
     # 初始化当前步交互矩阵
-    parameter['interact'] = [[0]*(WOLF_NUM+TARGET_NUM)] * (WOLF_NUM+TARGET_NUM)
+    parameter['interact'] = [[0 for _ in range(WOLF_NUM+TARGET_NUM)] for _ in range((WOLF_NUM+TARGET_NUM))]
     # 将当前仿真步数传入参数字典
     parameter['t'] = t
     # 障碍物的旋转和移动，不规则障碍物各边构成点的更新
@@ -95,8 +104,19 @@ def before_plot(parameter: Dict[str, Any], t: int):
     all_move(**parameter)
 
 
-# 为方便重复调用，将画图后的迭代更新抽象为一个函数
-def after_plot(parameter: Dict[str, Any], data: Dict[str, List], targets: List[Target], irr_obss: List, m_irr_obss: List):
+def after_plot(parameter: Dict[str, Any], data: Dict[str, List]):
+    """
+    为方便重复调用，将画图后的迭代更新抽象为一个函数
+    输入：
+        @param parameter: 包含算法、画图参数及机器人、目标、障碍物的字典
+        @param data: 存放围捕机器人和目标相关数据的字典
+
+    输出：
+        @return a: 0表示围捕失败，1表示围捕已成功结束，2表示尚未成功，需继续围捕
+        @return b: 一个表示围捕失败原因的列表
+        @return c: 已死亡目标的列表
+    """
+    targets, irr_obss, m_irr_obss = parameter['targets'], parameter['irr_obss'], parameter['m_irr_obss']
     # 记录围捕机器人、目标的速度、角速度、能量消耗，用于后续数据绘图
     pos_targets_t, ori_targets_t, vel_targets_t, ang_vel_targets_t, energy_targets_t, pos_wolves_t, ori_wolves_t, vel_wolves_t, ang_vel_wolves_t, energy_wolves_t, interact_t, mob_obss_t, irr_obss_t, m_irr_obss_t = record_data(**parameter)
     data['pos_targets'].append(pos_targets_t)
@@ -134,31 +154,38 @@ def after_plot(parameter: Dict[str, Any], data: Dict[str, List], targets: List[T
 
     return 2, [], all_death
 
-# 若该文件存在，则删除此文件，然后保存
+
 def rewrite(path: str, data: List):
+    """
+    若该文件存在，则删除此文件，然后保存
+    输入：
+        @param path: 文件路径
+        @param data: 要保存的数据列表
+    """
     if os.path.exists(path):
         os.remove(path)
     with open(path, 'w') as f:
         f.write(str(data))
+
 
 def main(opt):
     """
     群机器人围捕仿真主函数
 
     输入：
-        opt: 命令语句
+        @param opt: 命令语句
 
     输出：
-        a: 0表示因与障碍物碰撞，围捕失败，1表示围捕成功，2表示因未在规定时间内完成围捕而失败，3表示因围捕机器人之间碰撞而导致围捕失败
-        b: 所有机器人总累计消耗能量(单位为J)
-        c: 围捕任务完成所需时间(单位为step)
+        @return a: 0表示因与障碍物碰撞，围捕失败，1表示围捕成功，2表示因未在规定时间内完成围捕而失败，3表示因围捕机器人之间碰撞而导致围捕失败
+        @return b: 所有机器人总累计消耗能量(单位为J)
+        @return c: 围捕任务完成所需时间(单位为step)
     """
 
     # 初始化仿真过程中传递参数的字典
     parameter = {# 以下这部分是优化后选取的算法参数
                  'VARSIGMA': 0.3869405500381927,
-                 'D_DANGER': 0.28489136293795562,
-                 'D_DANGER_W': 0.50,
+                 'D_DANGER': 0.20,
+                 'D_DANGER_W': 0.15,
                  'ALPHA': 5.050359027046031,
                  'BETA': 2.32753414,
                  'TAU_1': 2.114010945835207,
@@ -177,10 +204,7 @@ def main(opt):
                  'DIS_AVOID_BORDER': 1.4,   # 避墙距离(单位为m) 
                  'R_ATTACKED': 0.8,         # 目标受攻击的距离(单位为m)
                  'VEL_OBS': 0.5,            # 障碍物在全局坐标系中的速度x轴分量最大值和y轴分量最大值
-                 'EXPANSION1': [1.6, 2.0, 2.0, 2.8, 1.0],   # 障碍物少的情况下目标的危险角度区间的扩展系数
-                 'EXPANSION2': [1.3, 1.6, 1.6, 2.0, 1.0],   # 障碍物多的情况下目标的危险角度区间的扩展系数
-                 'EXPANSION3': [1.6, 2.4, 2.4, 3.2],        # 障碍物少的情况下机器人的危险角度区间的扩展系数
-                 'EXPANSION4': [1.3, 1.8, 1.8, 2.2],        # 障碍物多的情况下机器人的危险角度区间的扩展系数
+                 'safety_enemy': 1.0,       # 目标对机器人的危险角度区间的扩展系数
                  'ASSIGN_CYCLE': 5,                         # 机器人重新分配目标的仿真步数周期，即每5步重新分配目标
                  # 以下这些是为了方便传参放进来的一些不断更新的数据
                  'wolves': [], 'targets': [], 'sta_obss': [], 'mob_obss': [], 'irr_obss': [], 'm_irr_obss': [], 'rectangle_border': [],
@@ -217,7 +241,7 @@ def main(opt):
                     # 绘图
                     plot_all(data, **parameter)
                     writer.grab_frame()
-                    branch, ret, all_death = after_plot(parameter, data, targets, irr_obss, m_irr_obss)
+                    branch, ret, all_death = after_plot(parameter, data)
                     if branch == 0: return ret[0], ret[1], ret[2]
                     elif branch == 1: break
         else:
@@ -229,7 +253,7 @@ def main(opt):
                 before_plot(parameter, t)
                 # 绘图
                 plot_all(data, **parameter)
-                branch, ret, all_death = after_plot(parameter, data, targets, irr_obss, m_irr_obss)
+                branch, ret, all_death = after_plot(parameter, data)
                 if branch == 0: return ret[0], ret[1], ret[2]
                 elif branch == 1: break
         t2 = time.time()

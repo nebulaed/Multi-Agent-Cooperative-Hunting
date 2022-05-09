@@ -19,24 +19,24 @@ def robot_avoid_obs(t: int, mark: int, vel_wolf_desired: float, theta_wolf_desir
     围捕机器人的避障算法
 
     输入：
-        t: 当前仿真步数(单位为step)
-        mark: 围捕机器人序号
-        vel_wolf_desired: 在不考虑避障的情况下围捕机器人期望速度(单位为m/s)
-        theta_wolf_desired: 在不考虑避障的情况下围捕机器人期望速度方向∈[0,2π)
-        my_t: 存放围捕机器人选择的目标list
-        wolves: 存放所有围捕机器人对象的list
-        mob_obss: 存放所有移动障碍物对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        irr_obss: 存放所有不规则障碍物对象的list
-        m_irr_obss: 存放所有移动不规则障碍物对象的list
-        border: 边界对象
-        D_DANGER: 围捕机器人启动紧急避障的距离(单位为m)
-        D_DANGER_W: 围捕机器人避免互碰启动紧急避障的距离(单位为m)
+        @param t: 当前仿真步数(单位为step)
+        @param mark: 围捕机器人序号
+        @param vel_wolf_desired: 在不考虑避障的情况下围捕机器人期望速度(单位为m/s)
+        @param theta_wolf_desired: 在不考虑避障的情况下围捕机器人期望速度方向∈[0,2π)
+        @param my_t: 存放围捕机器人选择的目标list
+        @param wolves: 存放所有围捕机器人对象的list
+        @param mob_obss: 存放所有移动障碍物对象的list
+        @param sta_obss: 存放所有固定障碍物对象的list
+        @param irr_obss: 存放所有不规则障碍物对象的list
+        @param m_irr_obss: 存放所有移动不规则障碍物对象的list
+        @param border: 边界对象
+        @param D_DANGER: 围捕机器人启动紧急避障的距离(单位为m)
+        @param D_DANGER_W: 围捕机器人避免互碰启动紧急避障的距离(单位为m)
 
     输出：
-        vel_wolf_desired: 考虑避障的情况下围捕机器人的期望速度(单位为m/s)
-        theta_wolf_desired: 考虑避障的情况下围捕机器人期望速度方向∈[0,2π)
-        dangerous_ranges_organized: 围捕机器人的观察范围内的危险角度范围区间∈[0,2π)
+        @return vel_wolf_desired: 考虑避障的情况下围捕机器人的期望速度(单位为m/s)
+        @return theta_wolf_desired: 考虑避障的情况下围捕机器人期望速度方向∈[0,2π)
+        @return dangerous_ranges_organized: 围捕机器人的观察范围内的危险角度范围区间∈[0,2π)
     """
     # 目标受攻击数预登记为0
     attack = 0

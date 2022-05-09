@@ -6,6 +6,7 @@
 # --------------------------------------------------------
 # 本文件定义了画图函数PlotAll，用于在每一步时将当前步的情况呈现在绘图窗口中。
 
+from platform import system
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
@@ -13,7 +14,6 @@ from matplotlib import rcParams, patches
 from matplotlib.font_manager import FontProperties  # 字体属性管理器
 from typing import List, Dict
 from model import Robot, Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
-from utils.math_func import norm
 from utils.params import WOLF_NUM, TARGET_NUM, PI
 
 
@@ -26,7 +26,12 @@ config = {
 rcParams.update(config)
 
 # 设置字体及其大小，修改字体时替换字体的路径即可
-font1 = FontProperties(fname=r"C:\Windows\Fonts\times.ttf", size=14)
+if system() == 'Windows':
+    font1 = FontProperties(fname=r"C:\\Windows\\Fonts\\times.ttf", size=14)
+elif system() == 'Linux':
+    font1 = FontProperties(fname=r"/home/nebulae/.local/share/fonts/times.ttf", size=14)
+else:
+    font1 = FontProperties(fname=r"/home/nebulae/.local/share/fonts/times.ttf", size=14)
 
 
 def plot_all(data: Dict[str, List], wolves: List[Robot], targets: List[Target], sta_obss: List[StaObs], mob_obss: List[MobObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], rectangle_border: Border, t: int, w_d_range: List, v_vector: np.ndarray, t_d_range: List, **kwargs) -> None:
@@ -34,18 +39,18 @@ def plot_all(data: Dict[str, List], wolves: List[Robot], targets: List[Target], 
     画图函数，将仿真中每一步时的位置情况呈现在绘图窗口中
 
     输入：
-        data: 存储数据的字典
-        wolves: 存放所有围捕机器人对象的list
-        targets: 存放所有目标对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        mob_obss: 存放所有移动障碍物对象的list
-        irr_obss: 存放所有不规则障碍物对象的list
-        m_irr_obss: 存放所有移动不规则障碍物对象的list
-        rectangle_border: 边界对象
-        t: 当前仿真步数(单位为step)
-        w_d_range: 存放matplotlib扇形对象的list，用于画图
-        v_vector: 存放围捕机器人的期望速度矢量，用于画图方便debug
-        t_d_range: 存放matplotlib扇形对象的list，用于画图
+        @param data: 存储数据的字典
+        @param wolves: 存放所有围捕机器人对象的list
+        @param targets: 存放所有目标对象的list
+        @param sta_obss: 存放所有固定障碍物对象的list
+        @param mob_obss: 存放所有移动障碍物对象的list
+        @param irr_obss: 存放所有不规则障碍物对象的list
+        @param m_irr_obss: 存放所有移动不规则障碍物对象的list
+        @param rectangle_border: 边界对象
+        @param t: 当前仿真步数(单位为step)
+        @param w_d_range: 存放matplotlib扇形对象的list，用于画图
+        @param v_vector: 存放围捕机器人的期望速度矢量，用于画图方便debug
+        @param t_d_range: 存放matplotlib扇形对象的list，用于画图
     """
     ax = plt.gca()
     wolves_wedges, targets_wedges = [], []

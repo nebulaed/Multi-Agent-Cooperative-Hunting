@@ -14,13 +14,13 @@ def check_circle_line_segInter(center: np.ndarray, radius: float, line_p1: np.nd
     判断输入的圆和线段是否有交点。
 
     输入：
-        center: 圆心
-        radius: 半径
-        line_p1: 线段起点坐标
-        line_p2: 线段终点坐标
+        @param center: 圆心坐标
+        @param radius: 圆的半径，单位为m
+        @param line_p1: 线段起点坐标
+        @param line_p2: 线段终点坐标
 
     输出：
-        True表示有交点，False表示无交点
+        @return: True表示有交点，False表示无交点
     """
 
     flag1 = norm(center-line_p1) <= radius
@@ -45,11 +45,11 @@ def compute_circle_line_seg_inter(center: np.ndarray, radius: float, line_p1: np
     计算输入的圆和线段的交点坐标。
 
     输入：
-        center: 圆心
-        radius: 半径
-        line_p1: 线段起点坐标
-        line_p2: 线段终点坐标
+        @param center: 圆心坐标
+        @param radius: 圆的半径，单位为m
+        @param line_p1: 线段起点坐标
+        @param line_p2: 线段终点坐标
 
     输出：
-        交点坐标
+        @return: 交点坐标
     """

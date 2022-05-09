@@ -14,34 +14,40 @@ import numpy as np
 # import matplotlib.pyplot as plt
 from typing import List
 from model import Target, StaObs, MobObs, IrregularObs, MobIrregularObs, Border
-from utils.math_func import correct, peri_arctan, arcsin, norm, sin, cos, exp, inc_angle, intervals_merge
+from utils.math_func import correct, peri_arctan, arcsin, norm, exp, inc_angle, intervals_merge, expand_angle
 from utils.robots_control import saturator
 from utils.params import WOLF_NUM, TARGET_NUM, PI, TS
 
 
-def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_desired: float, targets: List[Target], mob_obss: List[MobObs], sta_obss: List[StaObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], border: Border, EXPANSION1: List[float], EXPANSION2: List[float], danger_direction: List = [], danger_index: List = []):
+def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_desired: float, targets: List[Target], mob_obss: List[MobObs], sta_obss: List[StaObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], border: Border, D_DANGER_W: float, safety_enemy: float, danger_direction: List = None, danger_index: List = None):
     """
     目标的避障算法
 
     输入：
-        t: 当前仿真步数(单位为step)
-        mark: 目标的序号
-        vel_target_desired: 在不考虑避障情况下，目标的期望速度(单位为m/s)
-        theta_target_desired: 在不考虑避障情况下，目标的期望方向角∈[0,2π)
-        targets: 存放所有目标对象的list
-        mob_obss: 存放所有移动障碍物对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        irr_obss: 存放所有不规则障碍物对象的list
-        m_irr_obss: 存放所有移动不规则障碍物对象的list
-        border: 边界对象
-        danger_direction: 将围捕机器人也当成障碍物判断危险角度范围，实际未用到，是一个空list，逃避围捕在TargetGo函数中已实现，可忽略
-        danger_index: 目标已观察到的围捕机器人序号(索引)，实际未用到，是一个空list，可忽略
+        @param t: 当前仿真步数(单位为step)
+        @param mark: 目标的序号
+        @param vel_target_desired: 在不考虑避障情况下，目标的期望速度(单位为m/s)
+        @param theta_target_desired: 在不考虑避障情况下，目标的期望方向角∈[0,2π)
+        @param targets: 存放所有目标对象的list
+        @param mob_obss: 存放所有移动障碍物对象的list
+        @param sta_obss: 存放所有固定障碍物对象的list
+        @param irr_obss: 存放所有不规则障碍物对象的list
+        @param m_irr_obss: 存放所有移动不规则障碍物对象的list
+        @param border: 边界对象
+        @param D_DANGER_W: 目标与障碍物的最短距离
+        @param safety_enemy: 目标对机器人的危险角度区间的扩展系数
+        @param danger_direction: 将围捕机器人也当成障碍物判断危险角度范围，实际未用到，是一个空list，逃避围捕在TargetGo函数中已实现，可忽略
+        @param danger_index: 目标已观察到的围捕机器人序号(索引)，实际未用到，是一个空list，可忽略
 
     输出：
-        vel_target_desired: 考虑避障下，目标的期望速度(单位为m/s)
-        theta_target_desired: 考虑避障下，目标的期望方向角∈[0,2π)
-        dangerous_ranges_organized: 目标的观察范围内的危险角度范围区间∈[0,2π)
+        @return vel_target_desired: 考虑避障下，目标的期望速度(单位为m/s)
+        @return theta_target_desired: 考虑避障下，目标的期望方向角∈[0,2π)
+        @return dangerous_ranges_organized: 目标的观察范围内的危险角度范围区间∈[0,2π)
     """
+    if danger_direction is None:
+        danger_direction = []
+    if danger_index is None:
+        danger_index = []
     # 用字典同时记录障碍物和目标的距离和障碍物的索引
     dict_d_obs = {}
     for i in range(len(targets[mark].danger_m)):
@@ -62,10 +68,6 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
     for i in range(len(danger_index)):
         obs_ind = danger_index[i]
         dict_d_obs[(5, obs_ind)] = norm(targets[mark].target_to_wolf[obs_ind])
-    if len(dict_d_obs) == 1:
-        safety_bor, safety_mob, safety_sta, safety_m_irr, safety_enemy = EXPANSION1[0], EXPANSION1[1], EXPANSION1[2], EXPANSION1[3], EXPANSION1[4]
-    elif len(dict_d_obs) >= 2:
-        safety_bor, safety_mob, safety_sta, safety_m_irr, safety_enemy = EXPANSION2[0], EXPANSION2[1], EXPANSION2[2], EXPANSION2[3], EXPANSION2[4]
     # 按照障碍物的距离将其和对应的索引进行排序
     dict_d_obs = sorted(dict_d_obs.items(), key=lambda item: item[1])
     dangerous_ranges_dists, dangerous_ranges, dangerous_ranges_indexs = [], [], []
@@ -80,9 +82,11 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
                 # 计算个体到移动障碍物的方向角
                 psi1 = peri_arctan(targets[mark].target_to_m_obs[i_m])
                 # 移动障碍物中心连线与切线的夹角
-                Delta1 = arcsin(mob_obss[i_m].R/(dist_m+mob_obss[i_m].R))*safety_mob
+                Delta1 = arcsin(mob_obss[i_m].R/(dist_m+mob_obss[i_m].R))
                 # 记录危险角度
-                dangerous_range = [correct(psi1-Delta1), correct(psi1+Delta1)]
+                dangerous_range, flag = expand_angle(psi1, Delta1, dist_m, D_DANGER_W)
+                if not flag:
+                    vel_target_desired = 0.1 * targets[mark].vel_max
             # 若是固定障碍物
             elif index[0] == 1:
                 i_s = index[1]
@@ -90,13 +94,16 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
                 # 计算目标到固定障碍物的方向角
                 psi2 = peri_arctan(targets[mark].target_to_s_obs[i_s])
                 # 固定障碍物中心连线与切线的夹角
-                Delta2 = arcsin(sta_obss[i_s].R/(dist_s+sta_obss[i_s].R))*safety_sta
+                Delta2 = arcsin(sta_obss[i_s].R/(dist_s+sta_obss[i_s].R))
                 # 记录危险角度
-                dangerous_range = [correct(psi2-Delta2), correct(psi2+Delta2)]
+                dangerous_range, flag = expand_angle(psi2, Delta2, dist_s, D_DANGER_W)
+                if not flag:
+                    vel_target_desired = 0.1 * targets[mark].vel_max
             # 若是不规则障碍物
             elif index[0] == 2:
                 # 获取该不规则障碍物的索引
                 i_ir = index[1]
+                dist_ir = item[1]
                 psi_points = []
                 for point in irr_obss[i_ir].elements:
                     if norm(point-targets[mark].pos) < targets[mark].AVOID_DIST:
@@ -115,16 +122,19 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
                     tangent_2 = psi_points[psi_points_difs_index[np.argmax(psi_points_difs)][1]]
                     if abs(tangent_1-tangent_2) > PI:
                         bisector = correct((tangent_1+tangent_2)/2+PI)
-                        half_ang = (PI-abs(tangent_1-tangent_2)/2)*safety_mob
+                        half_ang = (PI-abs(tangent_1-tangent_2)/2)
                     else:
                         bisector = (tangent_1+tangent_2)/2
-                        half_ang = abs(tangent_1-tangent_2)/2*safety_mob
+                        half_ang = abs(tangent_1-tangent_2)/2
                     # 记录危险角度
-                    dangerous_range = [correct(bisector-half_ang), correct(bisector+half_ang)]
+                    dangerous_range, flag = expand_angle(bisector, half_ang, dist_ir, D_DANGER_W)
+                    if not flag:
+                        vel_target_desired = 0.1 * targets[mark].vel_max
             # 若是移动不规则障碍物
             elif index[0] == 3:
                 # 获取距离最近移动不规则障碍物的索引
                 i_m_ir = index[1]
+                dist_m_ir = item[1]
                 psi_points = []
                 for point in m_irr_obss[i_m_ir].elements:
                     if norm(point-targets[mark].pos) < targets[mark].AVOID_DIST:
@@ -143,14 +153,17 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
                     tangent_2 = psi_points[psi_points_difs_index[np.argmax(psi_points_difs)][1]]
                     if abs(tangent_1-tangent_2) > PI:
                         bisector = correct((tangent_1+tangent_2)/2+PI)
-                        half_ang = (PI-abs(tangent_1-tangent_2)/2)*safety_m_irr
+                        half_ang = (PI-abs(tangent_1-tangent_2)/2)
                     else:
                         bisector = (tangent_1+tangent_2)/2
-                        half_ang = abs(tangent_1-tangent_2)/2*safety_m_irr
+                        half_ang = abs(tangent_1-tangent_2)/2
                     # 记录危险角度
-                    dangerous_range = [correct(bisector-half_ang), correct(bisector+half_ang)]
+                    dangerous_range, flag = expand_angle(bisector, half_ang, dist_m_ir, D_DANGER_W)
+                    if not flag:
+                        vel_target_desired = 0.1 * targets[mark].vel_max
             # 若是边界
             elif index[0] == 4:
+                dist_bor = item[1]
                 # 若是左边界
                 if index[1] == 0:
                     # 计算感知范围圆与边界的交点1的y坐标
@@ -204,12 +217,14 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
                 tangent_2 = peri_arctan(cut_off_point2-targets[mark].pos)
                 if abs(tangent_1-tangent_2) > PI:
                     bisector = correct((tangent_1+tangent_2)/2+PI)
-                    half_ang = (PI-abs(tangent_1-tangent_2)/2)*safety_bor
+                    half_ang = (PI-abs(tangent_1-tangent_2)/2)
                 else:
                     bisector = (tangent_1+tangent_2)/2
-                    half_ang = abs(tangent_1-tangent_2)/2*safety_bor
+                    half_ang = abs(tangent_1-tangent_2)/2
                 # 记录危险角度
-                dangerous_range = [correct(bisector-half_ang), correct(bisector+half_ang)]
+                dangerous_range, flag = expand_angle(bisector, half_ang, dist_bor, D_DANGER_W)
+                if not flag:
+                    vel_target_desired = 0.1 * targets[mark].vel_max
             elif index[0] == 5:
                 # 获取距离危险目标的索引
                 i_t = index[1]
@@ -327,24 +342,26 @@ def target_avoid_obs(t: int, mark: int, vel_target_desired: float, theta_target_
     return vel_target_desired, theta_target_desired, dangerous_ranges_organized
 
 
-def target_go(targets: List[Target], mob_obss: List[MobObs], sta_obss: List[StaObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], rectangle_border: Border, t: int, interact: List, EXPANSION1: List[float], EXPANSION2: List[float], **kwargs):
+def target_go(targets: List[Target], mob_obss: List[MobObs], sta_obss: List[StaObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], rectangle_border: Border, t: int, interact: List, safety_enemy: float, D_DANGER_W: float, **kwargs):
     """
     目标运动的主函数，在以上函数的基础上计算出目标下一步运动的速度和角速度
 
     输入：
-        targets: 存放所有目标对象的list
-        mob_obss: 存放所有移动障碍物对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        irr_obss: 存放所有不规则障碍物对象的list
-        m_irr_obss: 存放所有移动不规则障碍物对象的list
-        rectangle_border: 边界对象
-        t: 当前仿真步数(单位为step)
-        interact: 拓扑矩阵
+        @param targets: 存放所有目标对象的list
+        @param mob_obss: 存放所有移动障碍物对象的list
+        @param sta_obss: 存放所有固定障碍物对象的list
+        @param irr_obss: 存放所有不规则障碍物对象的list
+        @param m_irr_obss: 存放所有移动不规则障碍物对象的list
+        @param rectangle_border: 边界对象
+        @param t: 当前仿真步数(单位为step)
+        @param interact: 拓扑矩阵
+        @param safety_enemy: 目标对机器人的危险角度区间的扩展系数
+        @param D_DANGER_W: 目标与障碍物的最短距离
 
     输出：
-        vel_target: 目标计算得到的当前步的控制输入线速度(单位为m/s)，尚未实际移动
-        ang_vel_target: 目标计算得到的当前步的控制输入角速度(单位为rad/s)，尚未实际移动
-        t_d_rs: 目标当前步的观察范围内的危险角度范围区间∈[0,2π)
+        @return vel_target: 目标计算得到的当前步的控制输入线速度(单位为m/s)，尚未实际移动
+        @return ang_vel_target: 目标计算得到的当前步的控制输入角速度(单位为rad/s)，尚未实际移动
+        @return t_d_rs: 目标当前步的观察范围内的危险角度范围区间∈[0,2π)
     """
     vel_target, ang_vel_target = np.zeros(TARGET_NUM), np.zeros(TARGET_NUM)
     # 最大角速度
@@ -386,7 +403,7 @@ def target_go(targets: List[Target], mob_obss: List[MobObs], sta_obss: List[StaO
             w = np.random.uniform(-random_ang_vel_max, random_ang_vel_max)
             theta = correct(targets[i].ori+w)
 
-        vel_target_desired, theta_target_desired, t_d_r = target_avoid_obs(t, i, variation, theta, targets, mob_obss, sta_obss, irr_obss, m_irr_obss, rectangle_border, EXPANSION1, EXPANSION2)
+        vel_target_desired, theta_target_desired, t_d_r = target_avoid_obs(t, i, variation, theta, targets, mob_obss, sta_obss, irr_obss, m_irr_obss, rectangle_border, D_DANGER_W, safety_enemy)
         t_d_rs.append(t_d_r)
         vel_target[i], ang_vel_target[i] = saturator(targets[i].ori, targets[i].vel_max, targets[i].ang_vel_max, vel_target_desired, theta_target_desired)
     return vel_target, ang_vel_target, t_d_rs

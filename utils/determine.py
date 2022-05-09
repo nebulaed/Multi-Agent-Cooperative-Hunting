@@ -11,35 +11,41 @@ import numpy as np
 from typing import List
 from model import Robot, StaObs, MobObs, IrregularObs, MobIrregularObs
 from utils.params import WOLF_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM
-from utils.collision_detection import two_triangle_test,circle_triangle_test,two_polygon_test
-
+from utils.collision_detection import two_polygon_test, circle_triangle_test, two_triangle_test
+# from testSquare import circle_triangle_test, two_triangle_test
 
 def judge_fail(wolves: List[Robot], sta_obss: List[StaObs], mob_obss: List[MobObs], irr_obss: List[IrregularObs], m_irr_obss: List[MobIrregularObs], **kwargs) -> int:
     """判断围捕过程中围捕机器人是否撞上障碍物，是输出True，否输出False
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        mob_obss: 存放所有移动障碍物对象的list
-        irr_obss: 存放所有不规则障碍物对象的list
-        m_irr_obss: 存放所有移动不规则障碍物对象的list
+        @param wolves: 存放所有围捕机器人对象的list
+        @param sta_obss: 存放所有固定障碍物对象的list
+        @param mob_obss: 存放所有移动障碍物对象的list
+        @param irr_obss: 存放所有不规则障碍物对象的list
+        @param m_irr_obss: 存放所有移动不规则障碍物对象的list
 
     输出：
-        0表示未撞上障碍物或其他机器人，1表示机器人已撞上障碍物，2表示有机器人撞上了其他机器人
+        @return: 0表示未撞上障碍物或其他机器人，1表示机器人已撞上障碍物，2表示有机器人撞上了其他机器人
     """
 
     for i in range(WOLF_NUM):
         tri1 = np.array([[wolves[i].real_x0, wolves[i].real_y0],
                 [wolves[i].real_x1, wolves[i].real_y1],
                 [wolves[i].real_x2, wolves[i].real_y2]])
+        # tri1_side1 = np.array([wolves[i].real_x0, wolves[i].real_y0, wolves[i].real_x1, wolves[i].real_y1])
+        # tri1_side2 = np.array([wolves[i].real_x1, wolves[i].real_y1, wolves[i].real_x2, wolves[i].real_y2])
+        # tri1_side3 = np.array([wolves[i].real_x2, wolves[i].real_y2, wolves[i].real_x0, wolves[i].real_y0])
         # 检查围捕机器人是否互撞
-        for j in range(WOLF_NUM):
-            if j != i:
-                tri2 = np.array([[wolves[j].real_x0, wolves[j].real_y0],
-                        [wolves[j].real_x1, wolves[j].real_y1],
-                        [wolves[j].real_x2, wolves[j].real_y2]])
-                if two_triangle_test(tri1, tri2):
-                    return 2
+        # for j in range(WOLF_NUM):
+        #     if j != i:
+        #         tri2 = np.array([[wolves[j].real_x0, wolves[j].real_y0],
+        #                 [wolves[j].real_x1, wolves[j].real_y1],
+        #                 [wolves[j].real_x2, wolves[j].real_y2]])
+        #         # tri2_side1 = np.array([wolves[j].real_x0, wolves[j].real_y0, wolves[j].real_x1, wolves[j].real_y1])
+        #         # tri2_side2 = np.array([wolves[j].real_x1, wolves[j].real_y1, wolves[j].real_x2, wolves[j].real_y2])
+        #         # tri2_side3 = np.array([wolves[j].real_x2, wolves[j].real_y2, wolves[j].real_x0, wolves[j].real_y0])
+        #         if two_triangle_test(tri1, tri2):
+        #             return 2
         # 检查围捕机器人是否撞上固定障碍物
         for j in range(S_OBS_NUM):
             if circle_triangle_test(sta_obss[j].pos, sta_obss[j].R, tri1):

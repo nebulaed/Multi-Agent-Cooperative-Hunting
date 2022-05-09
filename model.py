@@ -7,11 +7,10 @@
 # 本文件定义的Agent表示基本unicycle模型，Robot表示围捕机器人，Target表示目标，后两者是Agent的子类。此外本文件还定义了固定障碍物StaObs，移动障碍物MobObs，不规则障碍物IrregularObs，移动不规则障碍物MobIrregularObs，边界Border。
 
 import numpy as np
-from numba import jit
 import matplotlib.pyplot as plt
 from matplotlib import patches
 from typing import List
-from utils.math_func import correct, peri_arctan, sin, cos, sqrt
+from utils.math_func import correct, peri_arctan, sin, cos, sqrt, rotate_update
 from utils.params import WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM, M_IRR_OBS_NUM, PI, TOTSTEP, TS
 # from utils.collision_detection import two_triangle_test, circle_triangle_test, two_polygon_test
 
@@ -19,20 +18,28 @@ from utils.params import WOLF_NUM, TARGET_NUM, S_OBS_NUM, M_OBS_NUM, IRR_OBS_NUM
 class Agent(object):
     """
     利用输入的初始位置和初始车头方向建立基本unicycle模型，有以下函数：
+        update_vertex: 更新小车三角形的顶点位置
         move: 移动
         plot_agent: 在matplotlib绘图窗口中绘出车体
         plot_circle: 在matplotlib绘图窗口中以车体为圆心画圆
-        check_feasibility: 检测按照给定速度和角速度运动当前小车会不会撞上其他小车
+        check_feasibility: 检测按照给定速度和角速度运动当前小车会不会发生碰撞
         pos: 输出位置(单位为m)
         ori: 输出车头方向∈[0,2π)
         vel: 输出车的速度(单位为m/s)
         ang_vel: 输出车的角速度(单位为rad/s)
-
-    输入：
-        f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)。
     """
-
-    def __init__(self, f_in: List[float], DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float):
+    def __init__(self, f_in: List[float], DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float) -> None:
+        """
+        输入：
+            @param f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)
+            @param DISPLAYBASE: 小车绘图呈现的三角形底边长度(单位为m)
+            @param DISPLAYHEIGHT: 小车绘图呈现的三角形高长度(单位为m)
+            @param REALBASE: 小车实际上的三角形底边长度，即轮间距(单位为m)
+            @param REALHEIGHT: 小车实际上的三角形高的长度(单位为m)
+            @param vel_max: 小车的最大线速度(单位为m/s)
+            @param ang_vel_max: 小车的最大角速度(单位为rad/s)
+            @param DIS_AVOID_BORDER: 小车对墙的避障距离(单位为m)
+       """
         # 位置pos_x, pos_y
         self.__pos_x = f_in[1]
         self.__pos_y = f_in[2]
@@ -63,7 +70,7 @@ class Agent(object):
         # 累计能量消耗(单位为J)
         self.energy = 0
         # 仿真过程中每一步是否距离障碍物过近，是则self.danger[t]为1，否则为0
-        self.danger = [0]*TOTSTEP
+        self.danger = [0 for _ in range(TOTSTEP)]
         # 仿真过程中每一步是否有其他机器人距离过近且在车头方向180°扇形内，是则self.danger_w为1，否则为0
         self.danger_w = np.zeros((TOTSTEP, WOLF_NUM), dtype=int)
         # 仿真过程中每一步是否有其他机器人距离过近，是则self.danger_w为1，否则为0
@@ -71,9 +78,9 @@ class Agent(object):
         # 避墙距离(单位为m)
         self.DIS_AVOID_BORDER = DIS_AVOID_BORDER
         # 避碰标签
-        self.avoidCollisionFlag = [0]*TOTSTEP
+        self.avoidCollisionFlag = [0 for _ in range(TOTSTEP)]
         # 避碰标签2
-        self.avoidCollisionFlag2 = [0]*TOTSTEP
+        self.avoidCollisionFlag2 = [0 for _ in range(TOTSTEP)]
         self.dangerObsFlag = {"sta_obss": np.zeros((TOTSTEP, S_OBS_NUM), dtype=int),
                               "mob_obss": np.zeros((TOTSTEP, M_OBS_NUM), dtype=int),
                               "irr_obss": np.zeros((TOTSTEP, IRR_OBS_NUM), dtype=int),
@@ -125,8 +132,8 @@ class Agent(object):
         θ[k+1] = θ[k] + ω[k]*TS
 
         输入：
-            vel: 线速度(单位为m/s)
-            ang_vel: 角速度(单位为rad/s)
+            @param vel: 线速度(单位为m/s)
+            @param ang_vel: 角速度(单位为rad/s)
         """
         self.__pos_x += vel*cos(self.__theta)*TS
         self.__pos_y += vel*sin(self.__theta)*TS
@@ -138,27 +145,33 @@ class Agent(object):
         self.update_vertex()
 
     def plot_agent(self, ax) -> None:
-        """在matplotlib绘图窗口中画出车体"""
+        """
+        在matplotlib绘图窗口中画出当前agent的车体
+
+        输入：
+            @param ax: 当前figure的Axes对象
+        """
 
         # 画等腰三角形，底边中点坐标为[self.__pos_x,self.__pos_y]
         polyvertexs = [[self.vertex_x0,self.vertex_y0],[self.vertex_x1,self.vertex_y1],[self.vertex_x2,self.vertex_y2]]
         poly = plt.Polygon(polyvertexs,ec="k",fill=False,linewidth=1.0, label = 'r1')
         ax.add_patch(poly)
     
-    def plot_agent2(self, ax) -> None:
-        """在matplotlib绘图窗口中画出车体"""
-        polyvertexs = [[self.vertex_x0,self.vertex_y0],[self.vertex_x1,self.vertex_y1],[self.vertex_x2,self.vertex_y2]]
-        # 黑色条纹填充
-        poly = plt.Polygon(polyvertexs,ec="b",fill=True,facecolor='b',linewidth=1.5)
-        ax.add_patch(poly)
+    # def plot_agent2(self, ax) -> None:
+    #     """在matplotlib绘图窗口中画出车体"""
+    #     polyvertexs = [[self.vertex_x0,self.vertex_y0],[self.vertex_x1,self.vertex_y1],[self.vertex_x2,self.vertex_y2]]
+    #     # 黑色条纹填充
+    #     poly = plt.Polygon(polyvertexs,ec="b",fill=True,facecolor='b',linewidth=1.5)
+    #     ax.add_patch(poly)
 
     def plot_circle(self, ax, r: float, ec: str, ls: str = '-') -> None:
         """画圆
 
         输入：
-            r: 圆的半径
-            ec: 线条颜色
-            ls: 线型，默认为实线
+            @param ax: plt.gca()获得的当前figure的Axes对象
+            @param r: 圆的半径(单位为m)
+            @param ec: 线条颜色
+            @param ls: 线型，默认为实线
         """
         Circle = plt.Circle((self.__pos_x, self.__pos_y), r, ec=ec, ls = ls, fill=False, linewidth=1.0)
         ax.add_patch(Circle)
@@ -168,14 +181,18 @@ class Agent(object):
         若移动后的新位置不超出边界范围且不与其他小车碰撞，按照输入速度和角速度移动
 
         输入：
-            vel: 线速度(单位为m/s)
-            ang_vel: 角速度(单位为rad/s)
-            border: 边界
-            wolves: 存放所有围捕机器人对象的list
-            mark: 当前机器人序号
+            @param vel: 线速度(单位为m/s)
+            @param ang_vel: 角速度(单位为rad/s)
+            @param border: 边界
+            @param wolves: 存放所有围捕机器人对象的list
+            @param sta_obss: 存放所有固定障碍物对象的list
+            @param mob_obss: 存放所有移动障碍物对象的list
+            @param irr_obss: 存放所有不规则障碍物对象的list
+            @param m_irr_obss: 存放所有移动不规则障碍物对象的list
+            @param mark: 当前机器人序号
 
         输出：
-            True表示新位置不超出边界且不与其他小车碰撞，False表示新位置超出边界或与其他小车碰撞，不可行
+            @return: True表示新位置不超出边界且不与其他小车碰撞，False表示新位置超出边界或与其他小车碰撞，不可行
         '''
 
         # 按照给定速度和角速度到达的新位置
@@ -242,7 +259,7 @@ class Agent(object):
         """输出位置的接口
 
         输出：
-            np.array([self.__pos_x,self.__pos_y]): 两个元素的numpy.ndarray数组，其中第一个为x坐标，第二个为y坐标，单位均为m
+            @return np.array([self.__pos_x,self.__pos_y]): 两个元素的numpy.ndarray数组，其中第一个为x坐标，第二个为y坐标，单位均为m
         """
         return np.array([self.__pos_x, self.__pos_y])
 
@@ -251,7 +268,7 @@ class Agent(object):
         """输出车头方向的接口
 
         输出：
-            self.__theta: 车头方向∈[0,2π)
+            @return self.__theta: 车头方向∈[0,2π)
         """
         return self.__theta
 
@@ -260,7 +277,7 @@ class Agent(object):
         """输出线速度的接口
 
         输出：
-            self.__vel: 线速度(单位为m/s)
+            @return self.__vel: 线速度(单位为m/s)
         """
         return self.__vel
 
@@ -269,7 +286,7 @@ class Agent(object):
         """输出角速度的接口
 
         输出：
-            self.__ang_vel: 角速度(单位为rad/s)
+            @return self.__ang_vel: 角速度(单位为rad/s)
         """
         return self.__ang_vel
 
@@ -279,12 +296,21 @@ class Robot(Agent):
     以Agent为父类，增加一些属于围捕机器人的属性和功能，有以下函数：
         plot_robot: 调用父类Agent的plotagent函数并用蓝色线画出等腰三角形的高，调用父类Agent的plotcircle函数画出围捕机器人的观察范围
         find_near: 对围捕机器人同伴按由近到远进行排序
-
-    输入：
-        f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)。
     """
-
-    def __init__(self, f_in: List[float], DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float, R_VISION: float, AVOID_DIST: float):
+    def __init__(self, f_in: List[float], DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float, R_VISION: float, AVOID_DIST: float) -> None:
+        """
+        输入：
+            @param f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)
+            @param DISPLAYBASE: 小车绘图呈现的三角形底边长度(单位为m)
+            @param DISPLAYHEIGHT: 小车绘图呈现的三角形高长度(单位为m)
+            @param REALBASE: 小车实际上的三角形底边长度，即轮间距(单位为m)
+            @param REALHEIGHT: 小车实际上的三角形高的长度(单位为m)
+            @param vel_max: 小车的最大线速度(单位为m/s)
+            @param ang_vel_max: 小车的最大角速度(单位为rad/s)
+            @param DIS_AVOID_BORDER: 小车对墙的避障距离(单位为m)
+            @param R_VISION: 小车的观察距离(单位为m)
+            @param AVOID_DIST: 小车的避障距离(单位为m)
+       """
         # 将父类Agent的__init__函数包含进来
         super(Robot, self).__init__(f_in, DISPLAYBASE, DISPLAYHEIGHT, REALBASE, REALHEIGHT, vel_max, ang_vel_max, DIS_AVOID_BORDER)
         # 机器人的车身颜色: 蓝色
@@ -312,7 +338,11 @@ class Robot(Agent):
         self.neighbor = np.zeros(WOLF_NUM-1)
 
     def plot_robot(self, ax) -> None:
-        """在matplotlib绘图窗口中画出围捕机器人的车体"""
+        """在matplotlib绘图窗口中画出围捕机器人的车体
+
+        输入：
+            @param ax: 当前figure的Axes对象
+        """
         self.plot_agent(ax)
         p5 = plt.Line2D([self.pos[0], self.vertex_x0], [self.pos[1], self.vertex_y0], linewidth=1.2, color=self.__color, label='r1')
         ax.add_line(p5)
@@ -341,12 +371,22 @@ class Target(Agent):
     """
     以Agent为父类，增加一些属于目标的属性和功能，有以下函数：
         plot_target: 调用父类Agent的plotagent函数并用红色线画出等腰三角形的高，调用父类Agent的plotcircle函数画出目标的观察范围和受攻击范围
-
-    输入：
-        f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)。
     """
-
-    def __init__(self, f_in: List[float], DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float, R_ATTACKED: float, R_VISION: float, AVOID_DIST: float):
+    def __init__(self, f_in: List[float], DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: float, vel_max: float, ang_vel_max: float, DIS_AVOID_BORDER: float, R_ATTACKED: float, R_VISION: float, AVOID_DIST: float) -> None:
+        """
+        输入：
+            @param f_in: 长度为3的list，f_in[0]∈[0,2π)为初始车头方向，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)
+            @param DISPLAYBASE: 小车绘图呈现的三角形底边长度(单位为m)
+            @param DISPLAYHEIGHT: 小车绘图呈现的三角形高长度(单位为m)
+            @param REALBASE: 小车实际上的三角形底边长度，即轮间距(单位为m)
+            @param REALHEIGHT: 小车实际上的三角形高的长度(单位为m)
+            @param vel_max: 目标小车的最大线速度(单位为m/s)
+            @param ang_vel_max: 目标小车的最大角速度(单位为rad/s)
+            @param DIS_AVOID_BORDER: 目标小车对墙的避障距离(单位为m)
+            @param R_ATTACKED: 目标的受攻击距离(单位为m)
+            @param R_VISION: 目标的观察距离(单位为m)
+            @param AVOID_DIST: 目标的避障距离(单位为m)
+        """
         # 将父类Agent的__init__函数包含进来
         super(Target, self).__init__(f_in, DISPLAYBASE, DISPLAYHEIGHT, REALBASE, REALHEIGHT, vel_max, ang_vel_max, DIS_AVOID_BORDER)
         # 目标的车身颜色: 红色
@@ -375,7 +415,11 @@ class Target(Agent):
         self.target_to_m_obs = np.zeros((M_OBS_NUM, 2))
 
     def plot_target(self, ax) -> None:
-        """在matplotlib绘图窗口中画出目标"""
+        """在matplotlib绘图窗口中画出目标
+
+        输入：
+            @param ax: 当前figure的Axes对象
+        """
         self.plot_agent(ax)
         p5 = plt.Line2D([self.pos[0], self.vertex_x0], [self.pos[1], self.vertex_y0], linewidth=1.1, color=self.__color)
         ax.add_line(p5)
@@ -391,20 +435,25 @@ class Obs(object):
         plot_obs: 输出matplotlib圆对象，用于画图
         pos: 输出障碍物圆心坐标
         R: 输出障碍物的半径
-
-    输入：
-        f_in: 长度为3的list，f_in[0]为障碍物半径(单位为m)，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)。
     """
 
-    def __init__(self, f_in: List[float]):
+    def __init__(self, f_in: List[float]) -> None:
+        """
+        输入：
+            @param f_in: 长度为3的list，f_in[0]为障碍物圆半径(单位为m)，f_in[1]为障碍物圆心初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)
+        """
+
         # 障碍物的位置pos_x, pos_y和半径__R(单位为m)
         self._pos_x = f_in[1]
         self._pos_y = f_in[2]
         self.__R = f_in[0]
 
-    def plot_obs(self, ax):
+    def plot_obs(self, ax) -> None:
         """
         画出障碍物
+
+        输入：
+            @param ax: 当前figure的Axes对象
         """
 
         # 黑色线条，且有黑色斜纹填充的matplotlib圆对象，以pos_x，pos_y为圆心，以__R为半径
@@ -417,7 +466,7 @@ class Obs(object):
         """输出障碍物坐标的接口
 
         输出：
-            np.array([self._pos_x,self._pos_y]): 两个元素的numpy.ndarray数组，其中第一个为障碍物圆心x坐标，第二个为障碍物圆心y坐标，单位均为m
+            @return np.array([self._pos_x,self._pos_y]): 两个元素的numpy.ndarray数组，其中第一个为障碍物圆心x坐标，第二个为障碍物圆心y坐标，单位均为m
         """
         return np.array([self._pos_x, self._pos_y])
 
@@ -426,7 +475,7 @@ class Obs(object):
         """输出障碍物半径的接口
 
         输出：
-            self.__R: 障碍物半径(单位为m)
+            @return self.__R: 障碍物半径(单位为m)
         """
         return self.__R
 
@@ -443,14 +492,14 @@ class MobObs(Obs):
     以Obs为类，增加属于移动障碍物的属性和功能，有以下函数：
         plot_obs: 输出matplotlib圆对象，用于画图
         move: 障碍物的移动
-
-    输入：
-        f_in: 长度为3的list，f_in[0]为障碍物半径(单位为m)，f_in[1]为初始位置pos_x(单位为m)，f_in[2]为初始位置pos_y(单位为m)
     """
 
-    def plot_obs(self, ax):
+    def plot_obs(self, ax) -> None:
         """
         画出移动障碍物
+
+        输入：
+            @param ax: 当前figure的Axes对象
         """
 
         # 绿色线条，且有绿色斜纹填充的matplotlib圆对象，以pos_x，pos_y为圆心，以__R为半径
@@ -465,7 +514,7 @@ class MobObs(Obs):
         y[k+1] = y[k] + v_y[k]*TS
 
         输入：
-            v_in: 长度为2的list，v_in[0]为全局坐标系中速度的x轴方向分量(单位为m/s)，v_in[1]为全局坐标系中速度的y轴方向分量(单位为m/s)
+            @param v_in: 长度为2的list，v_in[0]为全局坐标系中速度的x轴方向分量(单位为m/s)，v_in[1]为全局坐标系中速度的y轴方向分量(单位为m/s)
         """
         self._pos_x += v_in[0]*TS
         self._pos_y += v_in[1]*TS
@@ -479,12 +528,13 @@ class IrregularObs(object):
         plot_irr_obs: 输出matplotlib多边形对象，用于在绘图窗口中画出不规则障碍物
         pos: 输出不规则障碍物顶点的生成圆圆心
         R: 输出不规则障碍物顶点生成半径
-
-    输入：
-        f_in: 长度为3的list，f_in[0]为障碍物半径(单位为m)，f_in[1]为生成点位置pos_x(单位为m)，f_in[2]为生成点位置pos_y(单位为m)。
     """
 
-    def __init__(self, f_in: List[float]):
+    def __init__(self, f_in: List[float]) -> None:
+        """
+        输入：
+            @param f_in: 长度为3的list，f_in[0]为障碍物顶点生成圆半径(单位为m)，f_in[1]为障碍物顶点生成圆圆心初始位置pos_x(单位为m)，f_in[2]为障碍物顶点生成圆圆心初始位置pos_y(单位为m)
+        """
         # 不规则障碍物顶点的生成圆圆心pos_x, pos_y
         self._pos_x = f_in[1]
         self._pos_y = f_in[2]
@@ -520,11 +570,14 @@ class IrregularObs(object):
         for i in range(self.samples_num):
             vertex_pose[i] = np.array([self.vertex_x[i], self.vertex_y[i]])
             angle[i] = peri_arctan(vertex_pose[i]-self.pos)
-        self.pose_order = np.argsort(angle, kind='heapsort')
+        self.pose_order = np.argsort(angle)
 
-    def plot_obs(self, ax):
+    def plot_obs(self, ax) -> None:
         """
         输出matplotlib圆对象，用于画不规则障碍物的出生圆
+
+        输入：
+            @param ax: 当前figure的Axes对象
         """
         cir = plt.Circle((self._pos_x, self._pos_y), self.R,
                          color='black', fill=False, linewidth=1.5, linestyle='--')
@@ -540,9 +593,12 @@ class IrregularObs(object):
         for i in range(self.samples_num):
             self.poly.append((self.vertex_x[self.pose_order[i]], self.vertex_y[self.pose_order[i]]))
 
-    def plot_irr_obs(self, ax):
+    def plot_irr_obs(self, ax) -> None:
         """
         输出matplotlib.Polygon对象，用于在绘图窗口中画出不规则障碍物
+
+        输入：
+            @param ax: 当前figure的Axes对象
         """
         
         # 标出不规则障碍物每条边的构成点
@@ -558,7 +614,7 @@ class IrregularObs(object):
         """输出障碍物出生圆圆心的接口
 
         输出：
-            np.array([self._pos_x,self._pos_y]): 两个元素的numpy.ndarray数组，其中第一个为出生圆圆心x坐标，第二个为出生圆圆心y坐标，单位均为m
+            @return np.array([self._pos_x,self._pos_y]): 两个元素的numpy.ndarray数组，其中第一个为出生圆圆心x坐标，第二个为出生圆圆心y坐标，单位均为m
         """
         return np.array([self._pos_x, self._pos_y])
 
@@ -567,7 +623,7 @@ class IrregularObs(object):
         """输出障碍物出生圆半径的接口
 
         输出：
-            self.__R: 障碍物出生圆半径(单位为m)
+            @return self.__R: 障碍物出生圆半径(单位为m)
         """
         return self.__R
 
@@ -587,7 +643,7 @@ class MobIrregularObs(IrregularObs):
         y[k+1] = y[k] + v_y[k]*TS
 
         输入：
-            v_in: 长度为2的list，v_in[0]为全局坐标系中速度的x轴方向分量v_x(单位为m/s)，v_in[1]为全局坐标系中速度的y轴方向分量v_y(单位为m/s)
+            @param v_in: 长度为2的list，v_in[0]为全局坐标系中速度的x轴方向分量v_x(单位为m/s)，v_in[1]为全局坐标系中速度的y轴方向分量v_y(单位为m/s)
         """
 
         self.poly = []
@@ -601,9 +657,12 @@ class MobIrregularObs(IrregularObs):
         for i in range(self.samples_num):
             self.poly.append((self.vertex_x[self.pose_order[i]], self.vertex_y[self.pose_order[i]]))
 
-    def plot_irr_obs(self, ax):
+    def plot_irr_obs(self, ax) -> None:
         """
         输出matplotlib.Polygon对象，用于在绘图窗口中画出不规则障碍物
+
+        输入：
+            @param ax: 当前figure的Axes对象
         """
         # 标出不规则障碍物每条边的构成点
         # for item in self.elements:
@@ -618,21 +677,29 @@ class Border(object):
     """
     地图边界，有以下函数：
         plot_border: 输出matplotlib对象，用于后续在绘图窗口中画出地图边界
-
-    输入：
-        f_in: 长度为4的list，f_in[0]为x_min(单位为m)，f_in[1]为y_min(单位为m)，f_in[2]为x_max(单位为m)，f_in[3]为y_max(单位为m)。
-              矩形边界的四个顶点分别为[x_min,y_min],[x_max,y_min],[x_min,y_max],[x_max,y_max]
+        X_MIN: 输出矩形边界的左边界的x轴坐标
+        Y_MIN: 输出矩形边界的下边界的y轴坐标
+        X_MAX: 输出矩形边界的右边界的x轴坐标
+        Y_MAX: 输出矩形边界的上边界的y轴坐标
     """
 
-    def __init__(self, f_in: List[float]):
+    def __init__(self, f_in: List[float]) -> None:
+        """
+        输入：
+            @param f_in: 长度为4的list，f_in[0]为x_min(单位为m)，f_in[1]为y_min(单位为m)，f_in[2]为x_max(单位为m)，f_in[3]为y_max(单位为m)。
+                  矩形边界的四个顶点分别为[x_min,y_min],[x_max,y_min],[x_min,y_max],[x_max,y_max]
+        """
         self.__X_MIN = f_in[0]
         self.__Y_MIN = f_in[1]
         self.__X_MAX = f_in[2]
         self.__Y_MAX = f_in[3]
 
-    def plot_border(self, ax):
+    def plot_border(self, ax) -> None:
         """
         输出matplotlib.patches.Rectangle对象，用于在地图中画出边界
+
+        输入：
+            @param ax: 当前figure的Axes对象
         """
         border = patches.Rectangle((self.__X_MIN, self.__Y_MIN), self.__X_MAX -
                                    self.__X_MIN, self.__Y_MAX-self.__Y_MIN, fill=False, linewidth=5)
@@ -654,32 +721,3 @@ class Border(object):
     def Y_MAX(self) -> float:
         return self.__Y_MAX
 
-
-@jit(nopython = True)
-def rotate_update(t: np.ndarray, samples_num: int, r_num: np.ndarray, R: float, vertex_x: np.ndarray, vertex_y: np.ndarray, pos_x: float, pos_y: float, pose_order: np.ndarray, variation: float):
-    elements = np.zeros((samples_num * 5, 2))
-    count = 0
-    # 各顶点围绕生成点旋转
-    t += variation
-    for item in t:
-        item = correct(item)
-    unit_x = cos(t)
-    unit_y = sin(t)
-    # 计算出新顶点i为(vertex_x[i],vertex_y[i])
-    for i in range(samples_num):
-        polar_r = sqrt(r_num[i])*(R)
-        vertex_x[i] = unit_x[i]*polar_r+pos_x
-        vertex_y[i] = unit_y[i]*polar_r+pos_y
-    # 按照当前顶点在[0,2π)的角度顺序进行连接，并在每条边上取5个点作为该边的构成点
-    for i in range(samples_num-1):
-        side_x = np.linspace(vertex_x[pose_order[i]], vertex_x[pose_order[i+1]], 5)
-        side_y = np.linspace(vertex_y[pose_order[i]], vertex_y[pose_order[i+1]], 5)
-        for j in range(5):
-            elements[count] = np.array([side_x[j], side_y[j]])
-            count += 1
-    side_x = np.linspace(vertex_x[pose_order[-1]], vertex_x[pose_order[0]], 5)
-    side_y = np.linspace(vertex_y[pose_order[-1]], vertex_y[pose_order[0]], 5)
-    for i in range(5):
-        elements[count] = np.array([side_x[i], side_y[i]])
-        count += 1
-    return elements

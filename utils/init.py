@@ -26,10 +26,10 @@ def random_spawn(wolves: List[Robot]) -> np.ndarray:
     在随机个体的观察范围内随机选择一点作为目标的出生点
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
+        @param wolves: 存放所有围捕机器人对象的list
 
     输出：
-        np.array([x,y]): 目标的坐标
+        @return np.array([x,y]): 目标的坐标
     """
     # 天选之子, 目标将诞生在你附近
     chosen_son = np.random.randint(WOLF_NUM)
@@ -52,12 +52,12 @@ def sta_obs_init(wolves: List[Robot], targets: List[Target], border: Border):
     计算固定障碍物的初始位置
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
-        targets: 存放所有目标对象的list
-        border: 边界对象
+        @param wolves: 存放所有围捕机器人对象的list
+        @param targets: 存放所有目标对象的list
+        @param border: 边界对象
 
     输出：
-        sta_obss: 存放所有固定障碍物对象的list
+        @return sta_obss: 存放所有固定障碍物对象的list
     """
     t1 = time()
     sta_obss = []
@@ -105,13 +105,13 @@ def mob_obs_init(wolves: List[Robot], targets: List[Target], sta_obss: List[StaO
     计算移动障碍物的初始位置
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
-        targets: 存放所有目标对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        border: 边界对象
+        @param wolves: 存放所有围捕机器人对象的list
+        @param targets: 存放所有目标对象的list
+        @param sta_obss: 存放所有固定障碍物对象的list
+        @param border: 边界对象
 
     输出：
-        mob_obss: 存放所有移动障碍物对象的list
+        @return mob_obss: 存放所有移动障碍物对象的list
     """
     t1 = time()
     mob_obss = []
@@ -167,14 +167,14 @@ def irr_obs_init(wolves: List[Robot], targets: List[Target], sta_obss: List[StaO
     计算不规则障碍物的初始位置
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
-        targets: 存放所有目标对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        mob_obss: 存放所有移动障碍物对象的list
-        border: 边界对象
+        @param wolves: 存放所有围捕机器人对象的list
+        @param targets: 存放所有目标对象的list
+        @param sta_obss: 存放所有固定障碍物对象的list
+        @param mob_obss: 存放所有移动障碍物对象的list
+        @param border: 边界对象
 
     输出：
-        irr_obss: 存放所有不规则障碍物对象的list
+        @return irr_obss: 存放所有不规则障碍物对象的list
     """
     t1 = time()
     irr_obss = []
@@ -238,15 +238,15 @@ def mob_irr_obs_init(wolves: List[Robot], targets: List[Target], sta_obss: List[
     计算移动不规则障碍物的初始位置
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
-        targets: 存放所有目标对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        mob_obss: 存放所有移动障碍物对象的list
-        irr_obss: 存放所有不规则障碍物对象的list
-        border: 边界对象
+        @param wolves: 存放所有围捕机器人对象的list
+        @param targets: 存放所有目标对象的list
+        @param sta_obss: 存放所有固定障碍物对象的list
+        @param mob_obss: 存放所有移动障碍物对象的list
+        @param irr_obss: 存放所有不规则障碍物对象的list
+        @param border: 边界对象
 
     输出：
-        m_irr_obss: 存放所有移动不规则障碍物对象的list
+        @return m_irr_obss: 存放所有移动不规则障碍物对象的list
     """
     t1 = time()
     m_irr_obss = []
@@ -317,14 +317,25 @@ def init(DISPLAYBASE: float, DISPLAYHEIGHT: float, REALBASE: float, REALHEIGHT: 
     """
     初始化地图以及调用以上函数初始化所有围捕机器人、目标、障碍物
 
+    输入：
+        @param DISPLAYBASE: 三角形小车的显示底边长度(单位为m)
+        @param DISPLAYHEIGHT: 三角形小车的显示高长度(单位为m)
+        @param REALBASE: 三角形小车的实际底边长度(单位为m)
+        @param REALHEIGHT: 三角形小车的实际高长度(单位为m)
+        @param vel_max: 线速度v最大值(单位为m/s)
+        @param ang_vel_max: 角速度ω最大值(单位为rad/s)
+        @param DIS_AVOID_BORDER: 避墙距离(单位为m)
+        @param R_ATTACKED: 目标受攻击的距离(单位为m)
+        @param R_VISION: 机器人的观察范围
+        @param D_AVOID: 机器人的避障距离
     输出：
-        wolves: 存放所有围捕机器人对象的list
-        targets: 存放所有目标对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        mob_obss: 存放所有移动障碍物对象的list
-        irr_obss: 存放所有不规则障碍物对象的list
-        m_irr_obss: 存放所有移动不规则障碍物对象的list
-        rectangle_border: 边界对象
+        @return wolves: 存放所有围捕机器人对象的list
+        @return targets: 存放所有目标对象的list
+        @return sta_obss: 存放所有固定障碍物对象的list
+        @return mob_obss:存放所有移动障碍物对象的list
+        @return irr_obss: 存放所有不规则障碍物对象的list
+        @return m_irr_obss: 存放所有移动不规则障碍物对象的list
+        @return rectangle_border: 边界对象
     """
     init_fail = True
     # 如果初始化失败(例如随机初始化的障碍物太大导致无论如何摆放在地图边界范围内都放不下)，重新初始化

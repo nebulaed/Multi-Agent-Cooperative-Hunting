@@ -12,12 +12,13 @@ import yaml
 class Params(object):
     """
     从yml文件中读取参数
-
-    输入：
-        project_file: yml文件路径
     """
 
     def __init__(self, project_file: str):
+        """
+        输入：
+            @param project_file: yml文件路径
+        """
         self.params = yaml.safe_load(open(project_file).read())
 
     def __getattr__(self, item):

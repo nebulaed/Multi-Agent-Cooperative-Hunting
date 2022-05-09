@@ -20,13 +20,13 @@ def vector_count(wolves: List[Robot], targets: List[Target], sta_obss: List[StaO
     计算一些对象(包括围捕机器人、目标、固定和移动障碍物)间的向量差以及围捕机器人和目标到边界距离。
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
-        targets: 存放所有目标对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        mob_obss: 存放所有移动障碍物对象的list
-        irr_obss: 存放所有不规则障碍物对象的list
-        m_irr_obss: 存放所有移动不规则障碍物对象的list
-        border: 边界对象
+        @param wolves: 存放所有围捕机器人对象的list
+        @param targets: 存放所有目标对象的list
+        @param sta_obss: 存放所有固定障碍物对象的list
+        @param mob_obss: 存放所有移动障碍物对象的list
+        @param irr_obss: 存放所有不规则障碍物对象的list
+        @param m_irr_obss: 存放所有移动不规则障碍物对象的list
+        @param border: 边界对象
     """
 
     # 目标到各边界距离以及最近边界
@@ -179,6 +179,18 @@ def vector_count(wolves: List[Robot], targets: List[Target], sta_obss: List[StaO
 
 @jit(nopython = True)
 def find_closest_point(elements: np.ndarray, pos: np.ndarray):
+    """
+    计算一点到不规则形状的最短距离
+
+    输入：
+        @param elements: 不规则形状的构成点坐标数组
+        @param pos: 点的坐标
+
+    输出：
+        @return points_dist[mind_point]: 最短距离(单位为m)
+        @return elements[mind_point]-pos: 最短位置差矢量(单位为m)
+    """
+
     points_dist = np.zeros(len(elements))
     for i in range(len(elements)):
         points_dist[i] = norm(elements[i]-pos)

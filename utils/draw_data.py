@@ -28,21 +28,29 @@ def record_data(wolves: List[Robot], targets: List[Target], mob_obss: List[MobOb
     记录个体的速度和角速度
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
-        targets: 存放所有目标对象的list
-        t: 当前仿真的步数(单位为step)
-        interact: 当前步拓扑矩阵
+        @param wolves: 存放所有围捕机器人对象的list
+        @param targets: 存放所有目标对象的list
+        @param mob_obss: 存放所有移动障碍物对象的list
+        @param irr_obss: 存放所有不规则障碍物对象的list
+        @param m_irr_obss: 存放所有移动不规则障碍物对象的list
+        @param t: 当前仿真的步数(单位为step)
+        @param interact: 当前步拓扑矩阵
 
     输出：
-        pos_targets: 当前步所有目标的全局坐标(单位为m)
-        vel_targets: 当前步所有目标的线速度(单位为m/s)
-        ang_vel_targets: 当前步所有目标的角速度(单位为rad/s)
-        energy_targets: 当前步所有目标的能量消耗(单位为J)
-        pos_wolves: 当前步所有围捕机器人的全局坐标(单位为m)
-        vel_wolves: 当前步所有围捕机器人的线速度(单位为m/s)
-        ang_vel_wolves: 当前步所有围捕机器人的角速度(单位为rad/s)
-        energy_wolves: 当前步所有围捕机器人的能量消耗(单位为J)
-        interact: 当前步拓扑矩阵
+        @return pos_targets: 当前步所有目标的全局坐标(单位为m)
+        @return ori_targets: 当前步所有目标的航向(单位为rad)
+        @return vel_targets: 当前步所有目标的线速度(单位为m/s)
+        @return ang_vel_targets: 当前步所有目标的角速度(单位为rad/s)
+        @return energy_targets: 当前步所有目标的能量消耗(单位为J)
+        @return pos_wolves: 当前步所有围捕机器人的全局坐标(单位为m)
+        @return ori_wolves: 当前步所有围捕机器人的航向(单位为rad)
+        @return vel_wolves: 当前步所有围捕机器人的线速度(单位为m/s)
+        @return ang_vel_wolves: 当前步所有围捕机器人的角速度(单位为rad/s)
+        @return energy_wolves: 当前步所有围捕机器人的能量消耗(单位为J)
+        @return interact: 当前步拓扑矩阵
+        @return mob_obss_params: 移动障碍物画图所需参数
+        @return irr_obss_params: 不规则障碍物画图所需参数
+        @return m_irr_obss_params: 移动不规则障碍物画图所需参数
     """
     pos_targets = []
     ori_targets = []
@@ -83,13 +91,13 @@ def plot_data(var: str, vel_wolves: List, ang_vel_wolves: List, energy_wolves: L
     为运动数据提供画图界面
 
     输入：
-        var: 判断本次函数要画的是速度、角速度还是能量消耗曲线，只能是'v','w','E'
-        vel_wolves: 围捕机器人当前步的速度(单位为m/s)
-        ang_vel_wolves: 围捕机器人当前步的角速度(单位为rad/s)
-        energy_wolves: 围捕机器人当前步的累计能量消耗(单位为J)
-        vel_targets: 目标当前步的速度(单位为m/s)
-        ang_vel_targets: 目标当前步的角速度(单位为rad/s)
-        energy_targets: 目标当前步的累计能量消耗(单位为J)
+        @param var: 判断本次函数要画的是速度、角速度还是能量消耗曲线，只能是'v','w','E'
+        @param vel_wolves: 围捕机器人当前步的速度(单位为m/s)
+        @param ang_vel_wolves: 围捕机器人当前步的角速度(单位为rad/s)
+        @param energy_wolves: 围捕机器人当前步的累计能量消耗(单位为J)
+        @param vel_targets: 目标当前步的速度(单位为m/s)
+        @param ang_vel_targets: 目标当前步的角速度(单位为rad/s)
+        @param energy_targets: 目标当前步的累计能量消耗(单位为J)
     """
     # 打开绘图窗口
     plt.figure(figsize=(8, 6), constrained_layout=True)
@@ -161,12 +169,12 @@ def plot_ax(ax: object, n: int, var: str, vel_wolves: List, ang_vel_wolves: List
     画出机器人的速度曲线
 
     输入:
-        ax: 传入的matplotlib对象，用于画图
-        n: 围捕机器人序号
-        var: 判断本次函数要画的是速度、角速度还是能量消耗曲线，只能是'v','w','E'
-        vel_wolves: 围捕机器人当前步的速度(单位为m/s)
-        ang_vel_wolves: 围捕机器人当前步的角速度(单位为rad/s)
-        energy_wolves: 围捕机器人当前步的累计能量消耗(单位为J)
+        @param ax: plt.gca()获得的当前figure的Axes对象
+        @param n: 围捕机器人序号
+        @param var: 判断本次函数要画的是速度、角速度还是能量消耗曲线，只能是'v','w','E'
+        @param vel_wolves: 围捕机器人当前步的速度(单位为m/s)
+        @param ang_vel_wolves: 围捕机器人当前步的角速度(单位为rad/s)
+        @param energy_wolves: 围捕机器人当前步的累计能量消耗(单位为J)
     """
     vel_wolves_n, ang_vel_wolves_n, energy_wolves_n = [], [], []
     for i in range(len(vel_wolves)):

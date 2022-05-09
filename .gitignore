@@ -1,7 +1,11 @@
+.idea
+.mypy_cache
 __pycache__
+venv
 *.aux
 *.log
 *.synctex.gz
 .VSCodeCounter
 collision_avoidance2.py
 output/*
+2021_09_22_16_09_45.mp4

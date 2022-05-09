@@ -18,13 +18,14 @@ def all_update(wolves: List[Robot], targets: List[Target], sta_obss: List[StaObs
     障碍物的移动和旋转
 
     输入：
-        wolves: 存放所有围捕机器人对象的list
-        targets: 存放所有目标对象的list
-        sta_obss: 存放所有固定障碍物对象的list
-        mob_obss: 存放所有移动障碍物对象的list
-        irr_obss: 存放所有不规则障碍物对象的list
-        m_irr_obss: 存放所有移动不规则障碍物对象的list
-        rectangle_border: 边界对象
+        @param wolves: 存放所有围捕机器人对象的list
+        @param targets: 存放所有目标对象的list
+        @param sta_obss: 存放所有固定障碍物对象的list
+        @param mob_obss: 存放所有移动障碍物对象的list
+        @param irr_obss: 存放所有不规则障碍物对象的list
+        @param m_irr_obss: 存放所有移动不规则障碍物对象的list
+        @param rectangle_border: 边界对象
+        @param VEL_OBS: 移动障碍物移动的最大速度(单位为m/s)
     """
     
     # 移动障碍物移动

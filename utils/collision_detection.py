@@ -19,17 +19,17 @@ def two_line_segment_test(x1: float, y1: float, x2: float, y2: float, x3: float,
     判断输入两根线段是否有交点。
 
     输入：
-        x1: 输入线段1的起点x坐标
-        y1: 输入线段1的起点y坐标
-        x2: 输入线段1的终点x坐标
-        y2: 输入线段1的终点y坐标
-        x3: 输入线段2的起点x坐标
-        y3: 输入线段2的起点y坐标
-        x4: 输入线段2的终点x坐标
-        y4: 输入线段2的终点y坐标
+        @param x1: 输入线段1的起点x坐标
+        @param y1: 输入线段1的起点y坐标
+        @param x2: 输入线段1的终点x坐标
+        @param y2: 输入线段1的终点y坐标
+        @param x3: 输入线段2的起点x坐标
+        @param y3: 输入线段2的起点y坐标
+        @param x4: 输入线段2的终点x坐标
+        @param y4: 输入线段2的终点y坐标
 
     输出：
-        True表示两条线段有交点，False表示无交点
+        @return: True表示两条线段有交点，False表示无交点
     """
     if ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4)) == 0:
         return False  # ,[0,0]
@@ -48,11 +48,11 @@ def two_triangle_test(tri1: np.ndarray, tri2: np.ndarray) -> bool:
     判断输入的两个三角形是否有交集。
 
     输入：
-        tri1: 形如[顶点1:[x,y],顶点2:[x,y],顶点3:[x,y]]的list
-        tri2: 形如[顶点1:[x,y],顶点2:[x,y],顶点3:[x,y]]的list
+        @param tri1: 形如[顶点1:[x,y],顶点2:[x,y],顶点3:[x,y]]的list
+        @param tri2: 形如[顶点1:[x,y],顶点2:[x,y],顶点3:[x,y]]的list
 
     输出：
-        True表示有交集，False表示无交集
+        @return: True表示有交集，False表示无交集
     """
     # 三角形1的边[边1:[起点:[x,y],终点:[x,y]], 边2:...]
     tri1_sides = [[[tri1[0][0], tri1[0][1]], [tri1[1][0], tri1[1][1]]],
@@ -95,12 +95,12 @@ def get_foot_point(point: np.ndarray, line_p1: np.ndarray, line_p2: np.ndarray):
     计算点到直线的垂足坐标。
 
     输入：
-        point: 点的坐标
-        line_p1: 直线上任意两点之一坐标
-        line_p2: 直线上任意两点之一坐标
+        @param point: 点的坐标
+        @param line_p1: 直线上任意两点之一坐标
+        @param line_p2: 直线上任意两点之一坐标
 
     输出：
-        (xn, yn): 垂足坐标
+        @return: (xn, yn): 垂足坐标
     """
     x0 = point[0]
     y0 = point[1]
@@ -129,11 +129,11 @@ def get_dis_point2line(point: np.ndarray, line_p1: np.ndarray, line_p2: np.ndarr
     计算点到线段的距离。
 
     输入：
-        point: 点的坐标
-        line_p1: 线段起点坐标
-        line_p2: 线段终点坐标
+        @param point: 点的坐标
+        @param line_p1: 线段起点坐标
+        @param line_p2: 线段终点坐标
     输出：
-        dist: 点到线段距离
+        @return dist: 点到线段距离
     """
     footP = get_foot_point(point, line_p1, line_p2)
     if ((footP[0] - line_p1[0]) > 0) ^ ((footP[0] - line_p2[0]) > 0):  # 异或符号，符号不同是为1，,说明垂足落在直线中
@@ -149,12 +149,12 @@ def circle_triangle_test(center: np.ndarray, radius: float, tri: np.ndarray) -> 
     判断输入的圆形和三角形是否有交集。
 
     输入：
-        center: 圆心
-        radius: 半径
-        tri: 形如[顶点1:[x,y],顶点2:[x,y],顶点3:[x,y]]的三角形顶点list
+        @param center: 圆心
+        @param radius: 半径
+        @param tri: 形如[顶点1:[x,y],顶点2:[x,y],顶点3:[x,y]]的三角形顶点list
 
     输出：
-        True表示有交集，False表示无交集
+        @return: True表示有交集，False表示无交集
     """
     # 三角形的边[边1:[起点:[x,y],终点:[x,y]], 边2:...]
     tri_sides = np.array([[[tri[0][0], tri[0][1]], [tri[1][0], tri[1][1]]],
@@ -174,11 +174,11 @@ def two_polygon_test(poly1: np.ndarray, poly2: np.ndarray) -> bool:
     判断输入的两个多边形是否有交集。思路：首先判断两个多边形的点是否在另一多边形内，然后判断两个多边形是否有边相交。
 
     输入：
-        poly1: 多边形1
-        poly2: 多边形2
+        @param poly1: 多边形1
+        @param poly2: 多边形2
     
     输出：
-        True表示有交集，False表示无交集
+        @return: True表示有交集，False表示无交集
     """
     for i in range(poly1.shape[0]):
         # 利用opencv中的pointPolygonTest函数判断点是否在多边形外，1表示在多边形内，0表示在多边形边上，-1表示在多边形外
